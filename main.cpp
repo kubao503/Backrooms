@@ -2,6 +2,29 @@
 #include <box2d/box2d.h>
 #include <memory>
 
+void move_shape(sf::Shape &shape)
+{
+    const float VELOCITY = 0.5f;
+
+        // Moving objects
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+    {
+        shape.move(0.0f, -VELOCITY);
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+    {
+        shape.move(0.0f, VELOCITY);
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+    {
+        shape.move(-VELOCITY, 0.0f);
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+    {
+        shape.move(VELOCITY, 0.0f);
+    }
+}
+
 int main()
 {
     //      Box2D INIT
@@ -47,21 +70,24 @@ int main()
     int32 velocityIterations = 6;   // Velocity calculations during one step
     int32 positionIterations = 2;   // Position calculations during one step
 
-    for (int32 i = 0; i < 60; ++i)
-    {
-        world.Step(timeStep, velocityIterations, positionIterations);
-        b2Vec2 position = dynamicBody->GetPosition();
-        float angle = dynamicBody->GetAngle();
-        printf("%4.2f %4.2f %4.2f\n", position.x, position.y, angle);
-    }
+    // for (int32 i = 0; i < 60; ++i)
+    // {
+    //     world.Step(timeStep, velocityIterations, positionIterations);
+    //     b2Vec2 position = dynamicBody->GetPosition();
+    //     float angle = dynamicBody->GetAngle();
+    //     printf("%4.2f %4.2f %4.2f\n", position.x, position.y, angle);
+    // }
 
     //      SFML
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode(1000, 1000), "SFML works!");
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Green);
+    shape.setPosition(500.0f, 500.0f);
 
+    // Main loop
     while (window.isOpen())
     {
+        // Handling events
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -69,6 +95,9 @@ int main()
                 window.close();
         }
 
+        move_shape(shape);
+
+        // Drawing on screen
         window.clear();
         window.draw(shape);
         window.display();
