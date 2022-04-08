@@ -15,22 +15,12 @@ private:
     sf::RectangleShape shape_;
     b2Body *body_;
 
-    b2Vec2 getNewPosition()
-    {
-        static int count{0};
-        return b2Vec2(count++ * 20.0f, 0.0f);
-    }
+    b2Vec2 getNewPosition();
 
 public:
     friend void Camera::drawOnScreen(Object &object);
 
-    Object(sf::RectangleShape shape, const b2BodyDef &bodyDef)
-        : shape_{shape}
-    {
-        body_ = world_g.CreateBody(&bodyDef);
-        body_->SetTransform(getNewPosition(), 0);
-    }
-
+    Object(sf::RectangleShape shape, const b2BodyDef &bodyDef);
     void addFixture(const b2FixtureDef &fixture)
     {
         body_->CreateFixture(&fixture);
