@@ -46,19 +46,14 @@ int main()
     // wallShape.setOrigin(50.0f, 5.0f);
 
     // Objects
-    Object wall(wallShape, staticBodyDef);
-    Object wall2(wallShape, staticBodyDef);
-    Object player(playerShape, dynamicBodyDef);
-
-    // Fixtures
-    wall.addFixture(staticFixture);
-    wall2.addFixture(staticFixture);
-    player.addFixture(dynamicFixture);
+    Object wall(wallShape, staticBodyDef, staticFixture);
+    Object wall2(wallShape, staticBodyDef, staticFixture);
+    Object player(playerShape, dynamicBodyDef, dynamicFixture);
 
     // Simulation
-    float timeStep = 1.0f / 60.0f; // Step of time between events
-    int32 velocityIterations = 6;  // Velocity calculations during one step
-    int32 positionIterations = 2;  // Position calculations during one step
+    float timeStep = 1.0f / 120.0f; // Step of time between events
+    int32 velocityIterations = 4;  // Velocity calculations during one step
+    int32 positionIterations = 3;  // Position calculations during one step
 
     // Main loop
     while (camera.isOpen())
@@ -69,6 +64,7 @@ int main()
         // Box2D step
         world_g.Step(timeStep, velocityIterations, positionIterations);
         player.control();
+        player.rayCast();
 
         // Drawing on screen
         camera.start();
