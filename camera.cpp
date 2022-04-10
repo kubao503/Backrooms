@@ -8,6 +8,38 @@ void Camera::drawOnScreen(sf::Shape &shape, float x, float y)
     window_.draw(shape);
 }
 
+void Camera::drawRay(float angle, float distance)
+{
+    // Draw the closest hit point
+    sf::RectangleShape wallTexture(sf::Vector2f(2.0f, 50.0f));
+    wallTexture.setOrigin(1.0f, 25.0f);
+    wallTexture.setFillColor(sf::Color::Yellow);
+    const float adjacentDistance{cos(angle) * distance};
+    wallTexture.setScale(2.3f * adjacentDistance + 5.8f, 3.0f / adjacentDistance);
+    camera_g.drawOnScreen(wallTexture, tan(angle) * 1000.0f, 0.0f);
+}
+
+float Camera::getRayHit(const b2RayCastInput &input)
+{
+    float smallestFraction{input.maxFraction};
+
+    // iterate over all bodies and raycast them
+    for (b2Body *b = world_g.GetBodyList(); b; b = b->GetNext())
+    {
+        b2RayCastOutput output;
+        b2Fixture *fixList{b->GetFixtureList()};
+        bool hit{fixList[0].RayCast(&output, input, 0)};
+
+        // if a body is hit, check if this is the closest hit
+        if (hit && output.fraction < smallestFraction)
+        {
+            smallestFraction = output.fraction;
+        }
+    }
+
+    return smallestFraction;
+}
+
 void Camera::raycast(Object &object)
 {
     // Crate ray vector based on object position
@@ -16,7 +48,8 @@ void Camera::raycast(Object &object)
 
     const float rayLength{300.0f};
     const float FOVMaxAngle{M_PI / 6.0f};
-    const float basicAngle{M_PI / 4.0f};
+    // const float basicAngle{-M_PI / 2.0f};
+    const float basicAngle{object.getAngle()};
 
     // Cast a ray in any direction
     for (float angle{-FOVMaxAngle}; angle <= FOVMaxAngle; angle += 0.01f)
@@ -25,34 +58,14 @@ void Camera::raycast(Object &object)
         input.p2 += b2Vec2(cos(angle + basicAngle) * rayLength, sin(angle + basicAngle) * rayLength);
         input.maxFraction = 1;
 
-        float smallestFraction{input.maxFraction};
-
-        // iterate over all bodies and raycast them
-        for (b2Body *b = world_g.GetBodyList(); b; b = b->GetNext())
-        {
-            b2RayCastOutput output;
-            b2Fixture *fixList{b->GetFixtureList()};
-            bool hit{fixList[0].RayCast(&output, input, 0)};
-
-            // if a body is hit, check if this is the closest hit
-            if (hit && output.fraction < smallestFraction)
-            {
-                smallestFraction = output.fraction;
-            }
-        }
+        float smallestFraction{getRayHit(input)};
 
         // Calculate the closes hit point
         b2Vec2 hitPoint{input.p1 + smallestFraction * (input.p2 - input.p1)};
 
         if (smallestFraction != input.maxFraction)
         {
-            // Draw the closest hit point
-            sf::RectangleShape wallTexture(sf::Vector2f(4.0f, 50.0f));
-            wallTexture.setOrigin(2.0f, 25.0f);
-            wallTexture.setFillColor(sf::Color::Yellow);
-            const float scale{3.0f / (cos(angle) * smallestFraction)};
-            wallTexture.setScale(scale, scale);
-            camera_g.drawOnScreen(wallTexture, tan(angle) * 1000.0f, 0.0f);
+            drawRay(angle, smallestFraction);
         }
     }
 }
@@ -71,4 +84,12 @@ void Camera::handleEvents()
         if (event.type == sf::Event::Closed)
             window_.close();
     }
+}
+
+int Camera::getMouseXMovement()
+{
+    static const sf::Vector2i defaultPosition(100, 100);
+    int mouseMovement{sf::Mouse::getPosition(window_).x - defaultPosition.x};
+    sf::Mouse::setPosition(defaultPosition, window_);
+    return mouseMovement;
 }

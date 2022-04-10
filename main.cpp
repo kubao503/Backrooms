@@ -70,9 +70,9 @@ int main()
         // Drawing on screen
         camera_g.start();
         camera_g.raycast(player);
-        camera_g.drawOnScreen(wall);
-        camera_g.drawOnScreen(wall2);
-        camera_g.drawOnScreen(player);
+        // camera_g.drawOnScreen(wall);
+        // camera_g.drawOnScreen(wall2);
+        // camera_g.drawOnScreen(player);
         camera_g.end();
     }
 

@@ -4,7 +4,7 @@ b2Vec2 Object::getNewPosition()
 {
     static int count{0};
     int tmp{count++};
-    return b2Vec2(tmp * 180.0f, tmp * 50.0f);
+    return b2Vec2(0, tmp * 50.0f);
 }
 
 Object::Object(sf::RectangleShape shape, const b2BodyDef &bodyDef, const b2FixtureDef &fixture)
@@ -18,45 +18,6 @@ Object::Object(sf::RectangleShape shape, const b2BodyDef &bodyDef, const b2Fixtu
     this->addFixture(fixture);
 }
 
-// void Object::rayCast()
-// {
-//     b2RayCastInput input;
-//     b2Vec2 currentPosition{body_->GetPosition()};
-//     currentPosition += b2Vec2(17.0f, 0.0f);
-//     input.p1 = currentPosition;
-//     currentPosition += b2Vec2(-50.0f, 0.0f);
-//     input.p2 = currentPosition;
-//     // input.p1.Set(0.0f, 0.0f);
-//     // input.p1.Set(10000.0f, 0.0f);
-//     // std::cout << input.p1.x << ' ' << input.p2.x << '\n';
-//     input.maxFraction = 50.0f;
-//     int32 childIndex = 0;
-
-//     sf::CircleShape s1(3.0f);
-//     s1.setFillColor(sf::Color::Yellow);
-//     // const sf::Vector2f &size{s1.getSize()};
-//     // s1.setOrigin(0.5f * size);
-//     camera_g.drawOnScreen(s1, input.p1.x, input.p1.y);
-//     sf::CircleShape s2(3.0f);
-//     // const sf::Vector2f &size{s1.getSize()};
-//     // s1.setOrigin(0.5f * size);
-//     camera_g.drawOnScreen(s2, input.p2.x, input.p2.y);
-
-//     b2RayCastOutput output;
-//     b2Fixture *fix = body_->GetFixtureList();
-//     bool hit = fix[0].RayCast(&output, input, childIndex);
-//     if (hit)
-//     {
-//         shape_.setScale(output.fraction, output.fraction);
-//         // std::cout << output.fraction << '\n';
-//         shape_.setFillColor(sf::Color::Red);
-//     }
-//     else
-//     {
-//         shape_.setFillColor(sf::Color::Green);
-//     }
-// }
-
 void Object::control()
 {
     // const float VELOCITY = 2.0f;
@@ -66,25 +27,32 @@ void Object::control()
     // Moving objects
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
     {
-        newVelocity += b2Vec2(0.0f, -VELOCITY);
-        // body_->SetLinearVelocity(b2Vec2(0.0f, -VELOCITY));
+        newVelocity += b2Vec2(0.0f, VELOCITY);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
     {
-        newVelocity += b2Vec2(0.0f, VELOCITY);
-        // body_->SetLinearVelocity(b2Vec2(0.0f, VELOCITY));
+        newVelocity += b2Vec2(0.0f, -VELOCITY);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
     {
-        newVelocity += b2Vec2(-VELOCITY, 0.0f);
-        // body_->SetLinearVelocity(b2Vec2(-VELOCITY, 0.0f));
+        newVelocity += b2Vec2(VELOCITY, 0.0f);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
     {
-        newVelocity += b2Vec2(VELOCITY, 0.0f);
-        // body_->SetLinearVelocity(b2Vec2(VELOCITY, 0.0f));
+        newVelocity += b2Vec2(-VELOCITY, 0.0f);
     }
-    // if (!sf::Keyboard::isKeyPressed(sf::Keyboard::W) && !sf::Keyboard::isKeyPressed(sf::Keyboard::S) && !sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-    // body_->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
-    body_->SetLinearVelocity(newVelocity);
+
+    // body_->SetLinearVelocity(newVelocity);
+    setLocalVelocity(newVelocity);
+
+    int mouseXMovement(camera_g.getMouseXMovement());
+    body_->SetAngularVelocity(0.18f * mouseXMovement);
+}
+
+void Object::setLocalVelocity(const b2Vec2 &newVelocity)
+{
+    const float angle{body_->GetAngle() - static_cast<float>(M_PI / 2.0)};
+    body_->SetLinearVelocity(b2Vec2(
+        newVelocity.x * cos(angle) - newVelocity.y * sin(angle),
+        newVelocity.x * sin(angle) + newVelocity.y * cos(angle)));
 }

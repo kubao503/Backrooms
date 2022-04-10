@@ -28,8 +28,9 @@ public:
         body_->CreateFixture(&fixture);
     }
 
-    // void rayCast();
     void control();
+    void setLocalVelocity(const b2Vec2 &newVelocity); // Sets velocity based on the local cooridinates
+    float getAngle() const { return body_->GetAngle(); };
 };
 
 #endif
