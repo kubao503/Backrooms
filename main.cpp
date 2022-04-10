@@ -7,6 +7,7 @@
 
 // Creating world without gravity
 b2World world_g{b2Vec2(0.0f, 0.0f)};
+Camera camera_g(1000, 1000, "Backrooms");
 
 int main()
 {
@@ -35,7 +36,6 @@ int main()
     dynamicFixture.friction = 0.3f;
 
     //      SFML
-    Camera camera(1000, 1000, "Backrooms");
 
     sf::RectangleShape playerShape(sf::Vector2f(10.0f, 10.0f));
     playerShape.setFillColor(sf::Color::Green);
@@ -46,32 +46,35 @@ int main()
     // wallShape.setOrigin(50.0f, 5.0f);
 
     // Objects
+    Object player(playerShape, dynamicBodyDef, dynamicFixture);
+    // Object wall(playerShape, dynamicBodyDef, dynamicFixture);
+    // Object wall2(playerShape, dynamicBodyDef, dynamicFixture);
     Object wall(wallShape, staticBodyDef, staticFixture);
     Object wall2(wallShape, staticBodyDef, staticFixture);
-    Object player(playerShape, dynamicBodyDef, dynamicFixture);
 
     // Simulation
-    float timeStep = 1.0f / 120.0f; // Step of time between events
+    float timeStep = 1.0f / 60.0f; // Step of time between events
     int32 velocityIterations = 4;  // Velocity calculations during one step
     int32 positionIterations = 3;  // Position calculations during one step
 
     // Main loop
-    while (camera.isOpen())
+    while (camera_g.isOpen())
     {
         // Handling events
-        camera.handleEvents();
+        camera_g.handleEvents();
 
         // Box2D step
         world_g.Step(timeStep, velocityIterations, positionIterations);
         player.control();
-        player.rayCast();
 
         // Drawing on screen
-        camera.start();
-        camera.drawOnScreen(wall);
-        camera.drawOnScreen(wall2);
-        camera.drawOnScreen(player);
-        camera.end();
+        camera_g.start();
+        camera_g.drawOnScreen(wall);
+        camera_g.drawOnScreen(wall2);
+        // player.rayCast();
+        camera_g.drawOnScreen(player);
+        camera_g.raycast(player);
+        camera_g.end();
     }
 
     return 0;

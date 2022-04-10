@@ -8,6 +8,7 @@
 #include <iostream>
 
 extern b2World world_g;
+extern Camera camera_g;
 
 class Object
 {
@@ -19,6 +20,7 @@ private:
 
 public:
     friend void Camera::drawOnScreen(Object &object);
+    friend void Camera::raycast(Object &object);
 
     Object(sf::RectangleShape shape, const b2BodyDef &bodyDef, const b2FixtureDef &fixture);
     void addFixture(const b2FixtureDef &fixture)
@@ -26,7 +28,7 @@ public:
         body_->CreateFixture(&fixture);
     }
 
-    void rayCast();
+    // void rayCast();
     void control();
 };
 

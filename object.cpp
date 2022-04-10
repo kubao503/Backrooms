@@ -2,9 +2,9 @@
 
 b2Vec2 Object::getNewPosition()
 {
-    static int count{5};
+    static int count{0};
     int tmp{count++};
-    return b2Vec2(tmp * 50.0f, tmp * 50.0f);
+    return b2Vec2(tmp * 180.0f, tmp * 50.0f);
 }
 
 Object::Object(sf::RectangleShape shape, const b2BodyDef &bodyDef, const b2FixtureDef &fixture)
@@ -18,26 +18,44 @@ Object::Object(sf::RectangleShape shape, const b2BodyDef &bodyDef, const b2Fixtu
     this->addFixture(fixture);
 }
 
-void Object::rayCast()
-{
-    b2RayCastInput input;
-    // b2Vec2 currentPosition{body_->GetPosition()};
-    // currentPosition += b2Vec2(15.0f, 15.0f);
-    // input.p1 = currentPosition;
-    // currentPosition += b2Vec2(2.0f, 2.0f);
-    // input.p2 = currentPosition;
-    input.p1.Set(0.0f, 0.0f);
-    input.p1.Set(10.0f, 0.0f);
-    input.maxFraction = 1000.0f;
-    int32 childIndex = 0;
+// void Object::rayCast()
+// {
+//     b2RayCastInput input;
+//     b2Vec2 currentPosition{body_->GetPosition()};
+//     currentPosition += b2Vec2(17.0f, 0.0f);
+//     input.p1 = currentPosition;
+//     currentPosition += b2Vec2(-50.0f, 0.0f);
+//     input.p2 = currentPosition;
+//     // input.p1.Set(0.0f, 0.0f);
+//     // input.p1.Set(10000.0f, 0.0f);
+//     // std::cout << input.p1.x << ' ' << input.p2.x << '\n';
+//     input.maxFraction = 50.0f;
+//     int32 childIndex = 0;
 
-    b2RayCastOutput output;
-    b2Fixture *fix = body_->GetFixtureList();
-    bool hit = fix[0].RayCast(&output, input, childIndex);
-    if (hit)
-        shape_.setScale(output.fraction, output.fraction);
-        // std::cout << output.fraction << '\n';
-}
+//     sf::CircleShape s1(3.0f);
+//     s1.setFillColor(sf::Color::Yellow);
+//     // const sf::Vector2f &size{s1.getSize()};
+//     // s1.setOrigin(0.5f * size);
+//     camera_g.drawOnScreen(s1, input.p1.x, input.p1.y);
+//     sf::CircleShape s2(3.0f);
+//     // const sf::Vector2f &size{s1.getSize()};
+//     // s1.setOrigin(0.5f * size);
+//     camera_g.drawOnScreen(s2, input.p2.x, input.p2.y);
+
+//     b2RayCastOutput output;
+//     b2Fixture *fix = body_->GetFixtureList();
+//     bool hit = fix[0].RayCast(&output, input, childIndex);
+//     if (hit)
+//     {
+//         shape_.setScale(output.fraction, output.fraction);
+//         // std::cout << output.fraction << '\n';
+//         shape_.setFillColor(sf::Color::Red);
+//     }
+//     else
+//     {
+//         shape_.setFillColor(sf::Color::Green);
+//     }
+// }
 
 void Object::control()
 {
