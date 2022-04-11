@@ -1,36 +1,31 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include "camera.h"
+#include "shapes.h"
 
-#include <SFML/Graphics.hpp>
 #include <box2d/box2d.h>
-#include <iostream>
 
 extern b2World world_g;
-extern Camera camera_g;
 
 class Object
 {
-private:
-    sf::RectangleShape shape_;
+protected:
+    Shapes::Type shapeIdx_;
     b2Body *body_;
 
     b2Vec2 getNewPosition();
 
 public:
-    friend void Camera::drawOnScreen(Object &object);
-    friend void Camera::raycast(Object &object);
+    // friend void Camera::drawObject(Object &object);
+    // friend void Camera::raycast(Player &object);
 
-    Object(sf::RectangleShape shape, const b2BodyDef &bodyDef, const b2FixtureDef &fixture);
+    Object(Shapes::Type shapeIdx, const b2BodyDef &bodyDef, const b2FixtureDef &fixture);
     void addFixture(const b2FixtureDef &fixture)
     {
         body_->CreateFixture(&fixture);
     }
-
-    void control();
-    void setLocalVelocity(const b2Vec2 &newVelocity); // Sets velocity based on the local cooridinates
-    float getAngle() const { return body_->GetAngle(); };
+    Shapes::Type getShapeIdx() { return shapeIdx_; }
+    const b2Vec2 &getPosition() const { return body_->GetPosition(); };
 };
 
 #endif
