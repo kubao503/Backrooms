@@ -20,6 +20,16 @@ private:
     // Draws an object hit by a ray
     void drawRay(float angle, float distance);
 
+    class MyCallback : public b2RayCastCallback
+    {
+        float fraction_{1.0f};
+        float ReportFixture(b2Fixture *fixture, const b2Vec2 &point, const b2Vec2 &normal, float fraction) override;
+
+    public:
+        MyCallback(float maxFraction) : fraction_{maxFraction} {}
+        float getFraction() { return fraction_; }
+    };
+
 public:
     Camera(unsigned int width, unsigned int height, const std::string &title)
     {

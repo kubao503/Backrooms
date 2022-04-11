@@ -48,7 +48,6 @@ void Camera::raycast(Object &object)
 
     const float rayLength{300.0f};
     const float FOVMaxAngle{M_PI / 6.0f};
-    // const float basicAngle{-M_PI / 2.0f};
     const float basicAngle{object.getAngle()};
 
     // Cast a ray in any direction
@@ -56,14 +55,17 @@ void Camera::raycast(Object &object)
     {
         input.p1 = input.p2 = position;
         input.p2 += b2Vec2(cos(angle + basicAngle) * rayLength, sin(angle + basicAngle) * rayLength);
-        input.maxFraction = 1;
 
-        float smallestFraction{getRayHit(input)};
+        MyCallback callback(input.maxFraction = 1.0);
+        world_g.RayCast(&callback, input.p1, input.p2);
+
+        // float smallestFraction{getRayHit(input)};
+        float smallestFraction{callback.getFraction()};
 
         // Calculate the closes hit point
         b2Vec2 hitPoint{input.p1 + smallestFraction * (input.p2 - input.p1)};
 
-        if (smallestFraction != input.maxFraction)
+        if (smallestFraction < input.maxFraction)
         {
             drawRay(angle, smallestFraction);
         }
@@ -92,4 +94,9 @@ int Camera::getMouseXMovement()
     int mouseMovement{sf::Mouse::getPosition(window_).x - defaultPosition.x};
     sf::Mouse::setPosition(defaultPosition, window_);
     return mouseMovement;
+}
+
+float Camera::MyCallback::ReportFixture(b2Fixture *fixture, const b2Vec2 &point, const b2Vec2 &normal, float fraction)
+{
+    return fraction_ = fraction;
 }
