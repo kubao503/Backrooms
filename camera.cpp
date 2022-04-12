@@ -9,28 +9,28 @@ void Camera::drawRay(float angle, float distance)
     userio_g.drawOnScreen(Shapes::WALL, tan(angle) * 1000.0f, 0.0f, xScale, yScale);
 }
 
-float Camera::getRayHit(const b2RayCastInput &input)
-{
-    float smallestFraction{input.maxFraction};
+// float Camera::getRayHit(const b2RayCastInput &input)
+// {
+//     float smallestFraction{input.maxFraction};
 
-    // iterate over all bodies and raycast them
-    for (b2Body *b = world_g.GetBodyList(); b; b = b->GetNext())
-    {
-        b2RayCastOutput output;
-        b2Fixture *fixList{b->GetFixtureList()};
-        bool hit{fixList[0].RayCast(&output, input, 0)};
+//     // iterate over all bodies and raycast them
+//     for (b2Body *b = world_g.GetBodyList(); b; b = b->GetNext())
+//     {
+//         b2RayCastOutput output;
+//         b2Fixture *fixList{b->GetFixtureList()};
+//         bool hit{fixList[0].RayCast(&output, input, 0)};
 
-        // if a body is hit, check if this is the closest hit
-        if (hit && output.fraction < smallestFraction)
-        {
-            smallestFraction = output.fraction;
-        }
-    }
+//         // if a body is hit, check if this is the closest hit
+//         if (hit && output.fraction < smallestFraction)
+//         {
+//             smallestFraction = output.fraction;
+//         }
+//     }
 
-    return smallestFraction;
-}
+//     return smallestFraction;
+// }
 
-void Camera::raycast(const b2Vec2 &cameraPosition, float defaultAngle)
+void Camera::raycast(const MyWorld &world, const b2Vec2 &cameraPosition, float defaultAngle)
 {
     const float rayLength{300.0f};
     const float FOVMaxAngle{M_PI / 6.0f};
@@ -43,7 +43,7 @@ void Camera::raycast(const b2Vec2 &cameraPosition, float defaultAngle)
         input.p2 += b2Vec2(cos(angle + defaultAngle) * rayLength, sin(angle + defaultAngle) * rayLength);
 
         MyCallback callback(input.maxFraction = 1.0);
-        world_g.RayCast(&callback, input.p1, input.p2);
+        world.RayCast(&callback, input.p1, input.p2);
 
         // float smallestFraction{getRayHit(input)};
         float smallestFraction{callback.getFraction()};

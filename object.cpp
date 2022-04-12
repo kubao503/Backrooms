@@ -7,11 +7,10 @@ b2Vec2 Object::getNewPosition()
     return b2Vec2(0, tmp * 50.0f);
 }
 
-Object::Object(Shapes::Type shapeIdx, const b2BodyDef &bodyDef, const b2FixtureDef &fixture)
+Object::Object(MyWorld &world, Shapes::Type shapeIdx, const b2BodyDef &bodyDef, const b2FixtureDef &fixture)
     : shapeIdx_{shapeIdx}
 {
-
-    body_ = world_g.CreateBody(&bodyDef);
+    body_ = world.CreateBody(&bodyDef, *this);
     body_->SetTransform(getNewPosition(), 0);
     this->addFixture(fixture);
 }

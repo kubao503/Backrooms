@@ -2,13 +2,15 @@
 #include "object.h"
 #include "player.h"
 #include "userio.h"
+#include "myWorld.h"
 
-// Creating world without gravity
-b2World world_g{b2Vec2(0.0f, 0.0f)};
 UserIO userio_g(1000, 1000, "Backrooms");
 
 int main()
 {
+    // Creating world without gravity
+    MyWorld world{b2Vec2(0.0f, 0.0f)};
+
     // Definitions for bodies
     b2BodyDef staticBodyDef;
     staticBodyDef.position.Set(0.0f, 0.0f);
@@ -44,11 +46,11 @@ int main()
     // wallShape.setOrigin(50.0f, 5.0f);
 
     // Objects
-    Player player(Shapes::PLAYER, dynamicBodyDef, dynamicFixture);
+    Player player(world, Shapes::PLAYER, dynamicBodyDef, dynamicFixture);
     // Object wall(playerShape, dynamicBodyDef, dynamicFixture);
     // Object wall2(playerShape, dynamicBodyDef, dynamicFixture);
-    Object wall(Shapes::WALL, staticBodyDef, staticFixture);
-    Object wall2(Shapes::WALL, staticBodyDef, staticFixture);
+    Object wall(world, Shapes::WALL, staticBodyDef, staticFixture);
+    Object wall2(world, Shapes::WALL, staticBodyDef, staticFixture);
 
     // Simulation
     float timeStep = 1.0f / 60.0f; // Step of time between events
@@ -62,12 +64,12 @@ int main()
         userio_g.handleEvents();
 
         // Box2D step
-        world_g.Step(timeStep, velocityIterations, positionIterations);
+        world.Step(timeStep, velocityIterations, positionIterations);
         player.control();
 
         // Drawing on screen
         userio_g.start();
-        Camera::raycast(player.getPosition(), player.getAngle());
+        Camera::raycast(world, player.getPosition(), player.getAngle());
         // camera_g.drawOnScreen(wall);
         // camera_g.drawOnScreen(wall2);
         // camera_g.drawOnScreen(player);

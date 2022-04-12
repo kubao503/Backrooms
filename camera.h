@@ -3,16 +3,17 @@
 
 #include "userio.h"
 #include "shapes.h"
+#include "myWorld.h"
 
 #include <box2d/box2d.h>
 
 extern UserIO userio_g;
-extern b2World world_g;
+// extern b2World world_g;
 
 class Camera
 {
 private:
-    static float getRayHit(const b2RayCastInput &input);
+    // static float getRayHit(const b2RayCastInput &input);
 
     // Draws an object hit by a ray
     static void drawRay(float angle, float distance);
@@ -28,7 +29,7 @@ private:
     };
 
 public:
-    static void raycast(const b2Vec2 &cameraPosition, float defaultAngle);
+    static void raycast(const MyWorld &world, const b2Vec2 &cameraPosition, float defaultAngle);
 };
 
 #endif
