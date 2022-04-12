@@ -1,6 +1,6 @@
 #include "object.h"
 
-b2Vec2 Object::getNewPosition()
+b2Vec2 Object::getNewPosition() const
 {
     static int count{0};
     int tmp{count++};

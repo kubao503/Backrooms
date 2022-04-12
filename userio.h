@@ -19,7 +19,7 @@ public:
 
     // The 0, 0 coordinate coresponds to the center of the screen
     void drawOnScreen(Shapes::Type shapeIdx, float x = 0, float y = 0, float xScale = 1.0f, float yScale = 1.0f);
-    void drawObject(Object &object);
+    void drawObject(const Object &object);
 
     bool isOpen() { return window_.isOpen(); }
     void start() { window_.clear(); }

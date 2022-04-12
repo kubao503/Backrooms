@@ -4,10 +4,11 @@
 #include "userio.h"
 #include "myWorld.h"
 
-UserIO userio_g(1000, 1000, "Backrooms");
-
 int main()
 {
+    // User input via mouse and output via screen
+    UserIO userio(1000, 1000, "Backrooms");
+
     // Creating world without gravity
     MyWorld world{b2Vec2(0.0f, 0.0f)};
 
@@ -40,25 +41,25 @@ int main()
     Object wall(world, Shapes::WALL, staticBodyDef, staticFixture);
     Object wall2(world, Shapes::RED_WALL, staticBodyDef, staticFixture);
 
-    // Simulation
+    // Simulation parameters
     float timeStep = 1.0f / 60.0f; // Step of time between events
     int32 velocityIterations = 4;  // Velocity calculations during one step
     int32 positionIterations = 3;  // Position calculations during one step
 
     // Main loop
-    while (userio_g.isOpen())
+    while (userio.isOpen())
     {
         // Handling events
-        userio_g.handleEvents();
+        userio.handleEvents();
 
-        // Box2D step
+        // Physics step
         world.Step(timeStep, velocityIterations, positionIterations);
-        player.control();
+        player.control(userio);
 
         // Drawing on screen
-        userio_g.start();
-        Camera::raycast(world, player.getPosition(), player.getAngle());
-        userio_g.end();
+        userio.start();
+        Camera::raycast(userio, world, player.getPosition(), player.getAngle());
+        userio.end();
     }
 
     return 0;

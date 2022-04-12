@@ -9,7 +9,7 @@ void UserIO::drawOnScreen(Shapes::Type shapeIdx, float x, float y, float xScale,
     window_.draw(shape);
 }
 
-void UserIO::drawObject(Object &object)
+void UserIO::drawObject(const Object &object)
 {
     const b2Vec2 &currentPosition = object.getPosition();
     drawOnScreen(object.getShapeIdx(), currentPosition.x, currentPosition.y);

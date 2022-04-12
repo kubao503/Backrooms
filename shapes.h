@@ -14,7 +14,6 @@ public:
         TOTAL
     };
 
-    void init();
     static sf::RectangleShape getShape(Type shapeIdx)
     {
         return shapes_[shapeIdx];

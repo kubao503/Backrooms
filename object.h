@@ -16,7 +16,7 @@ protected:
 
     // Returns unique position helping avoiding spawning
     // objects at the same place
-    b2Vec2 getNewPosition();
+    b2Vec2 getNewPosition() const;
 
 public:
     Object(MyWorld &world, Shapes::Type shapeIdx, const b2BodyDef &bodyDef, const b2FixtureDef &fixture);

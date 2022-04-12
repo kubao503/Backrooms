@@ -1,0 +1,6 @@
+#ifndef CONSTANTS_1293453_H
+#define CONSTANTS_1293453_H
+
+constexpr float PI{3.14159265358979323f};
+
+#endif

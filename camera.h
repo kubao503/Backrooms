@@ -4,35 +4,34 @@
 #include "userio.h"
 #include "shapes.h"
 #include "myWorld.h"
+#include "constants.h"
 
 #include <box2d/box2d.h>
-
-extern UserIO userio_g;
-// extern b2World world_g;
 
 class Camera
 {
 private:
-    // static float getRayHit(const b2RayCastInput &input);
-
-    // Draws an object hit by a ray
-    static void drawRay(float angle, float distance, Shapes::Type shapeIdx);
-
     class MyCallback : public b2RayCastCallback
     {
-        float fraction_{1.0f};
+        float fraction_{maxFraction_};
         Shapes::Type shapeIdx_{Shapes::TOTAL};
         float ReportFixture(b2Fixture *fixture, const b2Vec2 &point, const b2Vec2 &normal, float fraction) override;
 
     public:
-        MyCallback(float maxFraction)
-            : fraction_{maxFraction} {}
-        float getFraction() { return fraction_; }
-        Shapes::Type getShapeIdx() { return shapeIdx_; }
+        float getFraction() const { return fraction_; }
+        Shapes::Type getShapeIdx() const { return shapeIdx_; }
     };
 
+    // Draws texture at ray hitpoint
+    static void drawRay(UserIO &userio, float angle, const MyCallback &callback);
+
+    static constexpr float maxFraction_{1.0f};
+    static constexpr float FOVMaxAngle_{PI / 6.0f};
+    static constexpr int raysNumber_{104};
+
 public:
-    static void raycast(const MyWorld &world, const b2Vec2 &cameraPosition, float defaultAngle);
+    // Casts multiple rays to show them as image on the screen
+    static void raycast(UserIO &userio, const MyWorld &world, const b2Vec2 &cameraPosition, float defaultAngle);
 };
 
 #endif
