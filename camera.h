@@ -16,16 +16,19 @@ private:
     // static float getRayHit(const b2RayCastInput &input);
 
     // Draws an object hit by a ray
-    static void drawRay(float angle, float distance);
+    static void drawRay(float angle, float distance, Shapes::Type shapeIdx);
 
     class MyCallback : public b2RayCastCallback
     {
         float fraction_{1.0f};
+        Shapes::Type shapeIdx_{Shapes::TOTAL};
         float ReportFixture(b2Fixture *fixture, const b2Vec2 &point, const b2Vec2 &normal, float fraction) override;
 
     public:
-        MyCallback(float maxFraction) : fraction_{maxFraction} {}
+        MyCallback(float maxFraction)
+            : fraction_{maxFraction} {}
         float getFraction() { return fraction_; }
+        Shapes::Type getShapeIdx() { return shapeIdx_; }
     };
 
 public:

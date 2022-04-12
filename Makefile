@@ -13,7 +13,7 @@ main.o: main.cpp camera.h object.h player.h userio.h myWorld.h
 camera.o: camera.cpp camera.h userio.h shapes.h myWorld.h
 	$(CXX) -I src/include -c camera.cpp
 
-object.o: object.cpp object.h shapes.h myWorld.h
+object.o: object.cpp object.h shapes.h myWorld.h myBody.h
 	$(CXX) -I src/include -c object.cpp
 
 player.o: player.cpp player.h object.h userio.h myWorld.h

@@ -9,6 +9,7 @@ public:
     enum Type
     {
         WALL,
+        RED_WALL,
         PLAYER,
         TOTAL
     };

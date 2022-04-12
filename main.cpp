@@ -35,22 +35,10 @@ int main()
     dynamicFixture.density = 1.0f; // For dynamic bodies it should be non-zero
     dynamicFixture.friction = 0.3f;
 
-    //      SFML
-
-    sf::RectangleShape playerShape(sf::Vector2f(10.0f, 10.0f));
-    playerShape.setFillColor(sf::Color::Green);
-    // playerShape.setOrigin(5.0f, 5.0f);
-
-    sf::RectangleShape wallShape(sf::Vector2f(100.0f, 10.0f));
-    wallShape.setFillColor(sf::Color::Red);
-    // wallShape.setOrigin(50.0f, 5.0f);
-
     // Objects
     Player player(world, Shapes::PLAYER, dynamicBodyDef, dynamicFixture);
-    // Object wall(playerShape, dynamicBodyDef, dynamicFixture);
-    // Object wall2(playerShape, dynamicBodyDef, dynamicFixture);
     Object wall(world, Shapes::WALL, staticBodyDef, staticFixture);
-    Object wall2(world, Shapes::WALL, staticBodyDef, staticFixture);
+    Object wall2(world, Shapes::RED_WALL, staticBodyDef, staticFixture);
 
     // Simulation
     float timeStep = 1.0f / 60.0f; // Step of time between events
@@ -70,9 +58,6 @@ int main()
         // Drawing on screen
         userio_g.start();
         Camera::raycast(world, player.getPosition(), player.getAngle());
-        // camera_g.drawOnScreen(wall);
-        // camera_g.drawOnScreen(wall2);
-        // camera_g.drawOnScreen(player);
         userio_g.end();
     }
 

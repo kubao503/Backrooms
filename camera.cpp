@@ -1,12 +1,12 @@
 #include "camera.h"
 
-void Camera::drawRay(float angle, float distance)
+void Camera::drawRay(float angle, float distance, Shapes::Type shapeIdx)
 {
     // Draw the closest hit point
     float adjacentDistance{cos(angle) * distance};
     float xScale{2.3f * adjacentDistance + 5.8f};
     float yScale{3.0f / adjacentDistance};
-    userio_g.drawOnScreen(Shapes::WALL, tan(angle) * 1000.0f, 0.0f, xScale, yScale);
+    userio_g.drawOnScreen(shapeIdx, tan(angle) * 1000.0f, 0.0f, xScale, yScale);
 }
 
 // float Camera::getRayHit(const b2RayCastInput &input)
@@ -53,12 +53,13 @@ void Camera::raycast(const MyWorld &world, const b2Vec2 &cameraPosition, float d
 
         if (smallestFraction < input.maxFraction)
         {
-            drawRay(angle, smallestFraction);
+            drawRay(angle, smallestFraction, callback.getShapeIdx());
         }
     }
 }
 
 float Camera::MyCallback::ReportFixture(b2Fixture *fixture, const b2Vec2 &point, const b2Vec2 &normal, float fraction)
 {
+    shapeIdx_ = static_cast<MyBody*>(fixture->GetBody())->getObject().getShapeIdx();
     return fraction_ = fraction;
 }
