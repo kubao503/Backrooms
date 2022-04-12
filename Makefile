@@ -2,10 +2,10 @@ CXX = g++
 
 all: link compile
 
-link: camera.o object.o player.o userio.o shapes.o main.o
-	$(CXX) camera.o object.o player.o userio.o shapes.o main.o -o main -L src/lib -l sfml-graphics -l sfml-window -l sfml-system -l box2d
+link: myBody.o myWorld.o camera.o object.o player.o userio.o shapes.o main.o
+	$(CXX) myBody.o myWorld.o camera.o object.o player.o userio.o shapes.o main.o -o main -L src/lib -l sfml-graphics -l sfml-window -l sfml-system -l box2d
 
-compile: main.o camera.o object.o player.o userio.o shapes.o
+compile: main.o camera.o object.o player.o userio.o shapes.o myBody.o myWorld.o
 
 main.o: main.cpp camera.h object.h player.h userio.h
 	$(CXX) -I src/include -c main.cpp
@@ -24,6 +24,12 @@ userio.o: userio.cpp userio.h object.h shapes.h
 
 shapes.o: shapes.cpp shapes.h
 	$(CXX) -I src/include -c shapes.cpp
+
+myBody.o: myBody.cpp myBody.h
+	$(CXX) -I src/include -c myBody.cpp
+
+myWorld.o: myWorld.cpp myWorld.h myBody.h
+	$(CXX) -I src/include -c myWorld.cpp
 
 clean:
 	rm -r *.o main.exe

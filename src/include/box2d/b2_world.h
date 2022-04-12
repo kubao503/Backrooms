@@ -214,7 +214,7 @@ public:
 	/// @warning this should be called outside of a time step.
 	void Dump();
 
-private:
+protected:
 
 	friend class b2Body;
 	friend class b2Fixture;

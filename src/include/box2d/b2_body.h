@@ -417,9 +417,11 @@ private:
 		e_toiFlag			= 0x0040
 	};
 
+public:
 	b2Body(const b2BodyDef* bd, b2World* world);
 	~b2Body();
 
+private:
 	void SynchronizeFixtures();
 	void SynchronizeTransform();
 
@@ -445,9 +447,12 @@ private:
 	float m_torque;
 
 	b2World* m_world;
+
+public:
 	b2Body* m_prev;
 	b2Body* m_next;
 
+private:
 	b2Fixture* m_fixtureList;
 	int32 m_fixtureCount;
 
