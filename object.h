@@ -5,6 +5,7 @@
 #include "myWorld.h"
 
 #include <box2d/box2d.h>
+#include <memory>
 
 // extern MyWorld world_g;
 
@@ -12,7 +13,7 @@ class Object
 {
 protected:
     Shapes::Type shapeIdx_;
-    MyBody *body_{nullptr};
+    std::unique_ptr<MyBody> body_{nullptr};
 
     // Returns unique position helping avoiding spawning
     // objects at the same place
