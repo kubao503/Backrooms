@@ -11,6 +11,7 @@
 class Camera
 {
 private:
+    // Class used to get feedback from ray-fixture collisions
     class MyCallback : public b2RayCastCallback
     {
         float fraction_{maxFraction_};
@@ -22,16 +23,18 @@ private:
         Shapes::Type getShapeIdx() const { return shapeIdx_; }
     };
 
-    // Draws texture at ray hitpoint
+    // Draws texture at ray's hitpoint
     static void drawRay(UserIO &userio, float angle, const MyCallback &callback);
+    static void sendRay(const MyWorld &world, MyCallback &rayCallback, const b2Vec2 &cameraPosition, float angle, float defaultAngle);
 
     static constexpr float maxFraction_{1.0f};
     static constexpr float FOVMaxAngle_{PI / 6.0f};
     static constexpr int raysNumber_{104};
+    static constexpr float renderDistance{300.0f};
 
 public:
     // Casts multiple rays to show them as image on the screen
-    static void raycast(UserIO &userio, const MyWorld &world, const b2Vec2 &cameraPosition, float defaultAngle);
+    static void drawViewOnScreen(UserIO &userio, const MyWorld &world, const b2Vec2 &cameraPosition, float defaultAngle);
 };
 
 #endif

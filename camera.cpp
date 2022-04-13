@@ -9,28 +9,37 @@ void Camera::drawRay(UserIO &userio, float angle, const MyCallback &callback)
     userio.drawOnScreen(callback.getShapeIdx(), tan(angle) * 1000.0f, 0.0f, xScale, yScale);
 }
 
-void Camera::raycast(UserIO &userio, const MyWorld &world, const b2Vec2 &cameraPosition, float defaultAngle)
+void Camera::sendRay(const MyWorld &world, MyCallback &rayCallback, const b2Vec2 &cameraPosition, float angle, float defaultAngle)
 {
-    constexpr float rayLength{300.0f};
+    // Create calculate ray vector
+    b2Vec2 p1{cameraPosition}, p2{cameraPosition};
+    p2 += b2Vec2(cos(angle + defaultAngle) * renderDistance, sin(angle + defaultAngle) * renderDistance);
+
+    // Send ray in a given direction
+    world.RayCast(&rayCallback, p1, p2);
+}
+
+void Camera::drawViewOnScreen(UserIO &userio, const MyWorld &world, const b2Vec2 &cameraPosition, float defaultAngle)
+{
+    userio.start();
+
     constexpr float angleChange{2.0f * FOVMaxAngle_ / raysNumber_};
 
     // Cast a rays in many directions
     for (float angle{-FOVMaxAngle_}; angle <= FOVMaxAngle_; angle += angleChange)
     {
-        // Create calculate ray vector
-        b2Vec2 p1{cameraPosition}, p2{cameraPosition};
-        p2 += b2Vec2(cos(angle + defaultAngle) * rayLength, sin(angle + defaultAngle) * rayLength);
-
-        // Send ray in given direction
         MyCallback rayCallback;
-        world.RayCast(&rayCallback, p1, p2);
 
-        // Check if the ray went shorter than max distance
+        sendRay(world, rayCallback, cameraPosition, angle, defaultAngle);
+
+        // Draw if the ray went shorter than max distance
         if (rayCallback.getFraction() < maxFraction_)
         {
             drawRay(userio, angle, rayCallback);
         }
     }
+
+    userio.end();
 }
 
 float Camera::MyCallback::ReportFixture(b2Fixture *fixture, const b2Vec2 &point, const b2Vec2 &normal, float fraction)

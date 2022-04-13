@@ -12,34 +12,10 @@ int main()
     // Creating world without gravity
     MyWorld world{b2Vec2(0.0f, 0.0f)};
 
-    // Definitions for bodies
-    b2BodyDef staticBodyDef;
-    staticBodyDef.position.Set(0.0f, 0.0f);
-
-    b2BodyDef dynamicBodyDef;             // Body is static by default
-    dynamicBodyDef.type = b2_dynamicBody; // This line makes body dynamic
-    dynamicBodyDef.position.Set(0.0f, 0.0f);
-
-    // Shapes
-    b2PolygonShape wallBox;
-    b2PolygonShape dynamicBox;
-    wallBox.SetAsBox(100.0f, 10.0f);
-    dynamicBox.SetAsBox(10.0f, 10.0f);
-
-    // Fixtures
-    b2FixtureDef staticFixture;
-    staticFixture.shape = &wallBox;
-    staticFixture.density = 0.0f;
-
-    b2FixtureDef dynamicFixture;
-    dynamicFixture.shape = &dynamicBox;
-    dynamicFixture.density = 1.0f; // For dynamic bodies it should be non-zero
-    dynamicFixture.friction = 0.3f;
-
     // Objects
-    Player player(world, Shapes::PLAYER, dynamicBodyDef, dynamicFixture);
-    Object wall(world, Shapes::WALL, staticBodyDef, staticFixture);
-    Object wall2(world, Shapes::RED_WALL, staticBodyDef, staticFixture);
+    Player player(world, Object::PLAYER);
+    Object wall(world, Object::WALL);
+    Object wall2(world, Object::WALL2);
 
     // Simulation parameters
     float timeStep = 1.0f / 60.0f; // Step of time between events
@@ -57,9 +33,7 @@ int main()
         player.control(userio);
 
         // Drawing on screen
-        userio.start();
-        Camera::raycast(userio, world, player.getPosition(), player.getAngle());
-        userio.end();
+        Camera::drawViewOnScreen(userio, world, player.getPosition(), player.getAngle());
     }
 
     return 0;
