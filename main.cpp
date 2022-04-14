@@ -7,7 +7,7 @@
 int main()
 {
     // User input via mouse and output via screen
-    UserIO userio(1000, 1000, "Backrooms");
+    UserIO userIO(1000, 1000, "Backrooms");
 
     // Creating world without gravity
     MyWorld world{b2Vec2(0.0f, 0.0f)};
@@ -23,17 +23,17 @@ int main()
     int32 positionIterations = 3;  // Position calculations during one step
 
     // Main loop
-    while (userio.isOpen())
+    while (userIO.isOpen())
     {
         // Handling events
-        userio.handleEvents();
+        userIO.handleEvents();
 
         // Physics step
         world.Step(timeStep, velocityIterations, positionIterations);
-        player.control(userio);
+        player.control(userIO);
 
         // Drawing on screen
-        Camera::drawViewOnScreen(userio, world, player.getPosition(), player.getAngle());
+        Camera::drawViewOnScreen(userIO, world, player.getPosition(), player.getAngle());
     }
 
     return 0;

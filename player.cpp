@@ -3,8 +3,9 @@
 void Player::control(UserIO &userIO)
 {
     // const float VELOCITY = 2.0f;
-    static const float LINEAR_VELOCITY = 3.0f;
-    static const float ANGULAR_VELOCITY = 0.15f;
+    static constexpr float LINEAR_VELOCITY = 3.0f;
+    static constexpr float ANGULAR_VELOCITY = 0.15f;
+    static constexpr float SPRINT_MULTIPLIER = 2.0f;
     b2Vec2 newVelocity(0.0f, 0.0f);
 
     // Moving objects
@@ -27,6 +28,13 @@ void Player::control(UserIO &userIO)
 
     newVelocity.Normalize();
     newVelocity *= LINEAR_VELOCITY;
+
+    // Sprint
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift))
+    {
+        newVelocity *= SPRINT_MULTIPLIER;
+    }
+
     setLocalVelocity(newVelocity);
 
     int mouseXMovement(userIO.getMouseXMovement());

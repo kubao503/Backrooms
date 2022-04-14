@@ -2,7 +2,8 @@
 #define USER_IO_H
 
 #include "object.h"
-
+#include <memory>
+#include <algorithm>
 #include <SFML/Graphics.hpp>
 
 class UserIO
@@ -18,8 +19,10 @@ public:
     }
 
     // The 0, 0 coordinate coresponds to the center of the screen
-    void drawOnScreen(Shapes::Type shapeIdx, float x = 0, float y = 0, float xScale = 1.0f, float yScale = 1.0f);
+    void drawOnScreen(Shapes::Type shapeIdx, float x = 0, float y = 0, float xScale = 1.0f, float yScale = 1.0f, float dim = 1.0f);
     void drawObject(const Object &object);
+
+    sf::Color dimColor(const sf::Color &color, float dimFactor);
 
     bool isOpen() { return window_.isOpen(); }
     void start() { window_.clear(); }
