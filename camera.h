@@ -7,6 +7,7 @@
 #include "constants.h"
 
 #include <box2d/box2d.h>
+#include <iostream>
 
 class Camera
 {
@@ -14,8 +15,12 @@ private:
     // Class used to get feedback from ray-fixture collisions
     class MyCallback : public b2RayCastCallback
     {
-        float fraction_{maxFraction_};      // The measured distance
+        friend class Camera;
+
+        float fraction_{maxFraction_}; // The measured distance
         Shapes::Type shapeIdx_{Shapes::TOTAL};
+        b2Vec2 normal_{0.0f, 0.0f};
+        b2Vec2 ray_{0.0f, 0.0f};
         float ReportFixture(b2Fixture *fixture, const b2Vec2 &point, const b2Vec2 &normal, float fraction) override;
 
     public:
