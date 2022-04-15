@@ -6,6 +6,8 @@
 
 #include <box2d/box2d.h>
 #include <memory>
+#include <functional>
+#include <iostream>
 
 class Object
 {
@@ -31,8 +33,9 @@ protected:
     // Returns unique position helping avoiding spawning
     // objects at the same place
     b2Vec2 getNewPosition() const;
-    const b2BodyDef &getBodyDef(BodyType bodyType);
-    const b2FixtureDef &getFixtureDef(const b2Vec2 &size);
+    static const b2BodyDef &getBodyDef(BodyType bodyType);
+    static const b2FixtureDef &getFixtureDef(const b2Vec2 &size);
+    static const b2FixtureDef &getFixtureDef(float radius);
 
     Object(MyWorld &world, Shapes::Type shapeIdx, const b2BodyDef &bodyDef, const b2FixtureDef &fixture);
     Object(MyWorld &world, Shapes::Type shapeIdx, BodyType bodyType, const b2Vec2 &size);

@@ -15,7 +15,7 @@ public:
     Player(MyWorld &world, Shapes::Type shapeIdx, const b2BodyDef &bodyDef, const b2FixtureDef &fixture)
         : Object{world, shapeIdx, bodyDef, fixture} {}
     Player(MyWorld &world, ObjectType objectType)
-        : Object{Object::objectGenerator(world, objectType)} {}
+        : Object{world, objectType} {}
 
     float getAngle() const { return body_->GetAngle(); };
     void control(UserIO &userIO);
