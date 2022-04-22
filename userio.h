@@ -1,10 +1,10 @@
 #ifndef USER_IO_H
 #define USER_IO_H
 
+#include <SFML/Graphics.hpp>
 #include "object.h"
 #include <memory>
 #include <algorithm>
-#include <SFML/Graphics.hpp>
 
 class UserIO
 {

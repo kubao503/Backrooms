@@ -4,12 +4,12 @@ FLAGS = -Wall -Wextra -pedantic -Werror -std=c++2a
 
 all: link compile
 
-link: myWorld.o camera.o object.o player.o userio.o shapes.o main.o
-	$(CXX) $(FLAGS) myWorld.o camera.o object.o player.o userio.o shapes.o main.o -o main -L src/lib -l sfml-graphics -l sfml-window -l sfml-system -l box2d
+link: textures.o myWorld.o camera.o object.o player.o userio.o shapes.o main.o
+	$(CXX) $(FLAGS) textures.o myWorld.o camera.o object.o player.o userio.o shapes.o main.o -o main -L src/lib -l sfml-graphics -l sfml-window -l sfml-system -l box2d
 
-compile: main.o camera.o object.o player.o userio.o shapes.o myWorld.o
+compile: main.o camera.o object.o player.o userio.o shapes.o myWorld.o textures.o
 
-main.o: main.cpp camera.h object.h player.h userio.h myWorld.h
+main.o: main.cpp camera.h object.h player.h userio.h myWorld.h textures.h
 	$(CXX) $(FLAGS) -I src/include -c main.cpp
 
 camera.o: camera.cpp camera.h userio.h shapes.h myWorld.h constants.h
@@ -29,6 +29,9 @@ shapes.o: shapes.cpp shapes.h
 
 myWorld.o: myWorld.cpp myWorld.h myBody.h
 	$(CXX) $(FLAGS) -I src/include -c myWorld.cpp
+
+texture.o: textures.cpp textures.h
+	$(CXX) $(FLAGS) -I src/include -c textures.cpp
 
 clean:
 	rm -r *.o main.exe

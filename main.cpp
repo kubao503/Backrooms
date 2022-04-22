@@ -3,9 +3,16 @@
 #include "player.h"
 #include "userio.h"
 #include "myWorld.h"
+#include "textures.h"
 
 int main()
 {
+    // Loading textures
+    if (!Textures::init())
+    {
+        std::cerr << "Loading textures failed\n";
+    }
+
     // User input via mouse and output via screen
     UserIO userIO(1000, 1000, "Backrooms");
 
