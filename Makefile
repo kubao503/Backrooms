@@ -1,37 +1,29 @@
 CXX = g++
 # -fsanitize=undefined	- clang needed ?
-FLAGS = -Wall -Wextra -pedantic -Werror -std=c++2a
+CXX_FLAGS = -Wall -Wextra -pedantic -Werror -std=c++2a
 
-all: link compile
+BIN = bin
+SRC = src
+INCLUDE = include
+LIB = lib
+LIBRARIES = -lbox2d -lsfml-graphics -lsfml-window -lsfml-system
+EXECUTABLE = main
 
-link: textures.o myWorld.o camera.o object.o player.o userio.o shapes.o main.o
-	$(CXX) $(FLAGS) textures.o myWorld.o camera.o object.o player.o userio.o shapes.o main.o -o main -L src/lib -l sfml-graphics -l sfml-window -l sfml-system -l box2d
+SRCS = $(wildcard $(SRC)/*.cpp)
+OBJS = $(patsubst $(SRC)/%.cpp,$(BIN)/%.o,$(SRCS))
 
-compile: main.o camera.o object.o player.o userio.o shapes.o myWorld.o textures.o
+test:
+	echo $(LIBS)
 
-main.o: main.cpp camera.h object.h player.h userio.h myWorld.h textures.h
-	$(CXX) $(FLAGS) -I src/include -c main.cpp
+all: compile link
 
-camera.o: camera.cpp camera.h userio.h shapes.h myWorld.h constants.h
-	$(CXX) $(FLAGS) -I src/include -c camera.cpp
+link: $(OBJS)
+	$(CXX) $(CXX_FLAGS) $(OBJS) -o $(BIN)/$(EXECUTABLE) -L$(LIB) $(LIBRARIES)
 
-object.o: object.cpp object.h shapes.h myWorld.h myBody.h
-	$(CXX) $(FLAGS) -I src/include -c object.cpp
+compile: $(OBJS)
 
-player.o: player.cpp player.h object.h userio.h myWorld.h
-	$(CXX) $(FLAGS) -I src/include -c player.cpp
-
-userio.o: userio.cpp userio.h object.h shapes.h
-	$(CXX) $(FLAGS) -I src/include -c userio.cpp
-
-shapes.o: shapes.cpp shapes.h
-	$(CXX) $(FLAGS) -I src/include -c shapes.cpp
-
-myWorld.o: myWorld.cpp myWorld.h myBody.h
-	$(CXX) $(FLAGS) -I src/include -c myWorld.cpp
-
-texture.o: textures.cpp textures.h
-	$(CXX) $(FLAGS) -I src/include -c textures.cpp
+$(BIN)/%.o: $(SRC)/%.cpp
+	$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -c $< -o $@
 
 clean:
-	rm -r *.o main.exe
+	rm -r $(BIN)/*
