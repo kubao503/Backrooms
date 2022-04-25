@@ -13,6 +13,7 @@ int main()
     {
         std::cerr << "Loading textures failed\n";
     }
+    Shapes::init();
 
     // User input via mouse and output via screen
     UserIO userIO(1000, 1000, "Backrooms");
@@ -22,8 +23,8 @@ int main()
 
     // Objects
     Player player(world, Object::PLAYER);
-    Object2D enemy(world, Object::ENEMY);
     Object3D wall(world, Object::WALL);
+    Object2D enemy(world, Object::ENEMY);
     Object3D wall2(world, Object3D::WALL2);
 
     // Simulation parameters
@@ -42,7 +43,7 @@ int main()
         player.control(userIO);
 
         // Drawing on screen
-        Camera::drawViewOnScreen(userIO, world, player.getPosition(), player.getAngle());
+        Camera::drawViewOnScreen(userIO, world, player, enemy);
     }
 
     return 0;

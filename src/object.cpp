@@ -4,7 +4,7 @@ b2Vec2 Object::getNewPosition() const
 {
     static int count{0};
     int tmp{count++};
-    return b2Vec2(0, tmp * 50.0f);
+    return b2Vec2(0, tmp * 30.0f);
 }
 
 const b2BodyDef &Object::getBodyDef(BodyType bodyType)

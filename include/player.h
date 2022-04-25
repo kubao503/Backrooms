@@ -15,7 +15,6 @@ public:
     Player(MyWorld &world, ObjectType objectType)
         : Object2D{world, objectType} {}
 
-    float getAngle() const { return body_->GetAngle(); };
     void control(UserIO &userIO);
 };
 

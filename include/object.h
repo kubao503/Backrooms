@@ -57,6 +57,7 @@ public:
     Object(MyWorld &world, ObjectType objectType);
     Shapes::Type getShapeIdx() const { return shapeIdx_; }
     const b2Vec2 &getPosition() const { return body_->GetPosition(); };
+    float getAngle() const { return body_->GetAngle(); };
 };
 
 #endif

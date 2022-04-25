@@ -1,7 +1,8 @@
 #ifndef SHAPES_H
 #define SHAPES_H
 
-#include <SFML/Graphics.hpp>    // for using sf::Shape
+#include <SFML/Graphics.hpp> // for using sf::Shape
+#include "textures.h"        // for setting sf::Texture
 
 class Shapes
 {
@@ -17,8 +18,12 @@ public:
 
     static sf::RectangleShape getShape(Type shapeIdx)
     {
+        if (shapeIdx >= TOTAL)
+            throw "Invalid shapeIdx\n";
         return shapes_[shapeIdx];
     }
+
+    static void init();
 
 private:
     static sf::RectangleShape shapes_[Type::TOTAL];

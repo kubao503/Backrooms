@@ -7,7 +7,8 @@ void UserIO::drawOnScreen(Shapes::Type shapeIdx, float x, float y, float xScale,
     const sf::Color &originalColor = shape.getFillColor();
     shape.setFillColor(std::move(dimColor(originalColor, dim)));
     shape.setScale(xScale, yScale);
-    shape.setPosition(x + size.x / 2.0f, y + size.y / 2.0f);
+
+    shape.setPosition(size.x / 2.0f * (x + 1.0f), size.y / 2.0f * (y + 1.0f));
     window_.draw(shape);
     shape.setFillColor(originalColor);
 }
