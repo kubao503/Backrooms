@@ -28,11 +28,20 @@ void UserIO::handleEvents()
     {
         if (event.type == sf::Event::Closed)
             window_.close();
+        if (event.type == sf::Event::LostFocus)
+            focus_ = false;
+        if (event.type == sf::Event::GainedFocus)
+        {
+            focus_ = true;
+            getMouseXMovement();    // Reseting mouse position
+        }
     }
 }
 
 int UserIO::getMouseXMovement()
 {
+    if (!focus_)    // Don't turn around if user is not focused on the window
+        return 0;
     static const sf::Vector2i defaultPosition(100, 100);
     int mouseMovement{sf::Mouse::getPosition(window_).x - defaultPosition.x};
     sf::Mouse::setPosition(defaultPosition, window_);

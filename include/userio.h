@@ -1,15 +1,18 @@
 #ifndef USER_IO_H
 #define USER_IO_H
 
-#include <SFML/Graphics.hpp>// for using sf::RenderWindow
-#include "shapes.h"         // for drawing sf::Shape
-#include <memory>           // for moving sf::Color
-#include <algorithm>        // for std::min
+#include <SFML/Graphics.hpp> // for using sf::RenderWindow
+#include "shapes.h"          // for drawing sf::Shape
+#include <memory>            // for moving sf::Color
+#include <algorithm>         // for std::min
+
+// #include <iostream>
 
 class UserIO
 {
 private:
     sf::RenderWindow window_;
+    bool focus_{true};     // Focus on game window
 
 public:
     UserIO(unsigned int width, unsigned int height, const std::string &title)
