@@ -1,12 +1,14 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include "shapes.h"
-#include "myWorld.h"
+#include "shapes.h"  // for shapeIdx_ attribute
+#include "myWorld.h" // needed for creating b2Body
 
-#include <box2d/box2d.h>
-#include <memory>
-#include <functional>
+#include <memory>     // for b2Body smart pointer
+#include <functional> // for storing fixture calls
+
+// DEBUG
+// #include <iostream>
 
 class Object
 {
@@ -16,6 +18,7 @@ public:
         WALL,
         WALL2,
         PLAYER,
+        ENEMY,
         TOTAL
     };
 
@@ -27,22 +30,31 @@ protected:
     };
 
     const Shapes::Type shapeIdx_;
-    std::unique_ptr<MyBody> body_{nullptr};
+    std::unique_ptr<b2Body> body_{nullptr};
 
     // Returns unique position helping avoiding spawning
     // objects at the same place
     b2Vec2 getNewPosition() const;
     static const b2BodyDef &getBodyDef(BodyType bodyType);
-    static const b2FixtureDef &getFixtureDef(const b2Vec2 &size);
-    static const b2FixtureDef &getFixtureDef(float radius);
+    static const b2FixtureDef *getFixtureDef(const b2Vec2 &size);
+    static const b2FixtureDef *getFixtureDef(float radius);
 
-    Object(MyWorld &world, Shapes::Type shapeIdx, const b2BodyDef &bodyDef, const b2FixtureDef &fixture);
-    Object(MyWorld &world, Shapes::Type shapeIdx, BodyType bodyType, const b2Vec2 &size);
-    static Object objectGenerator(MyWorld &world, ObjectType objectType);
+    virtual std::unique_ptr<b2Body> createBody(const b2BodyDef &bd, MyWorld &world) const = 0;
+    virtual ~Object() = default;
+
+    Object(ObjectType objectType);
+    // Object(MyWorld &world, Shapes::Type shapeIdx, BodyType bodyType, const b2Vec2 &size);
+    void setBody(MyWorld &world, ObjectType type);
+
+    static const std::function<const b2FixtureDef *()> fixtureCalls[ObjectType::TOTAL];
+    const static constexpr Shapes::Type shapeIdx[ObjectType::TOTAL]{
+        Shapes::WALL, Shapes::RED_WALL, Shapes::PLAYER, Shapes::ENEMY};
+
+    static constexpr BodyType bodyTypes[ObjectType::TOTAL]{
+        BodyType::STATIC, BodyType::STATIC, BodyType::DYNAMIC, BodyType::STATIC};
 
 public:
-    Object(MyWorld &world, ObjectType objectType)
-        : Object{objectGenerator(world, objectType)} {}
+    Object(MyWorld &world, ObjectType objectType);
     Shapes::Type getShapeIdx() const { return shapeIdx_; }
     const b2Vec2 &getPosition() const { return body_->GetPosition(); };
 };

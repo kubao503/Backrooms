@@ -1,6 +1,6 @@
 CXX = g++
 # -fsanitize=undefined	- clang needed ?
-CXX_FLAGS = -Wall -Wextra -pedantic -Werror -std=c++2a
+CXX_FLAGS = -g -Wall -Wextra -pedantic -Werror -std=c++2a
 
 BIN = bin
 SRC = src
@@ -11,9 +11,7 @@ EXECUTABLE = main
 
 SRCS = $(wildcard $(SRC)/*.cpp)
 OBJS = $(patsubst $(SRC)/%.cpp,$(BIN)/%.o,$(SRCS))
-
-test:
-	echo $(LIBS)
+HEADERS = $(INCLUDE)/*
 
 all: compile link
 
@@ -22,7 +20,7 @@ link: $(OBJS)
 
 compile: $(OBJS)
 
-$(BIN)/%.o: $(SRC)/%.cpp
+$(BIN)/%.o: $(SRC)/%.cpp $(HEADERS)
 	$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -c $< -o $@
 
 clean:

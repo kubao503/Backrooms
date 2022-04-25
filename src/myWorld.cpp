@@ -1,6 +1,6 @@
 #include "myWorld.h"
 
-MyBody* MyWorld::CreateBody(const b2BodyDef* def, const Object &object)
+std::unique_ptr<b2Body> MyWorld::CreateBody(const b2BodyDef* def, const Object3D &object)
 {
 	b2Assert(IsLocked() == false);
 	if (IsLocked())
@@ -21,5 +21,5 @@ MyBody* MyWorld::CreateBody(const b2BodyDef* def, const Object &object)
 	m_bodyList = b;
 	++m_bodyCount;
 
-	return b;
+	return std::unique_ptr<b2Body>(b);
 }

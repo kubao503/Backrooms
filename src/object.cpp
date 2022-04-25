@@ -12,12 +12,14 @@ const b2BodyDef &Object::getBodyDef(BodyType bodyType)
     static b2BodyDef bodyDef;
     if (bodyType == BodyType::DYNAMIC)
         bodyDef.type = b2_dynamicBody;
-    else
+    else if (bodyType == BodyType::STATIC)
         bodyDef.type = b2_staticBody;
+    else
+        throw "Invalid body type\n";
     return bodyDef;
 }
 
-const b2FixtureDef &Object::getFixtureDef(const b2Vec2 &size)
+const b2FixtureDef *Object::getFixtureDef(const b2Vec2 &size)
 {
     static b2PolygonShape rectShape; // Shape
     rectShape.SetAsBox(size.x, size.y);
@@ -26,10 +28,10 @@ const b2FixtureDef &Object::getFixtureDef(const b2Vec2 &size)
     fixture.shape = &rectShape;
     fixture.density = 1.0f;
     fixture.friction = 0.0f;
-    return fixture;
+    return &fixture;
 }
 
-const b2FixtureDef &Object::getFixtureDef(float radius)
+const b2FixtureDef *Object::getFixtureDef(float radius)
 {
     static b2CircleShape circleShape; // Shape
     circleShape.m_radius = radius;
@@ -38,34 +40,25 @@ const b2FixtureDef &Object::getFixtureDef(float radius)
     fixture.shape = &circleShape;
     fixture.density = 1.0f;
     fixture.friction = 0.0f;
-    return fixture;
+    return &fixture;
 }
 
-Object::Object(MyWorld &world, Shapes::Type shapeIdx, const b2BodyDef &bodyDef, const b2FixtureDef &fixture)
-    : shapeIdx_{shapeIdx}, body_{world.CreateBody(&bodyDef, *this)}
+Object::Object(ObjectType objectType)
+    : shapeIdx_{shapeIdx[objectType]} {}
+
+void Object::setBody(MyWorld &world, ObjectType type)
 {
+    body_ = createBody(getBodyDef(bodyTypes[type]), world);
     body_->SetTransform(getNewPosition(), 0);
-    body_->CreateFixture(&fixture);
+    body_->CreateFixture(fixtureCalls[type]());
 }
 
-Object::Object(MyWorld &world, Shapes::Type shapeIdx, BodyType bodyType, const b2Vec2 &size)
-    : Object(world, shapeIdx, getBodyDef(bodyType), getFixtureDef(size)) {}
-
-Object Object::objectGenerator(MyWorld &world, ObjectType objectType)
-{
-    static const std::function<b2FixtureDef()> fixtureCalls[ObjectType::TOTAL]{
-        []()
-        { return getFixtureDef(b2Vec2(100.0f, 10.0f)); },
-        []()
-        { return getFixtureDef(b2Vec2(100.0f, 10.0f)); },
-        []()
-        { return getFixtureDef(10.0f); }};
-
-    static constexpr Shapes::Type shapeIdx[ObjectType::TOTAL]{
-        Shapes::WALL, Shapes::RED_WALL, Shapes::PLAYER};
-
-    static constexpr BodyType bodyTypes[ObjectType::TOTAL]{
-        BodyType::STATIC, BodyType::STATIC, BodyType::DYNAMIC};
-
-    return Object(world, shapeIdx[objectType], getBodyDef(bodyTypes[objectType]), fixtureCalls[objectType]());
-}
+const std::function<const b2FixtureDef *()> Object::fixtureCalls[ObjectType::TOTAL]{
+    []()
+    { return getFixtureDef(b2Vec2(100.0f, 10.0f)); },
+    []()
+    { return getFixtureDef(b2Vec2(100.0f, 10.0f)); },
+    []()
+    { return getFixtureDef(10.0f); },
+    []()
+    { return getFixtureDef(10.0f); }};

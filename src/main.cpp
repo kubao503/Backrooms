@@ -1,9 +1,10 @@
 #include "camera.h"
-#include "object.h"
+#include "object3d.h"
 #include "player.h"
 #include "userio.h"
 #include "myWorld.h"
 #include "textures.h"
+#include <iostream>     // Printing information about texture loading fail
 
 int main()
 {
@@ -21,8 +22,9 @@ int main()
 
     // Objects
     Player player(world, Object::PLAYER);
-    Object wall(world, Object::WALL);
-    Object wall2(world, Object::WALL2);
+    Object2D enemy(world, Object::ENEMY);
+    Object3D wall(world, Object::WALL);
+    Object3D wall2(world, Object3D::WALL2);
 
     // Simulation parameters
     float timeStep = 1.0f / 60.0f; // Step of time between events

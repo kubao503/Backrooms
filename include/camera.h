@@ -1,13 +1,13 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "userio.h"
-#include "shapes.h"
-#include "myWorld.h"
-#include "constants.h"
+#include "userio.h"         // called to draw Shape on screen
+#include "shapes.h"         // for Shape manipulation
+#include "myWorld.h"        // needed by UserIO to draw ray hit
+#include "constants.h"      // for PI needed in angle calculations
+#include "object3d.h"       // for getting shapeIdx_ from Object3D
 
-#include <box2d/box2d.h>
-#include <iostream>
+#include <box2d/box2d.h>    // for raycast
 
 class Camera
 {

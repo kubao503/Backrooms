@@ -419,7 +419,7 @@ private:
 
 public:
 	b2Body(const b2BodyDef* bd, b2World* world);
-	~b2Body();
+	virtual ~b2Body();
 
 private:
 	void SynchronizeFixtures();

@@ -1,10 +1,10 @@
 #ifndef USER_IO_H
 #define USER_IO_H
 
-#include <SFML/Graphics.hpp>
-#include "object.h"
-#include <memory>
-#include <algorithm>
+#include <SFML/Graphics.hpp>// for using sf::RenderWindow
+#include "shapes.h"         // for drawing sf::Shape
+#include <memory>           // for moving sf::Color
+#include <algorithm>        // for std::min
 
 class UserIO
 {
@@ -20,7 +20,6 @@ public:
 
     // The 0, 0 coordinate coresponds to the center of the screen
     void drawOnScreen(Shapes::Type shapeIdx, float x = 0, float y = 0, float xScale = 1.0f, float yScale = 1.0f, float dim = 1.0f);
-    void drawObject(const Object &object);
 
     sf::Color dimColor(const sf::Color &color, float dimFactor);
 

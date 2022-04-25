@@ -12,12 +12,6 @@ void UserIO::drawOnScreen(Shapes::Type shapeIdx, float x, float y, float xScale,
     shape.setFillColor(originalColor);
 }
 
-void UserIO::drawObject(const Object &object)
-{
-    const b2Vec2 &currentPosition = object.getPosition();
-    drawOnScreen(object.getShapeIdx(), currentPosition.x, currentPosition.y);
-}
-
 sf::Color UserIO::dimColor(const sf::Color &color, float dimFactor)
 {
     dimFactor = std::min(dimFactor, 1.0f);

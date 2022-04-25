@@ -48,8 +48,11 @@ void Camera::drawViewOnScreen(UserIO &userIO, const MyWorld &world, const b2Vec2
 
 float Camera::MyCallback::ReportFixture(b2Fixture *fixture, const b2Vec2 &point, const b2Vec2 &normal, float fraction)
 {
-    shapeIdx_ = static_cast<MyBody *>(fixture->GetBody())->getObject().getShapeIdx();
+    MyBody* ptr = dynamic_cast<MyBody *>(fixture->GetBody());
+    if (!ptr)
+        return 1.0f;
+    shapeIdx_ = ptr->getObject().getShapeIdx();
     normal_ = normal;
-    (void)point;    // For -Werror=unused-variable
     return fraction_ = fraction;
+    (void)point;    // For -Werror=unused-variable
 }
