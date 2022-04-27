@@ -22,7 +22,7 @@ int main()
     MyWorld world{b2Vec2(0.0f, 0.0f)};
 
     // Objects
-    Player player(world, Object::PLAYER);
+    Player player(world, Object::PLAYER, b2Vec2(-100.0f, -100.0f), 0);
     Object2D enemy(world, Object::ENEMY, b2Vec2(-20.0f, -20.0f), 0);
     Object3D wall(world, Object::WALL, b2Vec2(50.0f, 30.0f), PI / 2);
     Object3D wall2(world, Object3D::WALL2);
