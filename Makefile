@@ -1,5 +1,4 @@
 CXX = clang++
-# 	- clang needed ?
 CXX_FLAGS = -I /usr/local/Cellar/sfml/2.5.1_1/include/ -I /usr/local/Cellar/box2d/2.4.1/include/ -fsanitize=undefined -g -Wall -Wextra -pedantic -Werror -std=c++2a
 
 BIN = bin

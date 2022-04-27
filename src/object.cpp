@@ -53,6 +53,13 @@ void Object::setBody(MyWorld &world, ObjectType type)
     body_->CreateFixture(fixtureCalls[type]());
 }
 
+void Object::setBody(MyWorld &world, ObjectType type, b2Vec2 position, float angle)
+{
+    body_ = createBody(getBodyDef(bodyTypes[type]), world);
+    body_->SetTransform(position, angle);
+    body_->CreateFixture(fixtureCalls[type]());
+}
+
 const std::function<const b2FixtureDef *()> Object::fixtureCalls[ObjectType::TOTAL]{
     []()
     { return getFixtureDef(b2Vec2(100.0f, 10.0f)); },

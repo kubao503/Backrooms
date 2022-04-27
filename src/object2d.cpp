@@ -10,3 +10,9 @@ Object2D::Object2D(MyWorld &world, ObjectType type)
 {
     setBody(world, type);
 }
+
+Object2D::Object2D(MyWorld &world, ObjectType type, b2Vec2 position, float angle)
+    : Object{type}
+{
+    setBody(world, type, position, angle);
+}

@@ -4,7 +4,7 @@
 #include "userio.h"
 #include "myWorld.h"
 #include "textures.h"
-#include <iostream>     // Printing information about texture loading fail
+#include <iostream> // Printing information about texture loading fail
 
 int main()
 {
@@ -23,7 +23,7 @@ int main()
 
     // Objects
     Player player(world, Object::PLAYER);
-    Object2D enemy(world, Object::ENEMY);
+    Object2D enemy(world, Object::ENEMY, b2Vec2(30.0f, 30.0f), 0);
     Object3D wall(world, Object::WALL);
     Object3D wall2(world, Object3D::WALL2);
 

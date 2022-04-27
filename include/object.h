@@ -45,6 +45,7 @@ protected:
     Object(ObjectType objectType);
     // Object(MyWorld &world, Shapes::Type shapeIdx, BodyType bodyType, const b2Vec2 &size);
     void setBody(MyWorld &world, ObjectType type);
+    void setBody(MyWorld &world, ObjectType type, b2Vec2 position, float angle);
 
     static const std::function<const b2FixtureDef *()> fixtureCalls[ObjectType::TOTAL];
     const static constexpr Shapes::Type shapeIdx[ObjectType::TOTAL]{
