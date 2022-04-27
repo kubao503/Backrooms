@@ -62,9 +62,9 @@ void Object::setBody(MyWorld &world, ObjectType type, b2Vec2 position, float ang
 
 const std::function<const b2FixtureDef *()> Object::fixtureCalls[ObjectType::TOTAL]{
     []()
-    { return getFixtureDef(b2Vec2(10.0f, 1.0f)); },
+    { return getFixtureDef(b2Vec2(5.0f, 1.0f)); },
     []()
-    { return getFixtureDef(b2Vec2(10.0f, 1.0f)); },
+    { return getFixtureDef(b2Vec2(5.0f, 1.0f)); },
     []()
     { return getFixtureDef(0.5f); },
     []()

@@ -35,7 +35,7 @@ private:
     using scale_t = std::pair<float, float>;
 
     static constexpr float maxFraction_{1.0f};
-    static constexpr float FOVMaxAngle_{PI / 24.0f};
+    static constexpr float FOVMaxAngle_{PI / 6.0f};
     static constexpr int raysNumber_{404};
     static constexpr float rayLength_{300.0f};
 

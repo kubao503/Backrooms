@@ -3,7 +3,7 @@
 
 inline float Camera::getDimFactor(const MyCallback &callback)
 {
-    float dimFactor = 1.0f / callback.getFraction() * vecCosine(callback.normal_, callback.ray_);
+    float dimFactor = 1.0f / callback.getFraction() * vecCosine(callback.normal_, callback.ray_) / 20;
     // std::cerr << dimFactor << '\n'; // DEBUG
     return dimFactor;
     // return 0.4f / callback.getFraction() * vecCosine(callback.normal_, callback.ray_);
@@ -12,7 +12,7 @@ inline float Camera::getDimFactor(const MyCallback &callback)
 inline Camera::scale_t Camera::get3DScale(float adjacentDistance)
 {
     return {
-        (adjacentDistance + 756.52173f) * 0.6827916f / raysNumber_,
+        (adjacentDistance + 756.52173f) * 0.7827916f / raysNumber_,
         100.0f / adjacentDistance};
 }
 
