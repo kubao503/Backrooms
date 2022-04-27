@@ -23,8 +23,8 @@ int main()
 
     // Objects
     Player player(world, Object::PLAYER);
-    Object2D enemy(world, Object::ENEMY, b2Vec2(30.0f, 30.0f), 0);
-    Object3D wall(world, Object::WALL);
+    Object2D enemy(world, Object::ENEMY, b2Vec2(-20.0f, -20.0f), 0);
+    Object3D wall(world, Object::WALL, b2Vec2(50.0f, 30.0f), PI / 2);
     Object3D wall2(world, Object3D::WALL2);
 
     // Simulation parameters
