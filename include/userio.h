@@ -12,7 +12,7 @@ class UserIO
 {
 private:
     sf::RenderWindow window_;
-    bool focus_{true};     // Focus on game window
+    bool focus_{true}; // Focus on game window
 
 public:
     UserIO(unsigned int width, unsigned int height, const std::string &title)
@@ -27,7 +27,9 @@ public:
     sf::Color dimColor(const sf::Color &color, float dimFactor);
 
     bool isOpen() { return window_.isOpen(); }
+    // Starts making new frame
     void start() { window_.clear(); }
+    // Displays frame
     void end() { window_.display(); }
     void handleEvents();
     int getMouseXMovement();

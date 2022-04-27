@@ -20,7 +20,7 @@ inline Camera::scale_t Camera::get2DScale(float adjacentDistance)
         560.0f / adjacentDistance};
 }
 
-#include "timer.h"  // DEBUG
+#include "timer.h" // DEBUG
 
 void Camera::drawRay(UserIO &userIO, float angle, const MyCallback &callback)
 {
@@ -36,7 +36,7 @@ void Camera::drawRay(UserIO &userIO, float angle, const MyCallback &callback)
     static const float maxCordX{tan(FOVMaxAngle_)};
     userIO.drawOnScreen(callback.getShapeIdx(), tan(angle) / maxCordX, 0.0f, scale.first, scale.second, dimFactor);
 
-    t.stop();   // DEBUG
+    t.stop(); // DEBUG
 }
 
 void Camera::drawRay(UserIO &userIO, float angle, const MyCallback &callback, float distance)
@@ -51,7 +51,10 @@ void Camera::drawRay(UserIO &userIO, float angle, const MyCallback &callback, fl
 
 void Camera::sendRay(const MyWorld &world, MyCallback &rayCallback, const b2Vec2 &cameraPosition, const b2Vec2 &ray)
 {
+    // Changing direction of vector in callback
     rayCallback.ray_ = -ray;
+
+    // Casting a Box2D ray
     world.RayCast(&rayCallback, cameraPosition, cameraPosition + ray);
 }
 
@@ -83,9 +86,10 @@ void Camera::drawViewOnScreen(UserIO &userIO, const MyWorld &world, const Object
 {
     userIO.start();
 
+    // Angle between casted rays
     constexpr float angleChange{2.0f * FOVMaxAngle_ / raysNumber_};
 
-    // Cast a rays in many directions
+    // Cast a rays in many directions for Object3Ds
     for (float angle{-FOVMaxAngle_}; angle <= FOVMaxAngle_; angle += angleChange)
     {
         MyCallback rayCallback;
