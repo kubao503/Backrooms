@@ -1,23 +1,26 @@
 #include "camera.h"
+#include <iostream> // DEBUG
 
 inline float Camera::getDimFactor(const MyCallback &callback)
 {
-    return 0.4f / callback.getFraction() * (0.5f * vecCosine(callback.normal_, callback.ray_) + 0.5f);
+    float dimFactor = 1.0f / callback.getFraction() * vecCosine(callback.normal_, callback.ray_);
+    // std::cerr << dimFactor << '\n'; // DEBUG
+    return dimFactor;
     // return 0.4f / callback.getFraction() * vecCosine(callback.normal_, callback.ray_);
 }
 
 inline Camera::scale_t Camera::get3DScale(float adjacentDistance)
 {
     return {
-        (adjacentDistance + 756.52173f) * 1.5227916f * FOVMaxAngle_ / raysNumber_,
-        900.0f / adjacentDistance};
+        (adjacentDistance + 756.52173f) * 0.6827916f / raysNumber_,
+        100.0f / adjacentDistance};
 }
 
 inline Camera::scale_t Camera::get2DScale(float adjacentDistance)
 {
     return {
-        280.0f / adjacentDistance / FOVMaxAngle_,
-        560.0f / adjacentDistance};
+        28.0f / adjacentDistance / FOVMaxAngle_,
+        56.0f / adjacentDistance};
 }
 
 #include "timer.h" // DEBUG
