@@ -26,6 +26,10 @@ int main()
     // Objects
     Player player(world, Object::PLAYER, b2Vec2(0.0f, -20.0f), 0);
     Object2D enemy(world, Object::ENEMY, b2Vec2(-20.0f, -30.0f), 0);
+    // new Chunk(world, b2Vec2(0.0f, 0.0f));
+    // new Chunk(world, b2Vec2(10.0f, 0.0f));
+    // new Chunk(world, b2Vec2(0.0f, 10.0f));
+    // new Chunk(world, b2Vec2(10.0f, 10.0f));
 
     for (float i = 0; i < 1000; i += 10)
         for (float j = 0; j < 1000; j += 10)

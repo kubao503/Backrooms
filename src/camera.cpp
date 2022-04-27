@@ -3,7 +3,8 @@
 
 inline float Camera::getDimFactor(const MyCallback &callback)
 {
-    float dimFactor = 1.0f / callback.getFraction() * vecCosine(callback.normal_, callback.ray_) / 20;
+    // float dimFactor = 1.0f / callback.getFraction() * vecCosine(callback.normal_, callback.ray_) / 20;
+    float dimFactor = (vecCosine(callback.normal_, callback.ray_) * 0.75f + (1.0f / 2.2f)) / 20 * (-callback.getFraction() * rayLength_ / 100 + 1.3f) * 10;
     // std::cerr << dimFactor << '\n'; // DEBUG
     return dimFactor;
     // return 0.4f / callback.getFraction() * vecCosine(callback.normal_, callback.ray_);
@@ -27,8 +28,8 @@ inline Camera::scale_t Camera::get2DScale(float adjacentDistance)
 
 void Camera::drawRay(UserIO &userIO, float angle, const MyCallback &callback)
 {
-    static Timer t; // DEBUG
-    t.start();      // DEBUG
+    // static Timer t; // DEBUG
+    // t.start();      // DEBUG
 
     // y component of distance measured in local coordinate system
     float adjacentDistance{cos(angle) * callback.getFraction() * rayLength_};
@@ -39,7 +40,7 @@ void Camera::drawRay(UserIO &userIO, float angle, const MyCallback &callback)
     static const float maxCordX{tan(FOVMaxAngle_)};
     userIO.drawOnScreen(callback.getShapeIdx(), tan(angle) / maxCordX, 0.0f, scale.first, scale.second, dimFactor);
 
-    t.stop(); // DEBUG
+    // t.stop(); // DEBUG
 }
 
 void Camera::drawRay(UserIO &userIO, float angle, const MyCallback &callback, float distance)

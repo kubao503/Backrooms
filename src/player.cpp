@@ -3,7 +3,7 @@
 void Player::control(UserIO &userIO)
 {
     // const float VELOCITY = 2.0f;
-    static constexpr float LINEAR_VELOCITY = 1.0f;
+    static constexpr float LINEAR_VELOCITY = 2.0f;
     static constexpr float ANGULAR_VELOCITY = 0.15f;
     static constexpr float SPRINT_MULTIPLIER = 2.0f;
     b2Vec2 newVelocity(0.0f, 0.0f);

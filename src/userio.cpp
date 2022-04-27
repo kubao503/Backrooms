@@ -15,7 +15,7 @@ void UserIO::drawOnScreen(Shapes::Type shapeIdx, float x, float y, float xScale,
 
 sf::Color UserIO::dimColor(const sf::Color &color, float dimFactor)
 {
-    dimFactor = std::min(dimFactor, 1.0f);
+    dimFactor = std::max(0.0f, std::min(dimFactor, 1.0f));
     return sf::Color(color.r * dimFactor,
                      color.g * dimFactor,
                      color.b * dimFactor,
@@ -34,14 +34,14 @@ void UserIO::handleEvents()
         if (event.type == sf::Event::GainedFocus)
         {
             focus_ = true;
-            getMouseXMovement();    // Reseting mouse position
+            getMouseXMovement(); // Reseting mouse position
         }
     }
 }
 
 int UserIO::getMouseXMovement()
 {
-    if (!focus_)    // Don't turn around if user is not focused on the window
+    if (!focus_) // Don't turn around if user is not focused on the window
         return 0;
     static const sf::Vector2i defaultPosition(100, 100);
     int mouseMovement{sf::Mouse::getPosition(window_).x - defaultPosition.x};
