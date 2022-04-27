@@ -23,6 +23,7 @@ public:
         return shapes_[shapeIdx];
     }
 
+    // Adds textures to some shapes
     static void init();
 
 private:

@@ -23,8 +23,8 @@ int main()
 
     // Objects
     Player player(world, Object::PLAYER);
-    Object3D wall(world, Object::WALL);
     Object2D enemy(world, Object::ENEMY);
+    Object3D wall(world, Object::WALL);
     Object3D wall2(world, Object3D::WALL2);
 
     // Simulation parameters

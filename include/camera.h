@@ -37,7 +37,7 @@ private:
     static constexpr float maxFraction_{1.0f};
     static constexpr float FOVMaxAngle_{PI / 6.0f};
     static constexpr int raysNumber_{104};
-    static constexpr float renderDistance_{300.0f};
+    static constexpr float rayLength_{300.0f};
 
     // Draws texture at ray's hitpoint
     static float getDimFactor(const MyCallback &callback);
@@ -45,7 +45,7 @@ private:
     static scale_t get2DScale(float adjacentDistance);
 
     // For 3D objects
-    static void drawRay(UserIO &userIO, float angle, const MyCallback &callback);   
+    static void drawRay(UserIO &userIO, float angle, const MyCallback &callback);
     // For 2D objects
     static void drawRay(UserIO &userIO, float angle, const MyCallback &callback, float distance);
 

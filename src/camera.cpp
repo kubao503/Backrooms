@@ -1,36 +1,42 @@
 #include "camera.h"
 
-float Camera::getDimFactor(const MyCallback &callback)
+inline float Camera::getDimFactor(const MyCallback &callback)
 {
-    float cosine{vecCosine(callback.normal_, callback.ray_)};
-    return 0.4f / callback.getFraction() * (0.5f * cosine + 0.5f);
+    return 0.4f / callback.getFraction() * (0.5f * vecCosine(callback.normal_, callback.ray_) + 0.5f);
+    // return 0.4f / callback.getFraction() * vecCosine(callback.normal_, callback.ray_);
 }
 
-Camera::scale_t Camera::get3DScale(float adjacentDistance)
+inline Camera::scale_t Camera::get3DScale(float adjacentDistance)
 {
     return {
-        (0.0076666666f * adjacentDistance + 5.8f) * 198.625f * FOVMaxAngle_ / raysNumber_,
+        (adjacentDistance + 756.52173f) * 1.5227916f * FOVMaxAngle_ / raysNumber_,
         900.0f / adjacentDistance};
 }
 
-Camera::scale_t Camera::get2DScale(float adjacentDistance)
+inline Camera::scale_t Camera::get2DScale(float adjacentDistance)
 {
     return {
         280.0f / adjacentDistance / FOVMaxAngle_,
         560.0f / adjacentDistance};
 }
 
+#include "timer.h"  // DEBUG
 
 void Camera::drawRay(UserIO &userIO, float angle, const MyCallback &callback)
 {
+    static Timer t; // DEBUG
+    t.start();      // DEBUG
+
     // y component of distance measured in local coordinate system
-    float adjacentDistance{cos(angle) * callback.getFraction() * renderDistance_};
+    float adjacentDistance{cos(angle) * callback.getFraction() * rayLength_};
     scale_t scale{get3DScale(adjacentDistance)};
 
     float dimFactor = getDimFactor(callback);
 
     static const float maxCordX{tan(FOVMaxAngle_)};
     userIO.drawOnScreen(callback.getShapeIdx(), tan(angle) / maxCordX, 0.0f, scale.first, scale.second, dimFactor);
+
+    t.stop();   // DEBUG
 }
 
 void Camera::drawRay(UserIO &userIO, float angle, const MyCallback &callback, float distance)
@@ -52,7 +58,7 @@ void Camera::sendRay(const MyWorld &world, MyCallback &rayCallback, const b2Vec2
 void Camera::sendRay(const MyWorld &world, MyCallback &rayCallback, const b2Vec2 &cameraPosition, float angle)
 {
     // Create calculate ray
-    b2Vec2 ray{renderDistance_ * getVector(angle)};
+    b2Vec2 ray{rayLength_ * getVector(angle)};
 
     // Send ray in a given direction
     sendRay(world, rayCallback, cameraPosition, ray);
