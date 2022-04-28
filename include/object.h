@@ -57,6 +57,8 @@ protected:
     void destroyBody()
     {
         body_->GetWorld()->DestroyBody(body_.get());
+        // delete body_.get();
+        body_.release();
     };
 
 public:

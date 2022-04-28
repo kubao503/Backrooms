@@ -44,7 +44,7 @@ void Chunk::restore(MyWorld &world)
 
     if (wallNorth)
     {
-        std::cerr << wallNorth.get()->getAngle();
+        // std::cerr << wallNorth.get()->getAngle();
         wallNorth->setBody(world, Object::ObjectType::WALL, position_, 0);
     }
 
