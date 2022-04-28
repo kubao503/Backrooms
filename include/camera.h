@@ -36,7 +36,7 @@ private:
 
     static constexpr float maxFraction_{1.0f};
     static constexpr float FOVMaxAngle_{PI / 5.0f};
-    static constexpr int raysNumber_{404};
+    static constexpr int raysNumber_{400};
     static constexpr float rayLength_{100.0f};
 
     // Draws texture at ray's hitpoint
