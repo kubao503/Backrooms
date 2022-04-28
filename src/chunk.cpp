@@ -33,6 +33,8 @@ Chunk::Chunk(MyWorld &world, b2Vec2 position)
 
 void Chunk::clear()
 {
+    cleared_ = true;
+
     if (wallNorth)
         wallNorth->destroyBody();
     if (wallWest)
@@ -41,6 +43,7 @@ void Chunk::clear()
 
 void Chunk::restore(MyWorld &world)
 {
+    cleared_ = false;
 
     if (wallNorth)
     {
@@ -53,9 +56,4 @@ void Chunk::restore(MyWorld &world)
         b2Vec2 offsetPosition = b2Vec2(position_.x + 5.0f, position_.y + 5.0f);
         wallWest->setBody(world, Object::ObjectType::WALL, offsetPosition, PI / 2);
     }
-}
-
-b2Vec2 Chunk::position() const
-{
-    return position_;
 }

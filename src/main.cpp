@@ -30,8 +30,8 @@ int main()
 
     std::vector<Chunk> chunks;
 
-    for (float i = 0; i < 100; i += 10)
-        for (float j = 0; j < 100; j += 10)
+    for (float i = 0; i < 1000; i += 10)
+        for (float j = 0; j < 1000; j += 10)
         {
             chunks.push_back(Chunk(world, b2Vec2(i, j)));
         }
@@ -41,10 +41,10 @@ int main()
         chunk.clear();
     }
 
-    for (auto &chunk : chunks)
-    {
-        chunk.restore(world);
-    }
+    // for (auto &chunk : chunks)
+    // {
+    //     chunk.restore(world);
+    // }
 
     // Simulation parameters
     float timeStep = 1.0f / 60.0f; // Step of time between events
@@ -60,6 +60,18 @@ int main()
         // Physics step
         world.Step(timeStep, velocityIterations, positionIterations);
         player.control(userIO);
+
+        for (auto &chunk : chunks)
+        {
+            b2Vec2 distance = chunk.getPosition() - player.getPosition();
+            if (abs(distance.x) < 50.0f && abs(distance.y) < 50.0f)
+            {
+                if (chunk.wasCleared())
+                    chunk.restore(world);
+            }
+            else if (!chunk.wasCleared())
+                chunk.clear();
+        }
 
         // Drawing on screen
         Camera::drawViewOnScreen(userIO, world, player, enemy);
