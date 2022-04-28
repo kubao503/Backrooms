@@ -27,4 +27,4 @@ Chunk::Chunk(MyWorld &world, b2Vec2 position)
     default:
         break;
     }
-};
+}

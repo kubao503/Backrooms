@@ -14,6 +14,9 @@ private:
     sf::RenderWindow window_;
     bool focus_{true}; // Focus on game window
 
+    sf::Color dimColor(const sf::Color &color, float dimFactor);
+    void setScale(sf::Shape &shape);
+
 public:
     UserIO(unsigned int width, unsigned int height, const std::string &title)
     {
@@ -23,8 +26,6 @@ public:
 
     // The 0, 0 coordinate coresponds to the center of the screen
     void drawOnScreen(Shapes::Type shapeIdx, float x = 0, float y = 0, float xScale = 1.0f, float yScale = 1.0f, float dim = 1.0f);
-
-    sf::Color dimColor(const sf::Color &color, float dimFactor);
 
     bool isOpen() { return window_.isOpen(); }
     // Starts making new frame
