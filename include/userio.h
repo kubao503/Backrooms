@@ -22,6 +22,7 @@ public:
     {
         getMouseXMovement();
         window_.create(sf::VideoMode(width, height), title);
+        window_.setMouseCursorVisible(false);
     }
 
     // The 0, 0 coordinate coresponds to the center of the screen
