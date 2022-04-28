@@ -52,7 +52,7 @@ protected:
         Shapes::WALL, Shapes::RED_WALL, Shapes::PLAYER, Shapes::ENEMY};
 
     static constexpr BodyType bodyTypes[ObjectType::TOTAL]{
-        BodyType::STATIC, BodyType::STATIC, BodyType::DYNAMIC, BodyType::STATIC};
+        BodyType::STATIC, BodyType::STATIC, BodyType::DYNAMIC, BodyType::DYNAMIC};
 
 public:
     Object(MyWorld &world, ObjectType objectType);

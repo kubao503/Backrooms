@@ -140,23 +140,3 @@ float Camera::MyCallback::ReportFixture(b2Fixture *fixture, const b2Vec2 &point,
     return fraction_ = fraction;
     (void)point; // For -Werror=unused-variable
 }
-
-float vecCosine(const b2Vec2 &vec1, const b2Vec2 &vec2)
-{
-    return b2Dot(vec1, vec2) / vec1.Length() / vec2.Length();
-}
-
-float vecAngle(const b2Vec2 &vec1, const b2Vec2 &vec2)
-{
-    return acos(vecCosine(vec1, vec2));
-}
-
-b2Vec2 getVector(const b2Vec2 &point1, const b2Vec2 &point2)
-{
-    return b2Vec2(point2.x - point1.x, point2.y - point1.y);
-}
-
-b2Vec2 getVector(float angle)
-{
-    return b2Vec2(cos(angle), sin(angle));
-}

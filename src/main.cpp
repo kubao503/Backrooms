@@ -5,6 +5,7 @@
 #include "myWorld.h"
 #include "textures.h"
 #include "chunk.h"
+#include "enemy.h"
 
 #include <iostream> // Printing information about texture loading fail
 
@@ -25,7 +26,7 @@ int main()
 
     // Objects
     Player player(world, Object::PLAYER, b2Vec2(0.0f, -20.0f), 0);
-    Object2D enemy(world, Object::ENEMY, b2Vec2(-20.0f, -30.0f), 0);
+    Enemy enemy(world, Object::ENEMY, b2Vec2(-20.0f, -30.0f), 0);
     // new Chunk(world, b2Vec2(0.0f, 0.0f));
     // new Chunk(world, b2Vec2(10.0f, 0.0f));
     // new Chunk(world, b2Vec2(0.0f, 10.0f));
@@ -51,6 +52,7 @@ int main()
         // Physics step
         world.Step(timeStep, velocityIterations, positionIterations);
         player.control(userIO);
+        enemy.control(player);
 
         // Drawing on screen
         Camera::drawViewOnScreen(userIO, world, player, enemy);

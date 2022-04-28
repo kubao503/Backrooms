@@ -2,7 +2,7 @@
 #define CHUNK_H
 
 #include "object3d.h"
-#include "constants.h"
+#include "myMath.h"
 #include <ctime>
 #include <random>
 

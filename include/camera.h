@@ -4,7 +4,7 @@
 #include "userio.h"    // called to draw Shape on screen
 #include "shapes.h"    // for Shape manipulation
 #include "myWorld.h"   // needed by UserIO to draw ray hit
-#include "constants.h" // for PI needed in angle calculations
+#include "myMath.h" // for PI needed in angle calculations
 #include "object3d.h"  // for drawing Object3D
 #include "object2d.h"  // for drawing Object2D
 
@@ -57,11 +57,5 @@ public:
     // Casts multiple rays to show them as image on the screen
     static void drawViewOnScreen(UserIO &userIO, const MyWorld &world, const Object &camera, const Object2D &object2D);
 };
-
-// Math
-inline float vecCosine(const b2Vec2 &vec1, const b2Vec2 &vec2);
-inline float vecAngle(const b2Vec2 &vec1, const b2Vec2 &vec2);
-inline b2Vec2 getVector(const b2Vec2 &point1, const b2Vec2 &point2);
-inline b2Vec2 getVector(float angle);
 
 #endif
