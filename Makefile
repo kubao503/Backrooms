@@ -1,5 +1,6 @@
-CXX = clang++
-CXX_FLAGS = -I /usr/local/Cellar/sfml/2.5.1_1/include/ -I /usr/local/Cellar/box2d/2.4.1/include/ -fsanitize=undefined -g -Wall -Wextra -pedantic -Werror -std=c++2a
+CXX = g++
+# -fsanitize=undefined	- clang needed ?
+CXX_FLAGS = -g -Wall -Wextra -pedantic -Werror -std=c++2a
 
 BIN = bin
 SRC = src
@@ -15,7 +16,7 @@ HEADERS = $(INCLUDE)/*
 all: compile link
 
 link: $(OBJS)
-	$(CXX) $(CXX_FLAGS) $(OBJS) -o $(BIN)/$(EXECUTABLE) $(LIBRARIES)
+	$(CXX) $(CXX_FLAGS) $(OBJS) -o $(BIN)/$(EXECUTABLE) -L$(LIB) $(LIBRARIES)
 
 compile: $(OBJS)
 
