@@ -7,6 +7,7 @@
 #include "chunk.h"
 #include "enemy.h"
 
+#include <vector> // TEST
 #include <iostream> // Printing information about texture loading fail
 
 int main()
@@ -27,16 +28,24 @@ int main()
     // Objects
     Player player(world, Object::PLAYER, b2Vec2(0.0f, -20.0f), 0);
     Enemy enemy(world, Object::ENEMY, b2Vec2(-20.0f, -30.0f), 0);
-    // new Chunk(world, b2Vec2(0.0f, 0.0f));
-    // new Chunk(world, b2Vec2(10.0f, 0.0f));
-    // new Chunk(world, b2Vec2(0.0f, 10.0f));
-    // new Chunk(world, b2Vec2(10.0f, 10.0f));
+
+    std::vector<Chunk> chunks;
 
     for (float i = 0; i < 1000; i += 10)
         for (float j = 0; j < 1000; j += 10)
         {
-            new Chunk(world, b2Vec2(i, j));
+            chunks.push_back(Chunk(world, b2Vec2(i, j)));
         }
+
+    for (auto &chunk : chunks)
+    {
+        chunk.clear();
+    }
+
+    // for (auto &chunk : chunks)
+    // {
+    //     chunk.restore(world);
+    // }
 
     // Simulation parameters
     float timeStep = 1.0f / 60.0f; // Step of time between events
@@ -53,6 +62,18 @@ int main()
         world.Step(timeStep, velocityIterations, positionIterations);
         player.control(userIO);
         enemy.control(player);
+
+        for (auto &chunk : chunks)
+        {
+            b2Vec2 distance = chunk.getPosition() - player.getPosition();
+            if (abs(distance.x) < 50.0f && abs(distance.y) < 50.0f)
+            {
+                if (chunk.wasCleared())
+                    chunk.restore(world);
+            }
+            else if (!chunk.wasCleared())
+                chunk.clear();
+        }
 
         // Drawing on screen
         Camera::drawViewOnScreen(userIO, world, player, enemy);

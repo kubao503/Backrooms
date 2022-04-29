@@ -11,10 +11,16 @@ class Chunk
 private:
     std::unique_ptr<Object3D> wallNorth{nullptr};
     std::unique_ptr<Object3D> wallWest{nullptr};
+    bool cleared_;
     static std::mt19937 mt;
+    const b2Vec2 position_;
 
 public:
     Chunk(MyWorld &world, b2Vec2 position);
+    void restore(MyWorld &world);
+    void clear();
+    bool wasCleared() const { return cleared_; };
+    b2Vec2 getPosition() const { return position_; };
 };
 
 #endif

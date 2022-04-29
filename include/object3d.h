@@ -6,6 +6,7 @@
 class Object3D : public Object
 {
 private:
+    friend class Chunk;
     std::unique_ptr<b2Body> createBody(const b2BodyDef &bd, MyWorld &world) const override;
 
 public:

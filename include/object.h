@@ -54,6 +54,13 @@ protected:
     static constexpr BodyType bodyTypes[ObjectType::TOTAL]{
         BodyType::STATIC, BodyType::STATIC, BodyType::DYNAMIC, BodyType::DYNAMIC};
 
+    void destroyBody()
+    {
+        body_->GetWorld()->DestroyBody(body_.get());
+        // delete body_.get();
+        body_.release();
+    };
+
 public:
     Object(MyWorld &world, ObjectType objectType);
     Shapes::Type getShapeIdx() const { return shapeIdx_; }

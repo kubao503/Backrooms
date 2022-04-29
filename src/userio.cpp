@@ -24,7 +24,7 @@ void UserIO::drawOnScreen(Shapes::Type shapeIdx, float x, float y, float xScale,
     const sf::Color &originalColor = shape.getFillColor();
     shape.setFillColor(std::move(dimColor(originalColor, dim)));
     shape.setScale(xScale, yScale);
-    setScale(shape);    // Set scale based on the window size
+    setScale(shape); // Set scale based on the window size
 
     shape.setPosition(size.x / 2.0f * (x + 1.0f), size.y / 2.0f * (y + 1.0f));
     window_.draw(shape);

@@ -13,7 +13,7 @@ inline float Camera::getDimFactor(const MyCallback &callback)
 inline Camera::scale_t Camera::get3DScale(float adjacentDistance)
 {
     return {
-        (adjacentDistance + 756.52173f) * 0.7827916f / raysNumber_,
+        (adjacentDistance + 756.52173f) * 0.8827916f / raysNumber_,
         100.0f / adjacentDistance};
 }
 
