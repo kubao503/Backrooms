@@ -53,23 +53,27 @@ void Camera::drawRay(UserIO &userIO, float angle, const MyCallback &callback, fl
     userIO.drawOnScreen(callback.getShapeIdx(), tan(angle) / maxCordX, 0.0f, scale.first, scale.second);
 }
 
-void Camera::sendRay(const MyWorld &world, MyCallback &rayCallback, const b2Vec2 &cameraPosition, const b2Vec2 &ray)
+Camera::MyCallback Camera::sendRay(const b2World &world, const b2Vec2 &cameraPosition, const b2Vec2 &ray)
 {
+    MyCallback rayCallback;
+
     // Changing direction of vector in callback
     rayCallback.ray_ = -ray;
 
     // Casting a Box2D ray
     world.RayCast(&rayCallback, cameraPosition, cameraPosition + ray);
+    return rayCallback;
 }
 
-void Camera::sendRay(const MyWorld &world, MyCallback &rayCallback, const b2Vec2 &cameraPosition, float angle)
+Camera::MyCallback Camera::sendRay(const b2World &world, const b2Vec2 &cameraPosition, float angle, float length)
 {
-    // Create calculate ray
-    b2Vec2 ray{rayLength_ * getVector(angle)};
+    // Calculate ray
+    b2Vec2 ray{getVector(angle)};
+    ray.Normalize();
+    ray *= length;
 
     // Send ray in a given direction
-    sendRay(world, rayCallback, cameraPosition, ray);
-    // world.RayCast(&rayCallback, begin, begin + ray);
+    return sendRay(world, cameraPosition, ray);
 }
 
 bool Camera::ifInFieldOfView(const Object &camera, const Object &object)
@@ -96,13 +100,11 @@ void Camera::drawViewOnScreen(UserIO &userIO, const MyWorld &world, const Object
     // Cast a rays in many directions for Object3Ds
     for (float angle{-FOVMaxAngle_}; angle <= FOVMaxAngle_; angle += angleChange)
     {
-        MyCallback rayCallback;
-
         // Rays can only hit Object3Ds
-        sendRay(world, rayCallback, camera.getPosition(), angle + camera.getAngle());
+        MyCallback rayCallback = sendRay(world, camera.getPosition(), angle + camera.getAngle());
 
         // Draw if the ray went shorter than max distance
-        if (rayCallback.getFraction() < maxFraction_)
+        if (rayCallback.getFraction() < maxFraction)
             drawRay(userIO, angle, rayCallback);
     }
 
@@ -112,17 +114,19 @@ void Camera::drawViewOnScreen(UserIO &userIO, const MyWorld &world, const Object
     {
         // If yes - check if nothing blocks its view
         //          by sending a ray in this direction
-        MyCallback rayCallback;
         b2Vec2 ray{getVector(camera.getPosition(), object2D.getPosition())};
-        sendRay(world, rayCallback, camera.getPosition(), ray);
+        MyCallback rayCallback = sendRay(world, camera.getPosition(), ray);
 
-        if (rayCallback.getFraction() == maxFraction_)
+        if (rayCallback.getFraction() == maxFraction)
         {
             // If no  - draw it
             rayCallback.shapeIdx_ = object2D.getShapeIdx();
             float objectAngle{vecAngle(getVector(camera.getAngle()), ray)};
+
+            // Differenciate when the object's on the left from when it's on the right
             float cross = b2Cross(getVector(camera.getAngle()), ray);
             objectAngle *= abs(cross) / cross;
+
             drawRay(userIO, objectAngle, rayCallback, b2Distance(getVector(camera.getAngle()), ray));
         }
     }

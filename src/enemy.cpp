@@ -13,17 +13,28 @@ void Enemy::setVelocity()
     // std::unique_ptr<b2Body> ptr2{std::move(ptr)};
 }
 
-void Enemy::updateWaypoint(const Object &player)
+// #include <SFML/Graphics.hpp>
+
+void Enemy::updateWaypoint(UserIO &debug, const Object &player)
 {
     // Check if player is visible for enemy
-    // If yes - set waypoint to the player positioin
-    waypoint_ = player.getPosition();
+    b2Vec2 ray{getVector(getPosition(), player.getPosition())};
+    float fractionToPlayer = Camera::sendRay(*body_->GetWorld(), getPosition(), ray).getFraction();
+    std::cerr << fractionToPlayer << '\n';
+    // Shapes::getShape(shapeIdx_).setFillColor(sf::Color::Red);
+    if (fractionToPlayer == Camera::maxFraction)
+    {
+        (void)debug;
+        // debug.drawOnScreen(Shapes::RED_WALL);
+        // If yes - set waypoint to the player positioin
+        waypoint_ = player.getPosition();
+    }
     // Check if waypoint is reached
     // If yes - set waypoint to random location
 }
 
-void Enemy::control(const Object &player)
+void Enemy::control(UserIO &debug, const Object &player)
 {
-    updateWaypoint(player);
+    updateWaypoint(debug, player);
     setVelocity();
 }

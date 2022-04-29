@@ -1,12 +1,12 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "userio.h"    // called to draw Shape on screen
-#include "shapes.h"    // for Shape manipulation
-#include "myWorld.h"   // needed by UserIO to draw ray hit
-#include "myMath.h" // for PI needed in angle calculations
-#include "object3d.h"  // for drawing Object3D
-#include "object2d.h"  // for drawing Object2D
+#include "userio.h"   // called to draw Shape on screen
+#include "shapes.h"   // for Shape manipulation
+#include "myWorld.h"  // needed by UserIO to draw ray hit
+#include "myMath.h"   // for PI needed in angle calculations
+#include "object3d.h" // for drawing Object3D
+#include "object2d.h" // for drawing Object2D
 
 #include <box2d/box2d.h> // for raycast
 
@@ -21,7 +21,7 @@ private:
     {
         friend class Camera;
 
-        float fraction_{maxFraction_}; // The measured distance
+        float fraction_{maxFraction}; // The measured distance
         Shapes::Type shapeIdx_{Shapes::TOTAL};
         b2Vec2 normal_{0.0f, 0.0f};
         b2Vec2 ray_{0.0f, 0.0f};
@@ -34,9 +34,8 @@ private:
 
     using scale_t = std::pair<float, float>;
 
-    static constexpr float maxFraction_{1.0f};
     static constexpr float FOVMaxAngle_{PI / 5.0f};
-    static constexpr int raysNumber_{404};
+    static constexpr int raysNumber_{204};
     static constexpr float rayLength_{100.0f};
 
     // Draws texture at ray's hitpoint
@@ -49,11 +48,14 @@ private:
     // For 2D objects
     static void drawRay(UserIO &userIO, float angle, const MyCallback &callback, float distance);
 
-    static void sendRay(const MyWorld &world, MyCallback &rayCallback, const b2Vec2 &cameraPosition, float angle);
-    static void sendRay(const MyWorld &world, MyCallback &rayCallback, const b2Vec2 &cameraPosition, const b2Vec2 &ray);
+    static MyCallback sendRay(const b2World &world, const b2Vec2 &cameraPosition, float angle, float length = rayLength_);
     static bool ifInFieldOfView(const Object &camera, const Object &object);
 
 public:
+    static constexpr float maxFraction{1.0f};
+
+    static MyCallback sendRay(const b2World &world, const b2Vec2 &cameraPosition, const b2Vec2 &ray);
+
     // Casts multiple rays to show them as image on the screen
     static void drawViewOnScreen(UserIO &userIO, const MyWorld &world, const Object &camera, const Object2D &object2D);
 };
