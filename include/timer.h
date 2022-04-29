@@ -10,6 +10,7 @@ private:
 
     std::chrono::time_point<clock_type> m_beg{clock_type::now()};
 
+public:
     void reset()
     {
         m_beg = clock_type::now();
@@ -20,12 +21,12 @@ private:
         return std::chrono::duration_cast<second_type>(clock_type::now() - m_beg).count();
     }
 
-public:
     void start()
     {
         reset();
     }
-    void stop(){
+    void stop()
+    {
         static int counter{0};
         static double measuredTime{0.0};
         ++counter;

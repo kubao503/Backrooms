@@ -28,6 +28,22 @@ void Enemy::updateWaypoint(const Object &player)
 
 void Enemy::control(const Object &player)
 {
-    updateWaypoint(player);
-    setVelocity();
+    if (spawned_)
+    {
+        updateWaypoint(player);
+        setVelocity();
+    }
+}
+
+void Enemy::startHunt(MyWorld &world, const Object &player)
+{
+    spawned_ = true;
+    b2Vec2 offset(1.0f, 0.0f);  // Needed to not spawn enemy directly on player
+    setBody(world, Object::ENEMY, player.getPosition() + offset, 0.0f);
+}
+
+void Enemy::stopHunt()
+{
+    spawned_ = false;
+    destroyBody();
 }

@@ -7,11 +7,13 @@
 #include "myMath.h"   // for PI needed in angle calculations
 #include "object3d.h" // for drawing Object3D
 #include "object2d.h" // for drawing Object2D
-
+// #include "enemy.h"    // for drawing Enemy
 #include <box2d/box2d.h> // for raycast
 
 // DEBUG
 // #include <iostream>
+
+class Enemy;
 
 class Camera
 {
@@ -58,7 +60,7 @@ public:
     static MyCallback sendRay(const b2World &world, const b2Vec2 &cameraPosition, const b2Vec2 &ray);
 
     // Casts multiple rays to show them as image on the screen
-    static void drawViewOnScreen(UserIO &userIO, const MyWorld &world, const Object &camera, const Object2D &object2D);
+    static void drawViewOnScreen(UserIO &userIO, const MyWorld &world, const Object &camera, const Enemy &enemy);
 };
 
 #endif

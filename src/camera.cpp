@@ -1,5 +1,5 @@
 #include "camera.h"
-#include <iostream> // DEBUG
+#include "enemy.h"  // Circular dependency
 
 inline float Camera::getDimFactor(const MyCallback &callback)
 {
@@ -24,7 +24,7 @@ inline Camera::scale_t Camera::get2DScale(float adjacentDistance)
         56.0f / adjacentDistance};
 }
 
-#include "timer.h" // DEBUG
+// #include "timer.h" // DEBUG
 
 void Camera::drawRay(UserIO &userIO, float angle, const MyCallback &callback)
 {
@@ -90,7 +90,7 @@ bool Camera::ifInFieldOfView(const Object &camera, const Object &object)
     return angle < FOVMaxAngle_;
 }
 
-void Camera::drawViewOnScreen(UserIO &userIO, const MyWorld &world, const Object &camera, const Object2D &object2D)
+void Camera::drawViewOnScreen(UserIO &userIO, const MyWorld &world, const Object &camera, const Enemy &enemy)
 {
     userIO.start(); // Start frame drawing
 
@@ -110,18 +110,18 @@ void Camera::drawViewOnScreen(UserIO &userIO, const MyWorld &world, const Object
 
     // Drawing Object2D
     // For each one check if it is in current fieldOfView
-    if (ifInFieldOfView(camera, object2D))
+    if (enemy.spawned() && ifInFieldOfView(camera, enemy))
     {
-        // If object2D is in the field of view
-        // send a ray in the object2D's this direction
-        b2Vec2 ray{getVector(camera.getPosition(), object2D.getPosition())};
+        // If enemy is in the field of view
+        // send a ray in the enemy's this direction
+        b2Vec2 ray{getVector(camera.getPosition(), enemy.getPosition())};
         MyCallback rayCallback = sendRay(world, camera.getPosition(), ray);
 
         if (!rayCallback.hit())
         {
-            // If none object3D block object2D's view
+            // If none object3D block enemy's view
             // draw it
-            rayCallback.shapeIdx_ = object2D.getShapeIdx();
+            rayCallback.shapeIdx_ = enemy.getShapeIdx();
             float objectAngle{vecAngle(getVector(camera.getAngle()), ray)};
 
             // Differenciate when the object's on the left side
