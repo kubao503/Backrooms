@@ -30,4 +30,9 @@ inline b2Vec2 getVector(float angle)
     return b2Vec2(cos(angle), sin(angle));
 }
 
+inline float distance(const b2Vec2 &pos1, const b2Vec2 &pos2)
+{
+    return (pos1 - pos2).Length();
+}
+
 #endif

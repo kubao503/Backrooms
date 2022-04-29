@@ -52,7 +52,7 @@ int main()
         // Physics step
         world.Step(timeStep, velocityIterations, positionIterations);
         player.control(userIO);
-        enemy.control(userIO, player);
+        enemy.control(player);
 
         // Drawing on screen
         Camera::drawViewOnScreen(userIO, world, player, enemy);

@@ -17,13 +17,13 @@ class Enemy : public Object2D
 
     // Updated waypoint to player's position
     // only when player is visible
-    void updateWaypoint(UserIO &debug, const Object &player);
+    void updateWaypoint(const Object &player);
 
 public:
     Enemy(MyWorld &world, ObjectType type, b2Vec2 position, float angle)
         : Object2D{world, type, position, angle} {}
 
-    void control(UserIO &debug, const Object &player);
+    void control(const Object &player);
 };
 
 #endif
