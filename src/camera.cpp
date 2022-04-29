@@ -92,38 +92,40 @@ bool Camera::ifInFieldOfView(const Object &camera, const Object &object)
 
 void Camera::drawViewOnScreen(UserIO &userIO, const MyWorld &world, const Object &camera, const Object2D &object2D)
 {
-    userIO.start();
+    userIO.start(); // Start frame drawing
 
     // Angle between casted rays
     constexpr float angleChange{2.0f * FOVMaxAngle_ / raysNumber_};
 
-    // Cast a rays in many directions for Object3Ds
+    // Cast a rays in many directions
+    // for drawing Object3Ds
     for (float angle{-FOVMaxAngle_}; angle <= FOVMaxAngle_; angle += angleChange)
     {
         // Rays can only hit Object3Ds
         MyCallback rayCallback = sendRay(world, camera.getPosition(), angle + camera.getAngle());
 
-        // Draw if the ray went shorter than max distance
-        if (rayCallback.getFraction() < maxFraction)
+        if (rayCallback.hit())
             drawRay(userIO, angle, rayCallback);
     }
 
-    // Get all Object2Ds
+    // Drawing Object2D
     // For each one check if it is in current fieldOfView
     if (ifInFieldOfView(camera, object2D))
     {
-        // If yes - check if nothing blocks its view
-        //          by sending a ray in this direction
+        // If object2D is in the field of view
+        // send a ray in the object2D's this direction
         b2Vec2 ray{getVector(camera.getPosition(), object2D.getPosition())};
         MyCallback rayCallback = sendRay(world, camera.getPosition(), ray);
 
-        if (rayCallback.getFraction() == maxFraction)
+        if (!rayCallback.hit())
         {
-            // If no  - draw it
+            // If none object3D block object2D's view
+            // draw it
             rayCallback.shapeIdx_ = object2D.getShapeIdx();
             float objectAngle{vecAngle(getVector(camera.getAngle()), ray)};
 
-            // Differenciate when the object's on the left from when it's on the right
+            // Differenciate when the object's on the left side
+            // from when it's on the right side
             float cross = b2Cross(getVector(camera.getAngle()), ray);
             objectAngle *= abs(cross) / cross;
 
@@ -131,16 +133,19 @@ void Camera::drawViewOnScreen(UserIO &userIO, const MyWorld &world, const Object
         }
     }
 
-    userIO.end();
+    userIO.end();   // Display ray on screen
 }
 
 float Camera::MyCallback::ReportFixture(b2Fixture *fixture, const b2Vec2 &point, const b2Vec2 &normal, float fraction)
 {
+    // Successful cast to MyBody means that's Object3D
     MyBody *ptr = dynamic_cast<MyBody *>(fixture->GetBody());
     if (!ptr)
-        return 1.0f;
+        return 1.0f;             // Continue ray travel
+
+    // Gather information about hit
     shapeIdx_ = ptr->getObject().getShapeIdx();
     normal_ = normal;
-    return fraction_ = fraction;
+    return fraction_ = fraction; // Stop ray at current position
     (void)point; // For -Werror=unused-variable
 }

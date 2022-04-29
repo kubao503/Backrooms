@@ -15,7 +15,7 @@
 
 class Camera
 {
-private:
+public:
     // Class used to get feedback from ray-fixture collisions
     class MyCallback : public b2RayCastCallback
     {
@@ -30,13 +30,16 @@ private:
     public:
         float getFraction() const { return fraction_; }
         Shapes::Type getShapeIdx() const { return shapeIdx_; }
+        bool hit() const { return fraction_ < maxFraction; }
     };
 
+private:
     using scale_t = std::pair<float, float>;
 
     static constexpr float FOVMaxAngle_{PI / 5.0f};
     static constexpr int raysNumber_{204};
     static constexpr float rayLength_{100.0f};
+    static constexpr float maxFraction{1.0f};
 
     // Draws texture at ray's hitpoint
     static float getDimFactor(const MyCallback &callback);
@@ -52,8 +55,6 @@ private:
     static bool ifInFieldOfView(const Object &camera, const Object &object);
 
 public:
-    static constexpr float maxFraction{1.0f};
-
     static MyCallback sendRay(const b2World &world, const b2Vec2 &cameraPosition, const b2Vec2 &ray);
 
     // Casts multiple rays to show them as image on the screen
