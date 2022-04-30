@@ -7,9 +7,6 @@ class Object3D : public Object
 {
     friend class Chunk;
 
-protected:
-    void setBody(b2World &world, ObjectType type, b2Vec2 position, float angle);
-
 public:
     Object3D(b2World &world, ObjectType type);
     Object3D(b2World &world, ObjectType type, b2Vec2 position, float angle);

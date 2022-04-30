@@ -73,4 +73,7 @@ void Object::setBody(b2World &world, ObjectType type, b2Vec2 position, float ang
     body_ = std::unique_ptr<b2Body>(world.CreateBody(&getBodyDef(bodyTypes[type])));
     body_->SetTransform(position, angle);
     body_->CreateFixture(fixtureCalls[type]());
+
+    // Setting Object as user data
+    body_->GetUserData().pointer = (uintptr_t)this;
 }

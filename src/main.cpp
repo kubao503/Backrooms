@@ -6,6 +6,7 @@
 #include "chunk.h"
 #include "enemy.h"
 #include "timer.h"
+#include "myListener.h" // for setting contact listener
 
 #include <vector> // TEST
 #include <iostream> // Printing information about texture loading fail
@@ -24,6 +25,10 @@ int main()
 
     // Creating world without gravity
     b2World world{b2Vec2(0.0f, 0.0f)};
+
+    // Setting contact listener
+    MyListener listener;
+    world.SetContactListener(&listener);
 
     // Objects
     Player player(world, Object::PLAYER, b2Vec2(0.0f, -20.0f), 0);

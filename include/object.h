@@ -45,7 +45,7 @@ private:
 protected:
     std::unique_ptr<b2Body> body_{nullptr};
 
-    // virtual ~Object() = default;
+    virtual ~Object() = default;
     Object(b2World &world, ObjectType type);
     Object(b2World &world, ObjectType type, b2Vec2 position, float angle);
     void setBody(b2World &world, ObjectType type, b2Vec2 position, float angle);

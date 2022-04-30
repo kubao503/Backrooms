@@ -29,8 +29,9 @@ float Ray::RayCallback::ReportFixture(b2Fixture *fixture, const b2Vec2 &point, c
     // b2Body *ptr = dynamic_cast<b2Body *>(fixture->GetBody());
 
     // Non-zero userData pointer means that's Object3D
-    Object3D *userData = (Object3D *)fixture->GetBody()->GetUserData().pointer;
-    if (!userData)
+    Object *userData = (Object *)fixture->GetBody()->GetUserData().pointer;
+    Object3D *obj = dynamic_cast<Object3D *>(userData);
+    if (!obj)
         return 1.0f; // Continue ray travel
 
     // Gather information about hit
