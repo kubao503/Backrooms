@@ -53,8 +53,6 @@ int main()
     int32 velocityIterations = 4;  // Velocity calculations during one step
     int32 positionIterations = 3;  // Position calculations during one step
 
-    int timer;
-
     // Main loop
     while (userIO.isOpen())
     {
@@ -79,19 +77,19 @@ int main()
                 chunk.clear();
         }
 
-        ++timer;
-        // Starting/stopping hunts
-        if (timer % 5000 == 0)
-        {
-            // std::cerr << "start\n";
-            enemy.startHunt(world, player);
-        }
-        else if ((timer + 2500) % 5000 == 0)
-        {
-            // std::cerr << "stop\n";
-            enemy.stopHunt();
-            // std::cerr << "stopped\n";
-        }
+        // ++timer;
+        // // Starting/stopping hunts
+        // if (timer % 5000 == 0)
+        // {
+        //     // std::cerr << "start\n";
+        //     enemy.startHunt(world, player);
+        // }
+        // else if ((timer + 2500) % 5000 == 0)
+        // {
+        //     // std::cerr << "stop\n";
+        //     enemy.stopHunt();
+        //     // std::cerr << "stopped\n";
+        // }
 
         // Drawing on screen
         Camera::drawViewOnScreen(userIO, world, player, enemy);

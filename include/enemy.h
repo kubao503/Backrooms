@@ -2,7 +2,7 @@
 #define ENEMY_H
 
 #include "object2d.h" // for inheriting from Object2D
-#include "camera.h"   // for ray sending to check player visibility
+#include "ray.h"      // for ray sending to check player visibility
 
 #include <iostream> // DEBUG
 

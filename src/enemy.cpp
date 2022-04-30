@@ -11,7 +11,7 @@ void Enemy::setVelocity()
 void Enemy::updateWaypoint(const Object &player)
 {
     b2Vec2 ray{getVector(getPosition(), player.getPosition())};
-    Camera::MyCallback rayCallback = Camera::sendRay(*body_->GetWorld(), getPosition(), ray);
+    Ray::RayCallback rayCallback = Ray::sendRay(*body_->GetWorld(), getPosition(), ray);
     if (!rayCallback.hit())
     {
         // If player is visible for enemy set waypoint to the player positioin
