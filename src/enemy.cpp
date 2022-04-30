@@ -35,7 +35,7 @@ void Enemy::control(const Object &player)
     }
 }
 
-void Enemy::startHunt(MyWorld &world, const Object &player)
+void Enemy::startHunt(b2World &world, const Object &player)
 {
     spawned_ = true;
     b2Vec2 offset(1.0f, 0.0f);  // Needed to not spawn enemy directly on player

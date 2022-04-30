@@ -16,8 +16,8 @@ private:
     const b2Vec2 position_;
 
 public:
-    Chunk(MyWorld &world, b2Vec2 position);
-    void restore(MyWorld &world);
+    Chunk(b2World &world, b2Vec2 position);
+    void restore(b2World &world);
     void clear();
     bool wasCleared() const { return cleared_; };
     b2Vec2 getPosition() const { return position_; };

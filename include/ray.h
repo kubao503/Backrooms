@@ -1,7 +1,6 @@
 #ifndef RAY_394_H
 #define RAY_394_H
 
-#include "myWorld.h"     // needed by UserIO to draw ray hit
 #include "shapes.h"      // for Shape manipulation
 #include "myMath.h"      // for vector calculations
 #include "object3d.h"    // for casting hit object to Object3D

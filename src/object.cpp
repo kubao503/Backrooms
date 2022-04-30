@@ -43,23 +43,6 @@ const b2FixtureDef *Object::getFixtureDef(float radius)
     return &fixture;
 }
 
-Object::Object(ObjectType objectType)
-    : shapeIdx_{shapeIdx[objectType]} {}
-
-void Object::setBody(MyWorld &world, ObjectType type)
-{
-    body_ = createBody(getBodyDef(bodyTypes[type]), world);
-    body_->SetTransform(getNewPosition(), 0);
-    body_->CreateFixture(fixtureCalls[type]());
-}
-
-void Object::setBody(MyWorld &world, ObjectType type, b2Vec2 position, float angle)
-{
-    body_ = createBody(getBodyDef(bodyTypes[type]), world);
-    body_->SetTransform(position, angle);
-    body_->CreateFixture(fixtureCalls[type]());
-}
-
 const std::function<const b2FixtureDef *()> Object::fixtureCalls[ObjectType::TOTAL]{
     []()
     { return getFixtureDef(b2Vec2(6.0f, 1.0f)); },
@@ -69,3 +52,25 @@ const std::function<const b2FixtureDef *()> Object::fixtureCalls[ObjectType::TOT
     { return getFixtureDef(0.5f); },
     []()
     { return getFixtureDef(0.5f); }};
+
+Object::Object(b2World &world, ObjectType type)
+    : Object{world, type, getNewPosition(), 0} {}
+
+Object::Object(b2World &world, ObjectType type, b2Vec2 position, float angle)
+    : shapeIdx_{shapeIdx[type]}
+{
+    setBody(world, type, position, angle);
+}
+
+void Object::destroyBody()
+{
+    body_->GetWorld()->DestroyBody(body_.get());
+    body_.release(); // This body is no longer valid
+}
+
+void Object::setBody(b2World &world, ObjectType type, b2Vec2 position, float angle)
+{
+    body_ = std::unique_ptr<b2Body>(world.CreateBody(&getBodyDef(bodyTypes[type])));
+    body_->SetTransform(position, angle);
+    body_->CreateFixture(fixtureCalls[type]());
+}

@@ -5,13 +5,14 @@
 
 class Object3D : public Object
 {
-private:
     friend class Chunk;
-    std::unique_ptr<b2Body> createBody(const b2BodyDef &bd, MyWorld &world) const override;
+
+protected:
+    void setBody(b2World &world, ObjectType type, b2Vec2 position, float angle);
 
 public:
-    Object3D(MyWorld &world, ObjectType type);
-    Object3D(MyWorld &world, ObjectType type, b2Vec2 position, float angle);
+    Object3D(b2World &world, ObjectType type);
+    Object3D(b2World &world, ObjectType type, b2Vec2 position, float angle);
 };
 
 #endif

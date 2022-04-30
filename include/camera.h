@@ -7,10 +7,6 @@
 #include "enemy.h"    // for drawing Enemy
 #include "ray.h"      // for casting rays
 
-
-// DEBUG
-// #include <iostream>
-
 class Enemy;
 
 class Camera
@@ -39,7 +35,7 @@ private:
 
 public:
     // Casts multiple rays to show them as image on the screen
-    static void drawViewOnScreen(UserIO &userIO, const MyWorld &world, const Object &camera, const Enemy &enemy);
+    static void drawViewOnScreen(UserIO &userIO, const b2World &world, const Object &camera, const Enemy &enemy);
 };
 
 #endif

@@ -3,7 +3,7 @@
 
 std::mt19937 Chunk::mt(time(nullptr));
 
-Chunk::Chunk(MyWorld &world, b2Vec2 position)
+Chunk::Chunk(b2World &world, b2Vec2 position)
     : position_(position)
 {
     int seed = int(mt() % 4);
@@ -41,7 +41,7 @@ void Chunk::clear()
         wallWest->destroyBody();
 }
 
-void Chunk::restore(MyWorld &world)
+void Chunk::restore(b2World &world)
 {
     cleared_ = false;
 

@@ -5,12 +5,9 @@
 
 class Object2D : public Object
 {
-private:
-    std::unique_ptr<b2Body> createBody(const b2BodyDef &bd, MyWorld &world) const override;
-
 public:
-    Object2D(MyWorld &world, ObjectType type);
-    Object2D(MyWorld &world, ObjectType type, b2Vec2 position, float angle);
+    Object2D(b2World &world, ObjectType type);
+    Object2D(b2World &world, ObjectType type, b2Vec2 position, float angle);
 };
 
 #endif

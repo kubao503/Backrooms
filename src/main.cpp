@@ -2,7 +2,6 @@
 #include "object3d.h"
 #include "player.h"
 #include "userio.h"
-#include "myWorld.h"
 #include "textures.h"
 #include "chunk.h"
 #include "enemy.h"
@@ -24,7 +23,7 @@ int main()
     UserIO userIO(1600, 900, "Backrooms");
 
     // Creating world without gravity
-    MyWorld world{b2Vec2(0.0f, 0.0f)};
+    b2World world{b2Vec2(0.0f, 0.0f)};
 
     // Objects
     Player player(world, Object::PLAYER, b2Vec2(0.0f, -20.0f), 0);

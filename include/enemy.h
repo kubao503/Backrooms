@@ -4,8 +4,6 @@
 #include "object2d.h" // for inheriting from Object2D
 #include "ray.h"      // for ray sending to check player visibility
 
-#include <iostream> // DEBUG
-
 class Enemy : public Object2D
 {
     // Destination where enemy is currently going
@@ -21,11 +19,11 @@ class Enemy : public Object2D
     void updateWaypoint(const Object &player);
 
 public:
-    Enemy(MyWorld &world, ObjectType type, b2Vec2 position, float angle)
+    Enemy(b2World &world, ObjectType type, b2Vec2 position, float angle)
         : Object2D{world, type, position, angle} {}
 
     void control(const Object &player);
-    void startHunt(MyWorld &world, const Object &player);
+    void startHunt(b2World &world, const Object &player);
     void stopHunt();
 
     bool spawned() const { return spawned_; }

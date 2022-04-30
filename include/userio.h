@@ -6,8 +6,6 @@
 #include <memory>            // for moving sf::Color
 #include <algorithm>         // for std::min
 
-// #include <iostream>
-
 class UserIO
 {
 private:

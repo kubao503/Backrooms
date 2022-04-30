@@ -25,14 +25,17 @@ Ray::RayCallback Ray::sendRay(const b2World &world, const b2Vec2 &cameraPosition
 
 float Ray::RayCallback::ReportFixture(b2Fixture *fixture, const b2Vec2 &point, const b2Vec2 &normal, float fraction)
 {
-    // Successful cast to MyBody means that's Object3D
-    MyBody *ptr = dynamic_cast<MyBody *>(fixture->GetBody());
-    if (!ptr)
-        return 1.0f;             // Continue ray travel
+    // Successful cast to b2Body means that's Object3D
+    // b2Body *ptr = dynamic_cast<b2Body *>(fixture->GetBody());
+
+    // Non-zero userData pointer means that's Object3D
+    Object3D *userData = (Object3D *)fixture->GetBody()->GetUserData().pointer;
+    if (!userData)
+        return 1.0f; // Continue ray travel
 
     // Gather information about hit
-    shapeIdx_ = ptr->getObject().getShapeIdx();
+    shapeIdx_ = userData->getShapeIdx();
     normal_ = normal;
     return fraction_ = fraction; // Stop ray at current position
-    (void)point; // For -Werror=unused-variable
+    (void)point;                 // For -Werror=unused-variable
 }
