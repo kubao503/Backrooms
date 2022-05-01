@@ -7,19 +7,14 @@
 #include "enemy.h"    // for drawing Enemy
 #include "ray.h"      // for casting rays
 
-class Enemy;
-
 class Camera
 {
-public:
-
-
 private:
     using scale_t = std::pair<float, float>;
 
     static constexpr float FOVMaxAngle_{PI / 5.0f};
     static constexpr float renderDistance_{100.0f};
-    static constexpr int raysNumber_{400};
+    static constexpr int raysNumber_{50};
 
     // Draws texture at ray's hitpoint
     static float getDimFactor(const Ray::RayCallback &callback);

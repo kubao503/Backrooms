@@ -22,6 +22,7 @@ public:
             throw "Invalid shapeIdx\n";
         return shapes_[shapeIdx];
     }
+    static sf::RectangleShape getShape(Type shapeIdx, int offset);
 
     // Adds textures to some shapes
     static void init();
