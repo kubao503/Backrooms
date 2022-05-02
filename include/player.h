@@ -3,6 +3,7 @@
 
 #include "userio.h"   // for getting mouse input
 #include "object2d.h" // for inheriting form Object2D
+#include "myMath.h"   // for rotating vector
 
 #include <box2d/box2d.h> // for setting b2Body velocity
 

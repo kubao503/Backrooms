@@ -6,15 +6,20 @@ sf::RectangleShape Shapes::shapes_[Type::TOTAL]{
     shapeGenerator(sf::Vector2f(10.f, 10.f), sf::Color::Green),
     shapeGenerator(sf::Vector2f(195.0f, 400.0f), sf::Color::White)};
 
-sf::RectangleShape Shapes::getShape(Type shapeIdx, int offset)
+sf::RectangleShape Shapes::getShape(Type shapeIdx, float offset)
 {
     if (shapeIdx >= TOTAL)
         throw "Invalid shapeIdx\n";
 
+    constexpr float offsetFactor{10.0f};
+
     sf::Vector2f shapeSize = shapes_[shapeIdx].getSize();
+    sf::Vector2u textureSize = shapes_[shapeIdx].getTexture()->getSize();
+    unsigned int offsetMod{static_cast<int>(shapeSize.x * offset * offsetFactor) % textureSize.x};
+
     shapes_[shapeIdx].setTextureRect(sf::IntRect(
-        sf::Vector2i(shapeSize.x * offset, 0),
-        static_cast<sf::Vector2i>(shapeSize)));
+        sf::Vector2i(offsetMod, 0),
+        sf::Vector2i(shapeSize.x, textureSize.y)));
     return shapes_[shapeIdx];
 }
 

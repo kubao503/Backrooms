@@ -7,5 +7,6 @@ bool Textures::init()
     bool success{true};
     success = success && textures_[ENEMY].loadFromFile("media/enemy.png");
     success = success && textures_[WALL].loadFromFile("media/concrete_texture.jpg");
+    textures_[WALL].setSmooth(false);
     return success;
 }

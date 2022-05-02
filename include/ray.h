@@ -18,6 +18,7 @@ public:
         Shapes::Type shapeIdx_{Shapes::TOTAL};
         b2Vec2 normal_{0.0f, 0.0f};
         b2Vec2 ray_{0.0f, 0.0f};
+        b2Vec2 hitPoint_{0.0f, 0.0f};
         Object *object_;
         float ReportFixture(b2Fixture *fixture, const b2Vec2 &point, const b2Vec2 &normal, float fraction) override;
 
@@ -27,6 +28,7 @@ public:
         b2Vec2 getNormal() const { return normal_; }
         b2Vec2 getRay() const { return ray_; }
         Object *getObject() const { return object_; }
+        const b2Vec2 &getHitPoint() const { return hitPoint_; }
 
         bool hit() const { return fraction_ < maxFraction; }
         void setShapeIdx(Shapes::Type type) { shapeIdx_ = type; }

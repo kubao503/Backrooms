@@ -23,7 +23,7 @@ inline Camera::scale_t Camera::get2DScale(float adjacentDistance)
         20.0f / adjacentDistance};
 }
 
-void Camera::drawRay(UserIO &userIO, float angle, const Ray::RayCallback &callback, int rayNumber)
+void Camera::draw3DRay(UserIO &userIO, float angle, const Ray::RayCallback &callback, float rayNumber)
 {
     // y component of distance measured in local coordinate system
     float adjacentDistance{cos(angle) * callback.getFraction() * renderDistance_};
@@ -36,7 +36,7 @@ void Camera::drawRay(UserIO &userIO, float angle, const Ray::RayCallback &callba
     userIO.drawOnScreen(callback.getShapeIdx(), tan(angle) / maxCordX, 0.0f, scale.first, scale.second, dimFactor, rayNumber);
 }
 
-void Camera::drawRay(UserIO &userIO, float angle, const Ray::RayCallback &callback, float distance)
+void Camera::draw2DRay(UserIO &userIO, float angle, const Ray::RayCallback &callback, float distance)
 {
     // y component of distance measured in local coordinate system
     float adjacentDistance{cos(angle) * callback.getFraction() * distance};
@@ -60,12 +60,14 @@ bool Camera::ifInFieldOfView(const Object &camera, const Object &object)
     return angle < FOVMaxAngle_;
 }
 
+// #include <iostream> // DEBUG
+
 void Camera::drawObjects3D(UserIO &userIO, const b2World &world, const Object &camera)
 {
     // Angle between casted rays
     constexpr float angleChange{2.0f * FOVMaxAngle_ / raysNumber_};
-    int rayNumber{0};
-    // Object *lastObject{nullptr};
+    Object *lastObject{nullptr}; // Last drawn object
+    b2Vec2 closestCorner;        // Corner of this object
 
     // Cast a rays in many directions
     // for drawing Object3Ds
@@ -76,14 +78,15 @@ void Camera::drawObjects3D(UserIO &userIO, const b2World &world, const Object &c
 
         if (rayCallback.hit())
         {
-            drawRay(userIO, angle, rayCallback, rayNumber++);
+            if (lastObject != rayCallback.getObject())
+            {
+                // Start drawing texture from begining
+                lastObject = rayCallback.getObject();
+                closestCorner = static_cast<Object3D *>(rayCallback.getObject())->getClosestCorner(camera.getPosition());
+            }
 
-            // if (lastObject != rayCallback.getObject())
-            // {
-            //     // Start drawing texture from begining
-            //     rayNumber = 0;
-            //     lastObject = rayCallback.getObject();
-            // }
+            float rayNumber{distance(rayCallback.getHitPoint(), closestCorner)};
+            draw3DRay(userIO, angle, rayCallback, rayNumber);
         }
     }
 }
@@ -111,7 +114,7 @@ void Camera::drawObjects2D(UserIO &userIO, const b2World &world, const Object &c
             float cross = b2Cross(getVector(camera.getAngle()), ray);
             objectAngle *= abs(cross) / cross;
 
-            drawRay(userIO, objectAngle, rayCallback, b2Distance(getVector(camera.getAngle()), ray));
+            draw2DRay(userIO, objectAngle, rayCallback, b2Distance(getVector(camera.getAngle()), ray));
         }
     }
 }

@@ -35,6 +35,7 @@ int main()
     Enemy enemy(world, Object::ENEMY, b2Vec2(-20.0f, -30.0f), 0);
 
     std::vector<Chunk> chunks;
+    // chunks.push_back(Chunk(world, b2Vec2(20, 20)));
 
     for (float i = 0; i < 1000; i += 10)
         for (float j = 0; j < 1000; j += 10)
@@ -66,7 +67,7 @@ int main()
         // Physics step
         world.Step(timeStep, velocityIterations, positionIterations);
         player.control(userIO);
-        enemy.control(player);
+        // enemy.control(player);
 
         // Chuncks update
         for (auto &chunk : chunks)
@@ -80,20 +81,6 @@ int main()
             else if (!chunk.wasCleared())
                 chunk.clear();
         }
-
-        // ++timer;
-        // // Starting/stopping hunts
-        // if (timer % 5000 == 0)
-        // {
-        //     // std::cerr << "start\n";
-        //     enemy.startHunt(world, player);
-        // }
-        // else if ((timer + 2500) % 5000 == 0)
-        // {
-        //     // std::cerr << "stop\n";
-        //     enemy.stopHunt();
-        //     // std::cerr << "stopped\n";
-        // }
 
         // Drawing on screen
         Camera::drawViewOnScreen(userIO, world, player, enemy);

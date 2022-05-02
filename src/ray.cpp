@@ -33,8 +33,9 @@ float Ray::RayCallback::ReportFixture(b2Fixture *fixture, const b2Vec2 &point, c
 
     // Gather information about hit
     object_ = obj;
+    hitPoint_ = point;
     shapeIdx_ = userData->getShapeIdx();
     normal_ = normal;
     return fraction_ = fraction; // Stop ray at current position
-    (void)point;                 // For -Werror=unused-variable
+    // (void)point;                 // For -Werror=unused-variable
 }

@@ -13,7 +13,7 @@ Chunk::Chunk(b2World &world, b2Vec2 position)
     // wallNorth = std::make_unique<Object3D>(world, Object::ObjectType::WALL, position, 0);
     // wallWest = std::make_unique<Object3D>(world, Object::ObjectType::WALL, offsetWall, PI / 2);
 
-    // seed = 3;
+    // seed = 2;      // DEBUG
     switch (seed)
     {
     case 1:
