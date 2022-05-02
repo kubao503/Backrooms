@@ -24,7 +24,7 @@ public:
     }
 
     // The 0, 0 coordinate coresponds to the center of the screen
-    void drawOnScreen(Shapes::Type shapeIdx, float x = 0, float y = 0, float xScale = 1.0f, float yScale = 1.0f, float dim = 1.0f);
+    void drawOnScreen(Shapes::Type shapeIdx, float x = 0, float y = 0, float xScale = 1.0f, float yScale = 1.0f, float dim = 1.0f, float textureOffset = 0.0);
 
     bool isOpen() { return window_.isOpen(); }
     // Starts making new frame

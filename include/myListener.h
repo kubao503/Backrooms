@@ -9,7 +9,7 @@
 
 class MyListener : public b2ContactListener
 {
-    void BeginContact(b2Contact *contact)
+    void BeginContact(b2Contact *contact) override
     {
         Object *objA = (Object *)contact->GetFixtureA()->GetBody()->GetUserData().pointer;
         Object *objB = (Object *)contact->GetFixtureB()->GetBody()->GetUserData().pointer;

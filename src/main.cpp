@@ -6,6 +6,7 @@
 #include "chunk.h"
 #include "enemy.h"
 #include "timer.h"
+#include "item.h"
 #include "myListener.h" // for setting contact listener
 
 #include <vector> // TEST
@@ -32,9 +33,12 @@ int main()
 
     // Objects
     Player player(world, Object::PLAYER, b2Vec2(0.0f, -20.0f), 0);
-    Enemy enemy(world, Object::ENEMY, b2Vec2(-20.0f, -30.0f), 0);
+    Object2D::object2Ds_t object2Ds;
+    object2Ds.push_back(std::make_unique<Enemy>(world, Object::ENEMY, b2Vec2(-20.0f, -30.0f), 0));
+    object2Ds.push_back(std::make_unique<Item>(world, Object::ITEM, b2Vec2(20.0f, -30.0f), 0));
 
     std::vector<Chunk> chunks;
+    // chunks.push_back(Chunk(world, b2Vec2(20, 20)));
 
     for (float i = 0; i < 1000; i += 10)
         for (float j = 0; j < 1000; j += 10)
@@ -66,7 +70,7 @@ int main()
         // Physics step
         world.Step(timeStep, velocityIterations, positionIterations);
         player.control(userIO);
-        enemy.control(player);
+        // enemy.control(player);
 
         // Chuncks update
         for (auto &chunk : chunks)
@@ -81,22 +85,8 @@ int main()
                 chunk.clear();
         }
 
-        // ++timer;
-        // // Starting/stopping hunts
-        // if (timer % 5000 == 0)
-        // {
-        //     // std::cerr << "start\n";
-        //     enemy.startHunt(world, player);
-        // }
-        // else if ((timer + 2500) % 5000 == 0)
-        // {
-        //     // std::cerr << "stop\n";
-        //     enemy.stopHunt();
-        //     // std::cerr << "stopped\n";
-        // }
-
         // Drawing on screen
-        Camera::drawViewOnScreen(userIO, world, player, enemy);
+        Camera::drawViewOnScreen(userIO, world, player, object2Ds);
     }
 
     return 0;

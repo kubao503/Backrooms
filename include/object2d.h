@@ -6,8 +6,10 @@
 class Object2D : public Object
 {
 public:
+    using object2Ds_t = std::vector<std::unique_ptr<Object2D>>;
+
     Object2D(b2World &world, ObjectType type);
-    Object2D(b2World &world, ObjectType type, b2Vec2 position, float angle);
+    Object2D(b2World &world, ObjectType type, const b2Vec2 &position, float angle);
 };
 
 #endif

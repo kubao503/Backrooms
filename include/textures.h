@@ -9,6 +9,7 @@ public:
     enum Type
     {
         ENEMY,
+        WALL,
         TOTAL
     };
     static bool init();

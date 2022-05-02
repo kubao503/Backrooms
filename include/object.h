@@ -16,6 +16,7 @@ public:
         WALL2,
         PLAYER,
         ENEMY,
+        ITEM,
         TOTAL
     };
 
@@ -26,30 +27,35 @@ private:
         DYNAMIC
     };
 
-    // Object generating
+    // Object generating methods
     static const b2BodyDef &getBodyDef(BodyType bodyType);
     static const b2FixtureDef *getFixtureDef(const b2Vec2 &size);
     static const b2FixtureDef *getFixtureDef(float radius);
     // Returns unique position helping avoiding spawning objects at the same place
     b2Vec2 getNewPosition() const;
 
+    // Object generation properties
     static const std::function<const b2FixtureDef *()> fixtureCalls[ObjectType::TOTAL];
     const static constexpr Shapes::Type shapeIdx[ObjectType::TOTAL]{
-        Shapes::WALL, Shapes::RED_WALL, Shapes::PLAYER, Shapes::ENEMY};
+        Shapes::WALL, Shapes::RED_WALL, Shapes::PLAYER, Shapes::ENEMY, Shapes::ENEMY};
 
     static constexpr BodyType bodyTypes[ObjectType::TOTAL]{
-        BodyType::STATIC, BodyType::STATIC, BodyType::DYNAMIC, BodyType::DYNAMIC};
+        BodyType::STATIC, BodyType::STATIC, BodyType::DYNAMIC, BodyType::DYNAMIC, BodyType::STATIC};
 
     const Shapes::Type shapeIdx_;
 
 protected:
     std::unique_ptr<b2Body> body_{nullptr};
 
-    virtual ~Object() = default;
+    virtual ~Object(){
+        if (body_)
+            destroyBody();
+    }
     Object(b2World &world, ObjectType type);
-    Object(b2World &world, ObjectType type, b2Vec2 position, float angle);
-    void setBody(b2World &world, ObjectType type, b2Vec2 position, float angle);
+    Object(b2World &world, ObjectType type, const b2Vec2 &position, float angle);
+    void setBody(b2World &world, ObjectType type, const b2Vec2 &position, float angle);
     void destroyBody();
+    void setSensor(bool sensor);
 
 public:
     Shapes::Type getShapeIdx() const { return shapeIdx_; }

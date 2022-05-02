@@ -4,7 +4,6 @@ inline float Camera::getDimFactor(const Ray::RayCallback &callback)
 {
     // float dimFactor = 1.0f / callback.getFraction() * vecCosine(callback.normal_, callback.ray_) / 20;
     float dimFactor = (vecCosine(callback.getNormal(), callback.getRay()) * 0.375f + 0.454545f) * (-callback.getFraction() * renderDistance_ / 100.0f + 1.3f);
-    // std::cerr << dimFactor << '\n'; // DEBUG
     return dimFactor;
     // return 0.4f / callback.getFraction() * vecCosine(callback.normal_, callback.ray_);
 }
@@ -19,11 +18,11 @@ inline Camera::scale_t Camera::get3DScale(float adjacentDistance)
 inline Camera::scale_t Camera::get2DScale(float adjacentDistance)
 {
     return {
-        28.0f / adjacentDistance / FOVMaxAngle_,
-        56.0f / adjacentDistance};
+        4.0f / adjacentDistance / FOVMaxAngle_,
+        10.0f / adjacentDistance};
 }
 
-void Camera::drawRay(UserIO &userIO, float angle, const Ray::RayCallback &callback)
+void Camera::draw3DRay(UserIO &userIO, float angle, const Ray::RayCallback &callback, float rayNumber)
 {
     // y component of distance measured in local coordinate system
     float adjacentDistance{cos(angle) * callback.getFraction() * renderDistance_};
@@ -32,10 +31,11 @@ void Camera::drawRay(UserIO &userIO, float angle, const Ray::RayCallback &callba
     float dimFactor = getDimFactor(callback);
 
     static const float maxCordX{tan(FOVMaxAngle_)};
-    userIO.drawOnScreen(callback.getShapeIdx(), tan(angle) / maxCordX, 0.0f, scale.first, scale.second, dimFactor);
+
+    userIO.drawOnScreen(callback.getShapeIdx(), tan(angle) / maxCordX, 0.0f, scale.first, scale.second, dimFactor, rayNumber);
 }
 
-void Camera::drawRay(UserIO &userIO, float angle, const Ray::RayCallback &callback, float distance)
+void Camera::draw2DRay(UserIO &userIO, float angle, const Ray::RayCallback &callback, float distance)
 {
     // y component of distance measured in local coordinate system
     float adjacentDistance{cos(angle) * callback.getFraction() * distance};
@@ -55,16 +55,15 @@ bool Camera::ifInFieldOfView(const Object &camera, const Object &object)
 
     // Check if the angle between the two vectors is less than FOVMaxAngle
     float angle{vecAngle(viewVector, objectVector)};
-    // std::cerr << angle << '\n';
     return angle < FOVMaxAngle_;
 }
 
-void Camera::drawViewOnScreen(UserIO &userIO, const b2World &world, const Object &camera, const std::vector<Object2D> &object2Ds)
+void Camera::drawObjects3D(UserIO &userIO, const b2World &world, const Object &camera)
 {
-    userIO.start(); // Start frame drawing
-
     // Angle between casted rays
     constexpr float angleChange{2.0f * FOVMaxAngle_ / raysNumber_};
+    Object *lastObject{nullptr}; // Last drawn object
+    b2Vec2 closestCorner;        // Corner of this object
 
     // Cast a rays in many directions
     // for drawing Object3Ds
@@ -74,33 +73,61 @@ void Camera::drawViewOnScreen(UserIO &userIO, const b2World &world, const Object
         Ray::RayCallback rayCallback = Ray::sendRay(world, camera.getPosition(), angle + camera.getAngle(), renderDistance_);
 
         if (rayCallback.hit())
-            drawRay(userIO, angle, rayCallback);
-    }
-
-    // Drawing Object2D
-    // For each one check if it is in current fieldOfView
-    if (enemy.spawned() && ifInFieldOfView(camera, enemy))
-    {
-        // If enemy is in the field of view
-        // send a ray in the enemy's this direction
-        b2Vec2 ray{getVector(camera.getPosition(), enemy.getPosition())};
-        Ray::RayCallback rayCallback = Ray::sendRay(world, camera.getPosition(), ray);
-
-        if (!rayCallback.hit())
         {
-            // If none object3D block enemy's view
-            // draw it
-            rayCallback.setShapeIdx(enemy.getShapeIdx());
-            float objectAngle{vecAngle(getVector(camera.getAngle()), ray)};
+            if (lastObject != rayCallback.getObject())
+            {
+                // Start drawing texture from begining
+                lastObject = rayCallback.getObject();
+                closestCorner = static_cast<Object3D *>(rayCallback.getObject())->getClosestCorner(camera.getPosition());
+            }
 
-            // Differenciate when the object's on the left side
-            // from when it's on the right side
-            float cross = b2Cross(getVector(camera.getAngle()), ray);
-            objectAngle *= abs(cross) / cross;
-
-            drawRay(userIO, objectAngle, rayCallback, b2Distance(getVector(camera.getAngle()), ray));
+            float rayNumber{distance(rayCallback.getHitPoint(), closestCorner)};
+            draw3DRay(userIO, angle, rayCallback, rayNumber);
         }
     }
+}
+
+void Camera::drawObjects2D(UserIO &userIO, const b2World &world, const Object &camera, const Object2D::object2Ds_t &object2Ds)
+{
+    for (auto &&object2D : object2Ds)
+    {
+        // Additional condition for enemy
+        const Enemy *enemy = dynamic_cast<const Enemy *>(object2D.get());
+        bool enemyCondition{!enemy || enemy->spawned()};
+
+        // Drawing Object2D
+        // For each one check if it is in current fieldOfView
+        if (ifInFieldOfView(camera, *object2D.get()) && enemyCondition)
+        {
+            // If object2D is in the field of view
+            // send a ray in the object2D's this direction
+            b2Vec2 ray{getVector(camera.getPosition(), object2D->getPosition())};
+            Ray::RayCallback rayCallback = Ray::sendRay(world, camera.getPosition(), ray);
+
+            if (!rayCallback.hit())
+            {
+                // If none object3D block object2D's view
+                // draw it
+                rayCallback.setShapeIdx(object2D->getShapeIdx());
+                float objectAngle{vecAngle(getVector(camera.getAngle()), ray)};
+
+                // Differenciate when the object's on the left side
+                // from when it's on the right side
+                float cross = b2Cross(getVector(camera.getAngle()), ray);
+                objectAngle *= abs(cross) / cross;
+
+                draw2DRay(userIO, objectAngle, rayCallback, b2Distance(getVector(camera.getAngle()), ray));
+            }
+        }
+    }
+}
+
+void Camera::drawViewOnScreen(UserIO &userIO, const b2World &world, const Object &camera, const Object2D::object2Ds_t &object2Ds)
+{
+    userIO.start(); // Start frame drawing
+
+    drawObjects3D(userIO, world, camera);
+    drawObjects2D(userIO, world, camera, object2Ds);
 
     userIO.end(); // Display ray on screen
 }

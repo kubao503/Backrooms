@@ -4,5 +4,9 @@ sf::Texture Textures::textures_[TOTAL]{};
 
 bool Textures::init()
 {
-    return textures_[ENEMY].loadFromFile("media/enemy.png");
+    bool success{true};
+    success = success && textures_[ENEMY].loadFromFile("media/enemy.png");
+    success = success && textures_[WALL].loadFromFile("media/concrete_texture.jpg");
+    textures_[WALL].setSmooth(false);
+    return success;
 }

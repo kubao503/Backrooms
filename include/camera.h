@@ -7,15 +7,10 @@
 #include "enemy.h"    // for drawing Enemy
 #include "ray.h"      // for casting rays
 
-#include <vector>     // for storing Object2Ds
-
-class Enemy;
+#include <vector> // for storing Object2Ds
 
 class Camera
 {
-public:
-
-
 private:
     using scale_t = std::pair<float, float>;
 
@@ -29,15 +24,17 @@ private:
     static scale_t get2DScale(float adjacentDistance);
 
     // For 3D objects
-    static void drawRay(UserIO &userIO, float angle, const Ray::RayCallback &callback);
+    static void draw3DRay(UserIO &userIO, float angle, const Ray::RayCallback &callback, float rayNumber);
     // For 2D objects
-    static void drawRay(UserIO &userIO, float angle, const Ray::RayCallback &callback, float distance);
+    static void draw2DRay(UserIO &userIO, float angle, const Ray::RayCallback &callback, float distance);
 
     static bool ifInFieldOfView(const Object &camera, const Object &object);
+    static void drawObjects3D(UserIO &userIO, const b2World &world, const Object &camera);
+    static void drawObjects2D(UserIO &userIO, const b2World &world, const Object &camera, const Object2D::object2Ds_t &object2Ds);
 
 public:
     // Casts multiple rays to show them as image on the screen
-    static void drawViewOnScreen(UserIO &userIO, const b2World &world, const Object &camera, const std::vector<Object2D> &object2Ds);
+    static void drawViewOnScreen(UserIO &userIO, const b2World &world, const Object &camera, const Object2D::object2Ds_t &object2Ds);
 };
 
 #endif

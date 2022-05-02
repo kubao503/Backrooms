@@ -13,14 +13,13 @@ void UserIO::setScale(sf::Shape &shape)
 {
     sf::Vector2u size{window_.getSize()};
     float xScaleFactor{size.x / 1000.f};
-    // float yScaleFactor{size.y / 1000.f};
     shape.scale(xScaleFactor, 1.0f);
 }
 
-void UserIO::drawOnScreen(Shapes::Type shapeIdx, float x, float y, float xScale, float yScale, float dim)
+void UserIO::drawOnScreen(Shapes::Type shapeIdx, float x, float y, float xScale, float yScale, float dim, float textureOffset)
 {
     sf::Vector2u size{window_.getSize()};
-    sf::RectangleShape shape{Shapes::getShape(shapeIdx)};
+    sf::RectangleShape shape{Shapes::getShape(shapeIdx, textureOffset)};
     const sf::Color &originalColor = shape.getFillColor();
     shape.setFillColor(std::move(dimColor(originalColor, dim)));
     shape.setScale(xScale, yScale);

@@ -51,15 +51,27 @@ const std::function<const b2FixtureDef *()> Object::fixtureCalls[ObjectType::TOT
     []()
     { return getFixtureDef(0.5f); },
     []()
-    { return getFixtureDef(0.5f); }};
+    { return getFixtureDef(0.5f); },
+    []()
+    { return getFixtureDef(1.0f); }};
 
 Object::Object(b2World &world, ObjectType type)
     : Object{world, type, getNewPosition(), 0} {}
 
-Object::Object(b2World &world, ObjectType type, b2Vec2 position, float angle)
+Object::Object(b2World &world, ObjectType type, const b2Vec2 &position, float angle)
     : shapeIdx_{shapeIdx[type]}
 {
     setBody(world, type, position, angle);
+}
+
+void Object::setBody(b2World &world, ObjectType type, const b2Vec2 &position, float angle)
+{
+    body_ = std::unique_ptr<b2Body>(world.CreateBody(&getBodyDef(bodyTypes[type])));
+    body_->SetTransform(position, angle);
+    body_->CreateFixture(fixtureCalls[type]());
+
+    // Setting Object as user data
+    body_->GetUserData().pointer = (uintptr_t)this;
 }
 
 void Object::destroyBody()
@@ -68,12 +80,7 @@ void Object::destroyBody()
     body_.release(); // This body is no longer valid
 }
 
-void Object::setBody(b2World &world, ObjectType type, b2Vec2 position, float angle)
+void Object::setSensor(bool sensor)
 {
-    body_ = std::unique_ptr<b2Body>(world.CreateBody(&getBodyDef(bodyTypes[type])));
-    body_->SetTransform(position, angle);
-    body_->CreateFixture(fixtureCalls[type]());
-
-    // Setting Object as user data
-    body_->GetUserData().pointer = (uintptr_t)this;
+    body_->GetFixtureList()[0].SetSensor(sensor);
 }

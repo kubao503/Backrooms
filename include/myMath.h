@@ -35,4 +35,11 @@ inline float distance(const b2Vec2 &pos1, const b2Vec2 &pos2)
     return (pos1 - pos2).Length();
 }
 
+inline b2Vec2 rotateVec(const b2Vec2 &vec, float angle)
+{
+    return {
+        vec.x * sin(angle) + vec.y * cos(angle),
+        -vec.x * cos(angle) + vec.y * sin(angle)};
+}
+
 #endif

@@ -44,7 +44,8 @@ void Player::control(UserIO &userIO)
 void Player::setLocalVelocity(const b2Vec2 &newVelocity)
 {
     const float angle{body_->GetAngle()};
-    body_->SetLinearVelocity(b2Vec2(
-        newVelocity.x * sin(angle) + newVelocity.y * cos(angle),
-        -newVelocity.x * cos(angle) + newVelocity.y * sin(angle)));
+    // body_->SetLinearVelocity(b2Vec2(
+    //     newVelocity.x * sin(angle) + newVelocity.y * cos(angle),
+    //     -newVelocity.x * cos(angle) + newVelocity.y * sin(angle)));
+    body_->SetLinearVelocity(rotateVec(newVelocity, angle));
 }
