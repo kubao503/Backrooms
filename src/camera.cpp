@@ -59,7 +59,7 @@ bool Camera::ifInFieldOfView(const Object &camera, const Object &object)
     return angle < FOVMaxAngle_;
 }
 
-void Camera::drawViewOnScreen(UserIO &userIO, const b2World &world, const Object &camera, const Enemy &enemy)
+void Camera::drawViewOnScreen(UserIO &userIO, const b2World &world, const Object &camera, const std::vector<Object2D> &object2Ds)
 {
     userIO.start(); // Start frame drawing
 

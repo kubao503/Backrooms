@@ -7,6 +7,8 @@
 #include "enemy.h"    // for drawing Enemy
 #include "ray.h"      // for casting rays
 
+#include <vector>     // for storing Object2Ds
+
 class Enemy;
 
 class Camera
@@ -35,7 +37,7 @@ private:
 
 public:
     // Casts multiple rays to show them as image on the screen
-    static void drawViewOnScreen(UserIO &userIO, const b2World &world, const Object &camera, const Enemy &enemy);
+    static void drawViewOnScreen(UserIO &userIO, const b2World &world, const Object &camera, const std::vector<Object2D> &object2Ds);
 };
 
 #endif
