@@ -1,14 +1,19 @@
 #include "player.h"
 
+void Player::setLocalVelocity(const b2Vec2 &newVelocity)
+{
+    const float angle{body_->GetAngle()};
+    body_->SetLinearVelocity(rotateVec(newVelocity, angle));
+}
+
 void Player::control(UserIO &userIO)
 {
-    // const float VELOCITY = 2.0f;
     static constexpr float LINEAR_VELOCITY = 2.0f;
     static constexpr float ANGULAR_VELOCITY = 0.15f;
     static constexpr float SPRINT_MULTIPLIER = 2.0f;
     b2Vec2 newVelocity(0.0f, 0.0f);
 
-    // Moving objects
+    // Moving
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
     {
         newVelocity += b2Vec2(0.0f, LINEAR_VELOCITY);
@@ -37,15 +42,27 @@ void Player::control(UserIO &userIO)
 
     setLocalVelocity(newVelocity);
 
+    // looking around
     int mouseXMovement(userIO.getMouseXMovement());
     body_->SetAngularVelocity(ANGULAR_VELOCITY * mouseXMovement);
+
+    // Pickig up items
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+    {
+        for (auto item : nearItems_)
+        {
+            // delete item;
+        }
+        nearItems_.clear();
+    }
 }
 
-void Player::setLocalVelocity(const b2Vec2 &newVelocity)
+void Player::itemContact(const Item *item)
 {
-    const float angle{body_->GetAngle()};
-    // body_->SetLinearVelocity(b2Vec2(
-    //     newVelocity.x * sin(angle) + newVelocity.y * cos(angle),
-    //     -newVelocity.x * cos(angle) + newVelocity.y * sin(angle)));
-    body_->SetLinearVelocity(rotateVec(newVelocity, angle));
+    nearItems_.insert(item);
+}
+
+void Player::itemLost(const Item *item)
+{
+    nearItems_.erase(item);
 }

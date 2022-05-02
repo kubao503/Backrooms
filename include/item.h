@@ -5,7 +5,8 @@
 
 class Item : public Object2D
 {
-public:
+    friend class Game;
+private:
     Item(b2World &world, Object::ObjectType type, const b2Vec2 &position, float angle)
         : Object2D{world, type, position, angle}
     {
