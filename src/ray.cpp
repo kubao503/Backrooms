@@ -15,7 +15,7 @@ Ray::RayCallback Ray::sendRay(const b2World &world, const b2Vec2 &cameraPosition
 Ray::RayCallback Ray::sendRay(const b2World &world, const b2Vec2 &cameraPosition, float angle, float length)
 {
     // Calculate ray
-    b2Vec2 ray{getVector(angle)};
+    b2Vec2 ray{getVec(angle)};
     ray.Normalize();
     ray *= length;
 
@@ -34,8 +34,7 @@ float Ray::RayCallback::ReportFixture(b2Fixture *fixture, const b2Vec2 &point, c
     // Gather information about hit
     object_ = obj;
     hitPoint_ = point;
-    shapeIdx_ = userData->getShapeIdx();
+    shapeIdx_ = obj->getShapeIdx();
     normal_ = normal;
     return fraction_ = fraction; // Stop ray at current position
-    // (void)point;                 // For -Werror=unused-variable
 }

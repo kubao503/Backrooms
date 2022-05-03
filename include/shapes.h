@@ -11,7 +11,6 @@ public:
     {
         WALL,
         RED_WALL,
-        PLAYER,
         ENEMY,
         TOTAL
     };

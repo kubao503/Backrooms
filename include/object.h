@@ -1,53 +1,56 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include "shapes.h"      // for shapeIdx_ attribute
+#include "myMath.h"
+#include "config.h"
+
 #include <box2d/box2d.h> // for creating body
 
 #include <memory>     // for b2Body smart pointer
 #include <functional> // for storing fixture calls
 
+// Collidable
 class Object
 {
 public:
     enum ObjectType
     {
         WALL,
-        WALL2,
+        RED_WALL,
         PLAYER,
         ENEMY,
         ITEM,
+        CAMERA,
         TOTAL
     };
 
 private:
-    enum class BodyType
-    {
-        STATIC,
-        DYNAMIC
-    };
-
     // Object generating methods
-    static const b2BodyDef &getBodyDef(BodyType bodyType);
-    static const b2FixtureDef *getFixtureDef(const b2Vec2 &size);
-    static const b2FixtureDef *getFixtureDef(float radius);
+    static const b2BodyDef &getBodyDef(b2BodyType bodyType);
+    static const b2Shape &getShape(float halfX, float halfY);
+    static const b2Shape &getShape(float radius);
+    static const b2Shape &getShape(float FOVangle, float renderDist, int verticesCount);
+    static const b2FixtureDef &getFixtureDef(const b2Shape &shape);
     // Returns unique position helping avoiding spawning objects at the same place
     b2Vec2 getNewPosition() const;
 
-    // Object generation properties
-    static const std::function<const b2FixtureDef *()> fixtureCalls[ObjectType::TOTAL];
-    const static constexpr Shapes::Type shapeIdx[ObjectType::TOTAL]{
-        Shapes::WALL, Shapes::RED_WALL, Shapes::PLAYER, Shapes::ENEMY, Shapes::ENEMY};
+    friend class Arguments;
 
-    static constexpr BodyType bodyTypes[ObjectType::TOTAL]{
-        BodyType::STATIC, BodyType::STATIC, BodyType::DYNAMIC, BodyType::DYNAMIC, BodyType::STATIC};
+    struct Arguments
+    {
+        b2BodyType bodyType_;
+        b2FixtureDef fixDef_;
+        Arguments(b2BodyType bodyType, const b2Shape &shape);
+    };
 
-    const Shapes::Type shapeIdx_;
+    // Arguments for creating objects
+    static Arguments argList[ObjectType::TOTAL];
 
 protected:
     std::unique_ptr<b2Body> body_{nullptr};
 
-    virtual ~Object(){
+    virtual ~Object()
+    {
         if (body_)
             destroyBody();
     }
@@ -58,7 +61,6 @@ protected:
     void setSensor(bool sensor);
 
 public:
-    Shapes::Type getShapeIdx() const { return shapeIdx_; }
     const b2Vec2 &getPosition() const { return body_->GetPosition(); };
     float getAngle() const { return body_->GetAngle(); };
 };

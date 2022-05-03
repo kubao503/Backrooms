@@ -7,6 +7,7 @@
 #include "enemy.h"
 #include "timer.h"
 #include "item.h"
+// #include "game.h"
 #include "myListener.h" // for setting contact listener
 
 #include <vector> // TEST
@@ -32,10 +33,8 @@ int main()
     world.SetContactListener(&listener);
 
     // Objects
-    Player player(world, Object::PLAYER, b2Vec2(0.0f, -20.0f), 0);
-    Object2D::object2Ds_t object2Ds;
-    object2Ds.push_back(std::make_unique<Enemy>(world, Object::ENEMY, b2Vec2(-20.0f, -30.0f), 0));
-    object2Ds.push_back(std::make_unique<Item>(world, Object::ITEM, b2Vec2(20.0f, -30.0f), 0));
+    Player player(world, b2Vec2(0.0f, -20.0f), 0);
+    Camera camera(world, player.getPosition(), player.getAngle());
 
     std::vector<Chunk> chunks;
     // chunks.push_back(Chunk(world, b2Vec2(20, 20)));
@@ -86,7 +85,7 @@ int main()
         }
 
         // Drawing on screen
-        Camera::drawViewOnScreen(userIO, world, player, object2Ds);
+        camera.drawViewOnScreen(userIO, world, player);
     }
 
     return 0;

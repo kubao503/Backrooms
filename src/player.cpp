@@ -49,20 +49,20 @@ void Player::control(UserIO &userIO)
     // Pickig up items
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
     {
-        for (auto item : nearItems_)
-        {
-            // delete item;
-        }
-        nearItems_.clear();
+        // for (auto item : itemsNearby_)
+        // {
+        //     // delete item
+        // }
+        itemsNearby_.clear();
     }
 }
 
 void Player::itemContact(const Item *item)
 {
-    nearItems_.insert(item);
+    itemsNearby_.insert(item);
 }
 
 void Player::itemLost(const Item *item)
 {
-    nearItems_.erase(item);
+    itemsNearby_.erase(item);
 }

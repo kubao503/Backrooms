@@ -6,16 +6,17 @@
 #include "myMath.h"   // for angle calculations
 #include "enemy.h"    // for drawing Enemy
 #include "ray.h"      // for casting rays
+#include "drawableObject.h"
+#include "config.h" // for constants
 
 #include <vector> // for storing Object2Ds
+#include <memory>
 
-class Camera
+class Camera : public Object
 {
 private:
     using scale_t = std::pair<float, float>;
 
-    static constexpr float FOVMaxAngle_{PI / 5.0f};
-    static constexpr float renderDistance_{100.0f};
     static constexpr int raysNumber_{400};
 
     // Draws texture at ray's hitpoint
@@ -25,16 +26,20 @@ private:
 
     // For 3D objects
     static void draw3DRay(UserIO &userIO, float angle, const Ray::RayCallback &callback, float rayNumber);
-    // For 2D objects
+    // For 2D objectsSetSensor
     static void draw2DRay(UserIO &userIO, float angle, const Ray::RayCallback &callback, float distance);
 
     static bool ifInFieldOfView(const Object &camera, const Object &object);
-    static void drawObjects3D(UserIO &userIO, const b2World &world, const Object &camera);
-    static void drawObjects2D(UserIO &userIO, const b2World &world, const Object &camera, const Object2D::object2Ds_t &object2Ds);
+    void drawObjects3D(UserIO &userIO, const b2World &world, const Object &player);
+    void drawObjects2D(UserIO &userIO, const b2World &world, const Object &player);
+
+    std::vector<Object2D *> viewedObjects_;
 
 public:
+    Camera(b2World &world, const b2Vec2 &position, float angle);
+
     // Casts multiple rays to show them as image on the screen
-    static void drawViewOnScreen(UserIO &userIO, const b2World &world, const Object &camera, const Object2D::object2Ds_t &object2Ds);
+    void drawViewOnScreen(UserIO &userIO, const b2World &world, const Object &player);
 };
 
 #endif
