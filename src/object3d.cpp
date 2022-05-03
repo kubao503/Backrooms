@@ -28,7 +28,7 @@ b2Vec2 Object3D::getClosestCorner(const b2Vec2 &playerPos) const
     return closestCorner;
 }
 
-Object3D::Object3D(b2World &world, ObjectType type, const b2Vec2 &position, float angle)
+Object3D::Object3D(b2World &world, Type type, const b2Vec2 &position, float angle)
     : DrawableObject{world, type, position, angle}
 {
     // Setting Object3D as user data

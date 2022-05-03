@@ -13,7 +13,7 @@ private:
     std::set<Object *> freeItems_;
 
 public:
-    void createItem(b2World &world, Object::ObjectType type, const b2Vec2 &position, float angle);
+    void createItem(b2World &world, Object::Type type, const b2Vec2 &position, float angle);
 };
 
 #endif

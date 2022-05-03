@@ -1,10 +1,10 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "userio.h"   // for getting mouse input
+#include "userio.h" // for getting mouse input
 #include "object.h" // for inheriting form Object2D
-#include "myMath.h"   // for rotating vector
-#include "item.h"     // for picking up item
+#include "myMath.h" // for rotating vector
+#include "item.h"   // for picking up item
 
 #include <box2d/box2d.h> // for setting b2Body velocity
 #include <set>           // for storing near items
@@ -21,7 +21,10 @@ private:
 
 public:
     Player(b2World &world, const b2Vec2 &position, float angle)
-        : Object{world, Object::PLAYER, position, angle} {}
+        : Object{world, Type::PLAYER, position, angle}
+    {
+        setCollisionFilter(Category::PLAYER);
+    }
 
     void control(UserIO &userIO);
     void itemContact(const Item *item);

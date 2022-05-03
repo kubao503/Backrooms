@@ -19,7 +19,7 @@ class Enemy : public Object2D
     void updateWaypoint(const Object &player);
 
 public:
-    Enemy(b2World &world, ObjectType type, b2Vec2 position, float angle)
+    Enemy(b2World &world, Type type, b2Vec2 position, float angle)
         : Object2D{world, type, position, angle} {}
 
     void control(const Object &player);

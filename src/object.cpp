@@ -1,15 +1,22 @@
 #include "object.h"
 
-Object::Arguments::Arguments(b2BodyType bodyType, const b2Shape &shape)
-    : bodyType_{bodyType}, fixDef_{getFixtureDef(shape)} {}
+std::map<Object::Category, uint16> Object::collisionMask_{
+    {WALL, PLAYER | OBJECT2D},
+    {PLAYER, WALL | PLAYER | OBJECT2D},
+    {CAMERA, OBJECT2D},
+    {OBJECT2D, WALL | PLAYER | CAMERA | OBJECT2D}
+};
 
-Object::Arguments Object::argList[ObjectType::TOTAL]{
+Object::Arguments Object::argList[static_cast<int>(Type::TOTAL)]{
     {b2_staticBody, getShape(6.0f, 1.0f)},
     {b2_staticBody, getShape(6.0f, 1.0f)},
     {b2_dynamicBody, getShape(0.5f)},
     {b2_dynamicBody, getShape(0.5f)},
     {b2_staticBody, getShape(1.0f)},
     {b2_staticBody, getShape(Conf::FOVangle, Conf::renderDistance, 5)}};
+
+Object::Arguments::Arguments(b2BodyType bodyType, const b2Shape &shape)
+    : bodyType_{bodyType}, fixDef_{getFixtureDef(shape)} {}
 
 b2Vec2 Object::getNewPosition() const
 {
@@ -63,31 +70,20 @@ const b2FixtureDef &Object::getFixtureDef(const b2Shape &shape)
     return fixture;
 }
 
-// const std::function<const b2FixtureDef *()> Object::fixtureCalls[ObjectType::TOTAL]{
-//     []()
-//     { return getFixtureDef(b2Vec2(6.0f, 1.0f)); },
-//     []()
-//     { return getFixtureDef(b2Vec2(6.0f, 1.0f)); },
-//     []()
-//     { return getFixtureDef(0.5f); },
-//     []()
-//     { return getFixtureDef(0.5f); },
-//     []()
-//     { return getFixtureDef(1.0f); }};
-
-Object::Object(b2World &world, ObjectType type)
+Object::Object(b2World &world, Type type)
     : Object{world, type, getNewPosition(), 0} {}
 
-Object::Object(b2World &world, ObjectType type, const b2Vec2 &position, float angle)
+Object::Object(b2World &world, Type type, const b2Vec2 &position, float angle)
 {
     setBody(world, type, position, angle);
 }
 
-void Object::setBody(b2World &world, ObjectType type, const b2Vec2 &position, float angle)
+void Object::setBody(b2World &world, Type type, const b2Vec2 &position, float angle)
 {
-    body_ = std::unique_ptr<b2Body>(world.CreateBody(&getBodyDef(argList[type].bodyType_)));
+    int argIdx{static_cast<int>(type)};
+    body_ = std::unique_ptr<b2Body>(world.CreateBody(&getBodyDef(argList[argIdx].bodyType_)));
     body_->SetTransform(position, angle);
-    body_->CreateFixture(&argList[type].fixDef_);
+    body_->CreateFixture(&argList[argIdx].fixDef_);
 
     // Setting Object as user data
     body_->GetUserData().pointer = (uintptr_t)this;
@@ -102,4 +98,12 @@ void Object::destroyBody()
 void Object::setSensor(bool sensor)
 {
     body_->GetFixtureList()[0].SetSensor(sensor);
+}
+
+void Object::setCollisionFilter(Category category) const
+{
+    b2Filter filter;
+    filter.categoryBits = static_cast<uint16>(category);
+    filter.maskBits = collisionMask_.at(category);
+    body_->GetFixtureList()[0].SetFilterData(filter);
 }

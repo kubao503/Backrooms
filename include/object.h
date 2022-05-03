@@ -8,12 +8,13 @@
 
 #include <memory>     // for b2Body smart pointer
 #include <functional> // for storing fixture calls
+#include <map>        // for collition mask
 
 // Collidable
 class Object
 {
 public:
-    enum ObjectType
+    enum class Type
     {
         WALL,
         RED_WALL,
@@ -24,7 +25,18 @@ public:
         TOTAL
     };
 
+protected:
+    enum Category
+    {
+        WALL = 0x1,
+        PLAYER = 0x2,
+        CAMERA = 0x4,
+        OBJECT2D = 0x8
+    };
+
 private:
+    static std::map<Category, uint16> collisionMask_;
+
     // Object generating methods
     static const b2BodyDef &getBodyDef(b2BodyType bodyType);
     static const b2Shape &getShape(float halfX, float halfY);
@@ -44,7 +56,7 @@ private:
     };
 
     // Arguments for creating objects
-    static Arguments argList[ObjectType::TOTAL];
+    static Arguments argList[static_cast<int>(Type::TOTAL)];
 
 protected:
     std::unique_ptr<b2Body> body_{nullptr};
@@ -54,11 +66,12 @@ protected:
         if (body_)
             destroyBody();
     }
-    Object(b2World &world, ObjectType type);
-    Object(b2World &world, ObjectType type, const b2Vec2 &position, float angle);
-    void setBody(b2World &world, ObjectType type, const b2Vec2 &position, float angle);
+    Object(b2World &world, Type type);
+    Object(b2World &world, Type type, const b2Vec2 &position, float angle);
+    void setBody(b2World &world, Type type, const b2Vec2 &position, float angle);
     void destroyBody();
     void setSensor(bool sensor);
+    void setCollisionFilter(Category category) const;
 
 public:
     const b2Vec2 &getPosition() const { return body_->GetPosition(); };

@@ -13,7 +13,7 @@ private:
 
 public:
     b2Vec2 getClosestCorner(const b2Vec2 &playerPos) const;
-    Object3D(b2World &world, ObjectType type, const b2Vec2 &position, float angle);
+    Object3D(b2World &world, Type type, const b2Vec2 &position, float angle);
 };
 
 #endif
