@@ -65,5 +65,5 @@ b2Vec2 Chunk::getClosestChunk(const b2Vec2 &position) const
     if (position.x >= this->getPosition().x && position.x <= (this->getPosition().x + 10.0f))
         if (position.y >= this->getPosition().y && position.y <= (this->getPosition().y + 10.0f))
             return this->getPosition();
-    return b2Vec2();
+    return b2Vec2(-1.0f, -1.0f);
 };

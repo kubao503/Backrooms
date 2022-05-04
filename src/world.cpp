@@ -39,9 +39,9 @@ b2Vec2 World::closestChunk(const Player &player) const
     for (auto &chunk : chunks)
     {
         b2Vec2 closestChunk = chunk.getClosestChunk(player.getPosition());
-        if (closestChunk.IsValid())
+        if (closestChunk != b2Vec2(-1.0f, -1.0f))
             return closestChunk;
     }
 
-    return b2Vec2();
+    return b2Vec2(-1.0f, -1.0f);
 }
