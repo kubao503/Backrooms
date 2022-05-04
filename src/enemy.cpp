@@ -3,14 +3,14 @@
 void Enemy::setVelocity()
 {
     // Set velocity to waypoints location
-    b2Vec2 waypointDirection{getVector(getPosition(), waypoint_)};
+    b2Vec2 waypointDirection{getVec(getPosition(), waypoint_)};
     waypointDirection.Normalize();
     body_->SetLinearVelocity(waypointDirection);
 }
 
 void Enemy::updateWaypoint(const Object &player)
 {
-    b2Vec2 ray{getVector(getPosition(), player.getPosition())};
+    b2Vec2 ray{getVec(getPosition(), player.getPosition())};
     Ray::RayCallback rayCallback = Ray::sendRay(*body_->GetWorld(), getPosition(), ray);
     if (!rayCallback.hit())
     {
@@ -21,7 +21,7 @@ void Enemy::updateWaypoint(const Object &player)
     {
         // If waypoint is reached set waypoint to random location
 
-        b2Vec2 offsetVec{getVector(0.0f)};  // Should be random
+        b2Vec2 offsetVec{getVec(0.0f)};  // Should be random
         waypoint_ += offsetVec;
     }
 }
@@ -39,7 +39,7 @@ void Enemy::startHunt(b2World &world, const Object &player)
 {
     spawned_ = true;
     b2Vec2 offset(1.0f, 0.0f);  // Needed to not spawn enemy directly on player
-    setBody(world, Object::ENEMY, player.getPosition() + offset, 0.0f);
+    setBody(world, Type::ENEMY, player.getPosition() + offset, 0.0f);
 }
 
 void Enemy::stopHunt()

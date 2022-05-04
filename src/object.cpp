@@ -1,5 +1,23 @@
 #include "object.h"
 
+std::map<Object::Category, uint16> Object::collisionMask_{
+    {DEFAULT, 0xFFFF},
+    {WALL, PLAYER | OBJECT2D},
+    {PLAYER, WALL | PLAYER | OBJECT2D},
+    {CAMERA, OBJECT2D},
+    {OBJECT2D, WALL | PLAYER | CAMERA | OBJECT2D}};
+
+const Object::Arguments Object::argList[static_cast<int>(Type::TOTAL)]{
+    {b2_staticBody, getShape(6.0f, 1.0f)},
+    {b2_staticBody, getShape(6.0f, 1.0f)},
+    {b2_dynamicBody, getShape(0.5f)},
+    {b2_dynamicBody, getShape(0.5f)},
+    {b2_staticBody, getShape(1.0f)},
+    {b2_staticBody, getShape(Conf::FOVangle, Conf::renderDistance, 5)}};
+
+Object::Arguments::Arguments(b2BodyType bodyType, const b2Shape &shape)
+    : bodyType_{bodyType}, fixDef_{getFixtureDef(shape)} {}
+
 b2Vec2 Object::getNewPosition() const
 {
     static int count{0};
@@ -7,73 +25,90 @@ b2Vec2 Object::getNewPosition() const
     return b2Vec2(0, tmp * 50.0f);
 }
 
-const b2BodyDef &Object::getBodyDef(BodyType bodyType)
+const b2BodyDef &Object::getBodyDef(b2BodyType bodyType)
 {
     static b2BodyDef bodyDef;
-    if (bodyType == BodyType::DYNAMIC)
-        bodyDef.type = b2_dynamicBody;
-    else if (bodyType == BodyType::STATIC)
-        bodyDef.type = b2_staticBody;
-    else
-        throw "Invalid body type\n";
+    bodyDef.type = bodyType;
+    bodyDef.position.SetZero();
     return bodyDef;
 }
 
-const b2FixtureDef *Object::getFixtureDef(const b2Vec2 &size)
+const b2Shape &Object::getShape(float halfX, float halfY)
 {
-    static b2PolygonShape rectShape; // Shape
-    rectShape.SetAsBox(size.x, size.y);
-
-    static b2FixtureDef fixture; // Fixture
-    fixture.shape = &rectShape;
-    fixture.density = 1.0f;
-    fixture.friction = 0.0f;
-    return &fixture;
+    static b2PolygonShape shape; // Shape
+    shape.SetAsBox(halfX, halfY);
+    return shape;
 }
 
-const b2FixtureDef *Object::getFixtureDef(float radius)
+const b2Shape &Object::getShape(float radius)
 {
-    static b2CircleShape circleShape; // Shape
-    circleShape.m_radius = radius;
-
-    static b2FixtureDef fixture; // Fixture
-    fixture.shape = &circleShape;
-    fixture.density = 1.0f;
-    fixture.friction = 0.0f;
-    return &fixture;
+    static b2CircleShape shape; // Shape
+    shape.m_radius = radius;
+    return shape;
 }
 
-const std::function<const b2FixtureDef *()> Object::fixtureCalls[ObjectType::TOTAL]{
-    []()
-    { return getFixtureDef(b2Vec2(6.0f, 1.0f)); },
-    []()
-    { return getFixtureDef(b2Vec2(6.0f, 1.0f)); },
-    []()
-    { return getFixtureDef(0.5f); },
-    []()
-    { return getFixtureDef(0.5f); }};
+const b2Shape &Object::getShape(float FOVangle, float renderDist, int verticesCount)
+{
+    auto vertices = std::make_unique<b2Vec2[]>(verticesCount); // {new b2Vec2[verticesCount]{{0, 0}}};
+    for (int i{1}; i < verticesCount; ++i)
+    {
+        float angle{FOVangle / 2.0f / (verticesCount - 2) * (2 * i - verticesCount)};
+        vertices[i] = renderDist * getVecN(angle);
+    }
 
-Object::Object(b2World &world, ObjectType type)
+    static b2PolygonShape shape;
+    shape.Set(vertices.get(), verticesCount);
+
+    return shape;
+}
+
+const b2FixtureDef &Object::getFixtureDef(const b2Shape &shape)
+{
+    static b2FixtureDef fixture; // Fixture
+    fixture.shape = &shape;
+    fixture.density = 1.0f;
+    fixture.friction = 0.0f;
+    return fixture;
+}
+
+Object::Object(b2World &world, Type type)
     : Object{world, type, getNewPosition(), 0} {}
 
-Object::Object(b2World &world, ObjectType type, b2Vec2 position, float angle)
-    : shapeIdx_{shapeIdx[type]}
+Object::Object(b2World &world, Type type, const b2Vec2 &position, float angle)
 {
     setBody(world, type, position, angle);
 }
 
-void Object::destroyBody()
+void Object::setBody(b2World &world, Type type, const b2Vec2 &position, float angle)
 {
-    body_->GetWorld()->DestroyBody(body_.get());
-    body_.release(); // This body is no longer valid
-}
-
-void Object::setBody(b2World &world, ObjectType type, b2Vec2 position, float angle)
-{
-    body_ = std::unique_ptr<b2Body>(world.CreateBody(&getBodyDef(bodyTypes[type])));
+    int argIdx{static_cast<int>(type)};
+    body_ = std::unique_ptr<b2Body>(world.CreateBody(&getBodyDef(argList[argIdx].bodyType_)));
     body_->SetTransform(position, angle);
-    body_->CreateFixture(fixtureCalls[type]());
+    body_->CreateFixture(&argList[argIdx].fixDef_);
 
     // Setting Object as user data
     body_->GetUserData().pointer = (uintptr_t)this;
+}
+
+Object *Object::destroyBody()
+{
+    body_->GetWorld()->DestroyBody(body_.get());
+    body_.release(); // This body is no longer valid
+    return this;
+}
+
+void Object::setSensor(bool sensor, int fixIdx)
+{
+    body_->GetFixtureList()[fixIdx].SetSensor(sensor);
+}
+
+void Object::setCollisionFilter(Category category, int fixIdx) const
+{
+    if (fixIdx < 0)
+        throw "Invalid fixture idx\n";
+
+    b2Filter filter;
+    filter.categoryBits = static_cast<uint16>(category);
+    filter.maskBits = collisionMask_.at(category);
+    body_->GetFixtureList()[fixIdx].SetFilterData(filter);
 }

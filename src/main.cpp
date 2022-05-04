@@ -6,6 +6,8 @@
 #include "chunk.h"
 #include "enemy.h"
 #include "timer.h"
+#include "item.h"
+// #include "game.h"
 #include "world.h"
 #include "myListener.h" // for setting contact listener
 
@@ -32,8 +34,9 @@ int main()
     world.SetContactListener(&listener);
 
     // Objects
-    Player player(world, Object::PLAYER, b2Vec2(0.0f, -20.0f), 0);
-    Enemy enemy(world, Object::ENEMY, b2Vec2(-20.0f, -30.0f), 0);
+    Player player(world, b2Vec2(-15.0f, -15.0f), 0);
+    Enemy enemy(world, b2Vec2(-20.0f, -20.0f), 0.0f);
+    Item item(world, b2Vec2(-5.0f, -15.0f), 0.0f);
 
     // Creating chunks
     World gameWorld(world, 100);
@@ -62,7 +65,7 @@ int main()
             std::cout << closestChunk.x << " " << closestChunk.y << std::endl; // DEBUG
 
         // Drawing on screen
-        Camera::drawViewOnScreen(userIO, world, player, enemy);
+        Camera::drawViewOnScreen(userIO, player);
     }
 
     return 0;

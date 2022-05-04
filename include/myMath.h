@@ -18,16 +18,24 @@ inline float vecAngle(const b2Vec2 &vec1, const b2Vec2 &vec2)
 }
 
 // Returns the vector between given points
-inline b2Vec2 getVector(const b2Vec2 &point1, const b2Vec2 &point2)
+inline b2Vec2 getVec(const b2Vec2 &point1, const b2Vec2 &point2)
 {
     return point2 - point1;
 }
 
 // Returned vecotor is not normalized!
 // The length can vary
-inline b2Vec2 getVector(float angle)
+inline b2Vec2 getVec(float angle)
 {
     return b2Vec2(cos(angle), sin(angle));
+}
+
+// Normalized version of getVec(float)
+inline b2Vec2 getVecN(float angle)
+{
+    b2Vec2 temp = getVec(angle);
+    temp.Normalize();
+    return temp;
 }
 
 inline float distance(const b2Vec2 &pos1, const b2Vec2 &pos2)

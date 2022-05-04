@@ -19,8 +19,8 @@ class Enemy : public Object2D
     void updateWaypoint(const Object &player);
 
 public:
-    Enemy(b2World &world, ObjectType type, b2Vec2 position, float angle)
-        : Object2D{world, type, position, angle} {}
+    Enemy(b2World &world, b2Vec2 position, float angle)
+        : Object2D{world, Type::ENEMY, position, angle} {}
 
     void control(const Object &player);
     void startHunt(b2World &world, const Object &player);

@@ -4,16 +4,18 @@
 #include "userio.h"   // called to draw Shape on screen
 #include "object2d.h" // for drawing Object2D
 #include "myMath.h"   // for angle calculations
-#include "enemy.h"    // for drawing Enemy
 #include "ray.h"      // for casting rays
+#include "config.h"   // for constants
+#include "player.h"   // for getting visible objects
+
+#include <vector> // for storing Object2Ds
+#include <memory>
 
 class Camera
 {
 private:
     using scale_t = std::pair<float, float>;
 
-    static constexpr float FOVMaxAngle_{PI / 5.0f};
-    static constexpr float renderDistance_{100.0f};
     static constexpr int raysNumber_{400};
 
     // Draws texture at ray's hitpoint
@@ -23,16 +25,17 @@ private:
 
     // For 3D objects
     static void draw3DRay(UserIO &userIO, float angle, const Ray::RayCallback &callback, float rayNumber);
-    // For 2D objects
+    // For 2D objectsSetSensor
     static void draw2DRay(UserIO &userIO, float angle, const Ray::RayCallback &callback, float distance);
 
     static bool ifInFieldOfView(const Object &camera, const Object &object);
-    static void drawObjects3D(UserIO &userIO, const b2World &world, const Object &camera);
-    static void drawObjects2D(UserIO &userIO, const b2World &world, const Object &camera, const Enemy &enemy);
+    static void drawObjects3D(UserIO &userIO, const Player &player);
+    static void drawObjects2D(UserIO &userIO, const Player &player);
+    static void drawItems(UserIO &userIO, const Player &player);
 
 public:
     // Casts multiple rays to show them as image on the screen
-    static void drawViewOnScreen(UserIO &userIO, const b2World &world, const Object &camera, const Enemy &enemy);
+    static void drawViewOnScreen(UserIO &userIO, const Player &player);
 };
 
 #endif

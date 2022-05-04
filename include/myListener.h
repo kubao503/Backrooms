@@ -2,23 +2,21 @@
 #define MY_LISTENER_H
 
 #include "enemy.h" // for dynamic cast
+#include "player.h"
+#include "item.h"
+#include "camera.h"
 
 #include <box2d/box2d.h> // for inheriting from b2ContactListener
 
-#include <iostream> // DEBUG
+#include <iostream> // printing death message
 
 class MyListener : public b2ContactListener
 {
-    void BeginContact(b2Contact *contact)
-    {
-        Object *objA = (Object *)contact->GetFixtureA()->GetBody()->GetUserData().pointer;
-        Object *objB = (Object *)contact->GetFixtureB()->GetBody()->GetUserData().pointer;
+    void BeginContact(b2Contact *contact) override;
+    void EndContact(b2Contact *contact) override;
 
-        if ((dynamic_cast<Enemy *>(objA) && dynamic_cast<Player *>(objB)) || (dynamic_cast<Player *>(objA) && dynamic_cast<Enemy *>(objB)))
-        {
-            std::cerr << "YOU FOOL YOU DIED\n";
-        }
-    }
+    template <typename T, typename U>
+    bool getTandU(Object *&objA, Object *&objB);
 };
 
 #endif
