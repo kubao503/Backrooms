@@ -58,7 +58,8 @@ int main()
         gameWorld.draw(world, player);
 
         b2Vec2 closestChunk = gameWorld.closestChunk(player);
-        std::cout << closestChunk.x << " " << closestChunk.y << std::endl; // DEBUG
+        if (closestChunk.IsValid())
+            std::cout << closestChunk.x << " " << closestChunk.y << std::endl; // DEBUG
 
         // Drawing on screen
         Camera::drawViewOnScreen(userIO, world, player, enemy);

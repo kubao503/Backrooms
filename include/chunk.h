@@ -4,6 +4,7 @@
 #include "object3d.h"
 #include "player.h"
 #include "myMath.h"
+#include <limits>
 #include <ctime>
 #include <random>
 
