@@ -6,9 +6,10 @@
 #include "chunk.h"
 #include "enemy.h"
 #include "timer.h"
+#include "world.h"
 #include "myListener.h" // for setting contact listener
 
-#include <vector> // TEST
+#include <vector>   // TEST
 #include <iostream> // Printing information about texture loading fail
 
 int main()
@@ -34,24 +35,8 @@ int main()
     Player player(world, Object::PLAYER, b2Vec2(0.0f, -20.0f), 0);
     Enemy enemy(world, Object::ENEMY, b2Vec2(-20.0f, -30.0f), 0);
 
-    std::vector<Chunk> chunks;
-    // chunks.push_back(Chunk(world, b2Vec2(20, 20)));
-
-    for (float i = 0; i < 1000; i += 10)
-        for (float j = 0; j < 1000; j += 10)
-        {
-            chunks.push_back(Chunk(world, b2Vec2(i, j)));
-        }
-
-    for (auto &chunk : chunks)
-    {
-        chunk.clear();
-    }
-
-    // for (auto &chunk : chunks)
-    // {
-    //     chunk.restore(world);
-    // }
+    // Creating chunks
+    World gameWorld(world, 100);
 
     // Simulation parameters
     float timeStep = 1.0f / 60.0f; // Step of time between events
@@ -69,18 +54,8 @@ int main()
         player.control(userIO);
         // enemy.control(player);
 
-        // Chuncks update
-        for (auto &chunk : chunks)
-        {
-            b2Vec2 distance = chunk.getPosition() - player.getPosition();
-            if (abs(distance.x) < 50.0f && abs(distance.y) < 50.0f)
-            {
-                if (chunk.wasCleared())
-                    chunk.restore(world);
-            }
-            else if (!chunk.wasCleared())
-                chunk.clear();
-        }
+        // Chunks update
+        gameWorld.draw(world, player);
 
         // Drawing on screen
         Camera::drawViewOnScreen(userIO, world, player, enemy);
