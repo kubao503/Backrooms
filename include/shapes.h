@@ -15,13 +15,13 @@ public:
         TOTAL
     };
 
-    static sf::RectangleShape getShape(Type shapeIdx)
-    {
-        if (shapeIdx >= TOTAL)
-            throw "Invalid shapeIdx\n";
-        return shapes_[shapeIdx];
-    }
-    static sf::RectangleShape getShape(Type shapeIdx, float offset);
+    // static sf::RectangleShape getShape(Type shapeIdx)
+    // {
+    //     if (shapeIdx >= TOTAL)
+    //         throw "Invalid shapeIdx\n";
+    //     return shapes_[shapeIdx];
+    // }
+    static sf::RectangleShape getShape(Type shapeIdx, float offset = 0.0f);
 
     // Adds textures to some shapes
     static void init();

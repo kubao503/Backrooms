@@ -33,8 +33,10 @@ int main()
     world.SetContactListener(&listener);
 
     // Objects
-    Player player(world, b2Vec2(0.0f, -20.0f), 0);
+    Player player(world, b2Vec2(-15.0f, -15.0f), 0);
     Camera camera(world, player.getPosition(), player.getAngle());
+    Enemy enemy(world, b2Vec2(-20.0f, -20.0f), 0.0f);
+    camera.objectObserved(&enemy);
 
     std::vector<Chunk> chunks;
     // chunks.push_back(Chunk(world, b2Vec2(20, 20)));
@@ -70,6 +72,8 @@ int main()
         world.Step(timeStep, velocityIterations, positionIterations);
         player.control(userIO);
         // enemy.control(player);
+
+        // std::cerr << camera.getPosition().x << ' ' << camera.getPosition().y << '\n';
 
         // Chuncks update
         for (auto &chunk : chunks)

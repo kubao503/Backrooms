@@ -31,6 +31,5 @@ b2Vec2 Object3D::getClosestCorner(const b2Vec2 &playerPos) const
 Object3D::Object3D(b2World &world, Type type, const b2Vec2 &position, float angle)
     : DrawableObject{world, type, position, angle}
 {
-    // Setting Object3D as user data
-    body_->GetUserData().pointer = (uintptr_t)this;
+    setCollisionFilter(WALL);
 }

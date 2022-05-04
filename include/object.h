@@ -7,7 +7,6 @@
 #include <box2d/box2d.h> // for creating body
 
 #include <memory>     // for b2Body smart pointer
-#include <functional> // for storing fixture calls
 #include <map>        // for collition mask
 
 // Collidable
@@ -28,6 +27,7 @@ public:
 protected:
     enum Category
     {
+        DEFAULT = 0x0,
         WALL = 0x1,
         PLAYER = 0x2,
         CAMERA = 0x4,

@@ -1,11 +1,11 @@
 #include "object.h"
 
 std::map<Object::Category, uint16> Object::collisionMask_{
-    {WALL, PLAYER | OBJECT2D},
+    {DEFAULT, 0xFFFF},
+    {WALL, PLAYER | OBJECT2D | CAMERA},
     {PLAYER, WALL | PLAYER | OBJECT2D},
-    {CAMERA, OBJECT2D},
-    {OBJECT2D, WALL | PLAYER | CAMERA | OBJECT2D}
-};
+    {CAMERA, OBJECT2D | WALL},
+    {OBJECT2D, WALL | PLAYER | CAMERA | OBJECT2D}};
 
 Object::Arguments Object::argList[static_cast<int>(Type::TOTAL)]{
     {b2_staticBody, getShape(6.0f, 1.0f)},
@@ -51,7 +51,7 @@ const b2Shape &Object::getShape(float FOVangle, float renderDist, int verticesCo
     auto vertices = std::make_unique<b2Vec2[]>(verticesCount); // {new b2Vec2[verticesCount]{{0, 0}}};
     for (int i{1}; i < verticesCount; ++i)
     {
-        float angle{FOVangle / (verticesCount - 2) * (2 * i - verticesCount)};
+        float angle{FOVangle / 2.0f / (verticesCount - 2) * (2 * i - verticesCount)};
         vertices[i] = renderDist * getVecN(angle);
     }
 

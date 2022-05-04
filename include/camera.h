@@ -33,13 +33,16 @@ private:
     void drawObjects3D(UserIO &userIO, const b2World &world, const Object &player);
     void drawObjects2D(UserIO &userIO, const b2World &world, const Object &player);
 
-    std::vector<Object2D *> viewedObjects_;
+    std::vector<const Object2D *> visibleObjects_;
 
 public:
-    Camera(b2World &world, const b2Vec2 &position, float angle);
-
     // Casts multiple rays to show them as image on the screen
     void drawViewOnScreen(UserIO &userIO, const b2World &world, const Object &player);
+
+    void objectObserved(const Object2D *object);
+    void objectLost(const Object2D *object);
+
+    Camera(b2World &world, const b2Vec2 &position, float angle);
 };
 
 #endif
