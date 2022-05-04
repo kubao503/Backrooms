@@ -18,7 +18,7 @@ inline Camera::scale_t Camera::get3DScale(float adjacentDistance)
 inline Camera::scale_t Camera::get2DScale(float adjacentDistance)
 {
     return {
-        2.0f / adjacentDistance / Conf::FOVangle,
+        8.0f / adjacentDistance / Conf::FOVangle,
         10.0f / adjacentDistance};
 }
 

@@ -17,22 +17,24 @@ private:
 
     // Stores any items that are near
     std::vector<const Object2D *> visibleObjects_;
-    std::set<const Item *> nearbyItems_;
+    Item *nearbyItem_;
     std::set<std::unique_ptr<Item>> ownedItems_;
 
 public:
     Player(b2World &world, const b2Vec2 &position, float angle);
 
-    void objectObserved(const Object2D *object);
-    void objectLost(const Object2D *object);
+    void control(UserIO &userIO);
+
     const std::vector<const Object2D *> &getVisibleObjects() const
     {
         return visibleObjects_;
     }
 
-    void control(UserIO &userIO);
-    void itemContact(const Item *item);
-    void itemLost(const Item *item);
+    void objectObserved(const Object2D *object);
+    void objectLost(const Object2D *object);
+
+    void itemContact(Item *item);
+    void itemLost();
 };
 
 #endif

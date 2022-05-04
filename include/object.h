@@ -69,7 +69,7 @@ protected:
     Object(b2World &world, Type type);
     Object(b2World &world, Type type, const b2Vec2 &position, float angle);
     void setBody(b2World &world, Type type, const b2Vec2 &position, float angle);
-    void destroyBody();
+    Object *destroyBody();
     void setSensor(bool sensor, int fixIdx = 0);
     void setCollisionFilter(Category category, int fixIdx = 0) const;
 

@@ -10,7 +10,7 @@
 // #include "game.h"
 #include "myListener.h" // for setting contact listener
 
-#include <vector> // TEST
+#include <vector>   // TEST
 #include <iostream> // Printing information about texture loading fail
 
 int main()
@@ -34,9 +34,8 @@ int main()
 
     // Objects
     Player player(world, b2Vec2(-15.0f, -15.0f), 0);
-    // Camera camera(world, player.getPosition(), player.getAngle());
     Enemy enemy(world, b2Vec2(-20.0f, -20.0f), 0.0f);
-    // camera.objectObserved(&enemy);
+    Item item(world, b2Vec2(-5.0f, -15.0f), 0.0f);
 
     std::vector<Chunk> chunks;
     // chunks.push_back(Chunk(world, b2Vec2(20, 20)));

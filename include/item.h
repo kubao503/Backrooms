@@ -5,9 +5,11 @@
 
 class Item : public Object2D
 {
-private:
-    Item(b2World &world, Object::Type type, const b2Vec2 &position, float angle)
-        : Object2D{world, type, position, angle}
+public:
+    using Object::destroyBody;
+
+    Item(b2World &world, const b2Vec2 &position, float angle)
+        : Object2D{world, Type::ITEM, position, angle}
     {
         setSensor(true);
     }

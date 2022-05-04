@@ -21,21 +21,6 @@ Player::Player(b2World &world, const b2Vec2 &position, float angle)
     setSensor(true, 0);
 }
 
-#include <iostream> // DEBUG
-
-void Player::objectObserved(const Object2D *object)
-{
-    std::cerr << "object Observed\n";
-    visibleObjects_.push_back(object);
-}
-
-void Player::objectLost(const Object2D *object)
-{
-    std::cerr << "object Lost\n";
-    auto foundObj = std::find(visibleObjects_.begin(), visibleObjects_.end(), object);
-    visibleObjects_.erase(foundObj);
-}
-
 void Player::control(UserIO &userIO)
 {
     static constexpr float LINEAR_VELOCITY = 2.0f;
@@ -77,22 +62,38 @@ void Player::control(UserIO &userIO)
     body_->SetAngularVelocity(ANGULAR_VELOCITY * mouseXMovement);
 
     // Pickig up items
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) && nearbyItem_)
     {
-        // for (auto item : nearbyItems_)
-        // {
-        //     // delete item
-        // }
-        nearbyItems_.clear();
+        nearbyItem_->destroyBody();
+        // nearbyItem_ = static_cast<Item *>(nearbyItem_->destroyBody());
+        // objectLost(nearbyItem_);
     }
 }
 
-void Player::itemContact(const Item *item)
+#include <iostream> // DEBUG
+
+void Player::objectObserved(const Object2D *object)
 {
-    nearbyItems_.insert(item);
+    std::cerr << "object observed\n";
+    visibleObjects_.push_back(object);
 }
 
-void Player::itemLost(const Item *item)
+void Player::objectLost(const Object2D *object)
 {
-    nearbyItems_.erase(item);
+    std::cerr << "object lost\n";
+    auto foundObj = std::find(visibleObjects_.begin(), visibleObjects_.end(), object);
+    if (foundObj != visibleObjects_.end())
+        visibleObjects_.erase(foundObj);
+}
+
+void Player::itemContact(Item *item)
+{
+    std::cerr << "Item contact\n";
+    nearbyItem_ = item;
+}
+
+void Player::itemLost()
+{
+    std::cerr << "Item lost\n";
+    nearbyItem_ = nullptr;
 }

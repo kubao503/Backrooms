@@ -53,7 +53,7 @@ void MyListener::EndContact(b2Contact *contact)
         if (getTandU<Player, Item>(objA, objB))
         {
             // Player leaving item
-            static_cast<Player *>(objA)->itemLost(static_cast<Item *>(objB));
+            static_cast<Player *>(objA)->itemLost();
             return;
         }
 

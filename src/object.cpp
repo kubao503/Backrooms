@@ -90,10 +90,11 @@ void Object::setBody(b2World &world, Type type, const b2Vec2 &position, float an
     body_->GetUserData().pointer = (uintptr_t)this;
 }
 
-void Object::destroyBody()
+Object *Object::destroyBody()
 {
     body_->GetWorld()->DestroyBody(body_.get());
     body_.release(); // This body is no longer valid
+    return this;
 }
 
 void Object::setSensor(bool sensor, int fixIdx)
