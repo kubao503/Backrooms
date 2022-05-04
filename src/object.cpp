@@ -2,12 +2,12 @@
 
 std::map<Object::Category, uint16> Object::collisionMask_{
     {DEFAULT, 0xFFFF},
-    {WALL, PLAYER | OBJECT2D | CAMERA},
+    {WALL, PLAYER | OBJECT2D},
     {PLAYER, WALL | PLAYER | OBJECT2D},
-    {CAMERA, OBJECT2D | WALL},
+    {CAMERA, OBJECT2D},
     {OBJECT2D, WALL | PLAYER | CAMERA | OBJECT2D}};
 
-Object::Arguments Object::argList[static_cast<int>(Type::TOTAL)]{
+const Object::Arguments Object::argList[static_cast<int>(Type::TOTAL)]{
     {b2_staticBody, getShape(6.0f, 1.0f)},
     {b2_staticBody, getShape(6.0f, 1.0f)},
     {b2_dynamicBody, getShape(0.5f)},
@@ -29,6 +29,7 @@ const b2BodyDef &Object::getBodyDef(b2BodyType bodyType)
 {
     static b2BodyDef bodyDef;
     bodyDef.type = bodyType;
+    bodyDef.position.SetZero();
     return bodyDef;
 }
 
@@ -95,15 +96,18 @@ void Object::destroyBody()
     body_.release(); // This body is no longer valid
 }
 
-void Object::setSensor(bool sensor)
+void Object::setSensor(bool sensor, int fixIdx)
 {
-    body_->GetFixtureList()[0].SetSensor(sensor);
+    body_->GetFixtureList()[fixIdx].SetSensor(sensor);
 }
 
-void Object::setCollisionFilter(Category category) const
+void Object::setCollisionFilter(Category category, int fixIdx) const
 {
+    if (fixIdx < 0)
+        throw "Invalid fixture idx\n";
+
     b2Filter filter;
     filter.categoryBits = static_cast<uint16>(category);
     filter.maskBits = collisionMask_.at(category);
-    body_->GetFixtureList()[0].SetFilterData(filter);
+    body_->GetFixtureList()[fixIdx].SetFilterData(filter);
 }

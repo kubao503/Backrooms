@@ -6,8 +6,8 @@
 
 #include <box2d/box2d.h> // for creating body
 
-#include <memory>     // for b2Body smart pointer
-#include <map>        // for collition mask
+#include <memory> // for b2Body smart pointer
+#include <map>    // for collition mask
 
 // Collidable
 class Object
@@ -48,6 +48,7 @@ private:
 
     friend class Arguments;
 
+protected:
     struct Arguments
     {
         b2BodyType bodyType_;
@@ -56,9 +57,8 @@ private:
     };
 
     // Arguments for creating objects
-    static Arguments argList[static_cast<int>(Type::TOTAL)];
+    static const Arguments argList[static_cast<int>(Type::TOTAL)];
 
-protected:
     std::unique_ptr<b2Body> body_{nullptr};
 
     virtual ~Object()
@@ -70,8 +70,8 @@ protected:
     Object(b2World &world, Type type, const b2Vec2 &position, float angle);
     void setBody(b2World &world, Type type, const b2Vec2 &position, float angle);
     void destroyBody();
-    void setSensor(bool sensor);
-    void setCollisionFilter(Category category) const;
+    void setSensor(bool sensor, int fixIdx = 0);
+    void setCollisionFilter(Category category, int fixIdx = 0) const;
 
 public:
     const b2Vec2 &getPosition() const { return body_->GetPosition(); };

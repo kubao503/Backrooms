@@ -4,10 +4,11 @@
 #include "userio.h"   // called to draw Shape on screen
 #include "object2d.h" // for drawing Object2D
 #include "myMath.h"   // for angle calculations
-#include "enemy.h"    // for drawing Enemy
+// #include "enemy.h"    // for drawing Enemy
 #include "ray.h"      // for casting rays
-#include "drawableObject.h"
+// #include "drawableObject.h"
 #include "config.h" // for constants
+#include "player.h" // for getting visible objects
 
 #include <vector> // for storing Object2Ds
 #include <memory>
@@ -30,19 +31,14 @@ private:
     static void draw2DRay(UserIO &userIO, float angle, const Ray::RayCallback &callback, float distance);
 
     static bool ifInFieldOfView(const Object &camera, const Object &object);
-    void drawObjects3D(UserIO &userIO, const b2World &world, const Object &player);
-    void drawObjects2D(UserIO &userIO, const b2World &world, const Object &player);
-
-    std::vector<const Object2D *> visibleObjects_;
+    static void drawObjects3D(UserIO &userIO, const b2World &world, const Player &player);
+    static void drawObjects2D(UserIO &userIO, const b2World &world, const Player &player);
 
 public:
     // Casts multiple rays to show them as image on the screen
-    void drawViewOnScreen(UserIO &userIO, const b2World &world, const Object &player);
+    static void drawViewOnScreen(UserIO &userIO, const b2World &world, const Player &player);
 
-    void objectObserved(const Object2D *object);
-    void objectLost(const Object2D *object);
-
-    Camera(b2World &world, const b2Vec2 &position, float angle);
+    // Camera(b2World &world, const b2Vec2 &position, float angle);
 };
 
 #endif

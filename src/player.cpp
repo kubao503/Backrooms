@@ -6,6 +6,36 @@ void Player::setLocalVelocity(const b2Vec2 &newVelocity)
     body_->SetLinearVelocity(rotateVec(newVelocity, angle));
 }
 
+Player::Player(b2World &world, const b2Vec2 &position, float angle)
+    : Object{world, Type::PLAYER, position, angle}
+{
+    // New fixture is added at the front
+    body_->CreateFixture(&argList[static_cast<int>(Type::CAMERA)].fixDef_);
+
+    // Changing camera mass to zero
+    body_->GetFixtureList()[0].SetDensity(0.0f);
+    body_->ResetMassData();
+
+    setCollisionFilter(Category::PLAYER, 1);
+    setCollisionFilter(Category::CAMERA, 0);
+    setSensor(true, 0);
+}
+
+#include <iostream> // DEBUG
+
+void Player::objectObserved(const Object2D *object)
+{
+    std::cerr << "object Observed\n";
+    visibleObjects_.push_back(object);
+}
+
+void Player::objectLost(const Object2D *object)
+{
+    std::cerr << "object Lost\n";
+    auto foundObj = std::find(visibleObjects_.begin(), visibleObjects_.end(), object);
+    visibleObjects_.erase(foundObj);
+}
+
 void Player::control(UserIO &userIO)
 {
     static constexpr float LINEAR_VELOCITY = 2.0f;
@@ -49,20 +79,20 @@ void Player::control(UserIO &userIO)
     // Pickig up items
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
     {
-        // for (auto item : itemsNearby_)
+        // for (auto item : nearbyItems_)
         // {
         //     // delete item
         // }
-        itemsNearby_.clear();
+        nearbyItems_.clear();
     }
 }
 
 void Player::itemContact(const Item *item)
 {
-    itemsNearby_.insert(item);
+    nearbyItems_.insert(item);
 }
 
 void Player::itemLost(const Item *item)
 {
-    itemsNearby_.erase(item);
+    nearbyItems_.erase(item);
 }

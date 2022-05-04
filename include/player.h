@@ -2,7 +2,7 @@
 #define PLAYER_H
 
 #include "userio.h" // for getting mouse input
-#include "object.h" // for inheriting form Object2D
+#include "object.h" // for inheriting form Object
 #include "myMath.h" // for rotating vector
 #include "item.h"   // for picking up item
 
@@ -16,14 +16,18 @@ private:
     void setLocalVelocity(const b2Vec2 &newVelocity);
 
     // Stores any items that are near
-    std::set<const Item *> itemsNearby_;
+    std::vector<const Object2D *> visibleObjects_;
+    std::set<const Item *> nearbyItems_;
     std::set<std::unique_ptr<Item>> ownedItems_;
 
 public:
-    Player(b2World &world, const b2Vec2 &position, float angle)
-        : Object{world, Type::PLAYER, position, angle}
+    Player(b2World &world, const b2Vec2 &position, float angle);
+
+    void objectObserved(const Object2D *object);
+    void objectLost(const Object2D *object);
+    const std::vector<const Object2D *> &getVisibleObjects() const
     {
-        setCollisionFilter(Category::PLAYER);
+        return visibleObjects_;
     }
 
     void control(UserIO &userIO);

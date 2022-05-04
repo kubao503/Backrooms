@@ -57,9 +57,8 @@ bool Camera::ifInFieldOfView(const Object &camera, const Object &object)
     float angle{vecAngle(viewVector, objectVector)};
     return angle < Conf::FOVangle / 2.0f;
 }
-#include <iostream> // DEBUG
 
-void Camera::drawObjects3D(UserIO &userIO, const b2World &world, const Object &camera)
+void Camera::drawObjects3D(UserIO &userIO, const b2World &world, const Player &camera)
 {
     // Angle between casted rays
     constexpr float angleChange{Conf::FOVangle / raysNumber_};
@@ -82,29 +81,18 @@ void Camera::drawObjects3D(UserIO &userIO, const b2World &world, const Object &c
                 closestCorner = static_cast<Object3D *>(rayCallback.getObject())->getClosestCorner(camera.getPosition());
             }
 
-            // DEBUG
-            if (body_->GetFixtureList()[0].TestPoint(rayCallback.getHitPoint()))//->GetFixtureList())//[0].TestPoint(rayCallback.getHitPoint()))
-                rayCallback.setShapeIdx(Shapes::RED_WALL);
-                // std::cerr << "has booyd\n";
-
             float rayNumber{distance(rayCallback.getHitPoint(), closestCorner)};
             draw3DRay(userIO, angle, rayCallback, rayNumber);
         }
     }
 }
 
-void Camera::drawObjects2D(UserIO &userIO, const b2World &world, const Object &player)
+void Camera::drawObjects2D(UserIO &userIO, const b2World &world, const Player &player)
 {
-    for (auto *object2D : visibleObjects_)
+    for (auto object2D : player.getVisibleObjects())
     {
-        // Additional condition for enemy
-        // const Enemy *enemy = dynamic_cast<const Enemy *>(object2D);
-        // bool enemyCondition{!enemy || enemy->spawned()};
-
         // Drawing Object2D
-        // For each one check if it is in current fieldOfView
-        // If object2D is in the field of view
-        // send a ray in the object2D's this direction
+        // Send a ray in the object2D's this direction
         b2Vec2 ray{getVec(player.getPosition(), object2D->getPosition())};
         Ray::RayCallback rayCallback = Ray::sendRay(world, player.getPosition(), ray);
 
@@ -125,10 +113,8 @@ void Camera::drawObjects2D(UserIO &userIO, const b2World &world, const Object &p
     }
 }
 
-void Camera::drawViewOnScreen(UserIO &userIO, const b2World &world, const Object &player)
+void Camera::drawViewOnScreen(UserIO &userIO, const b2World &world, const Player &player)
 {
-    body_->SetTransform(player.getPosition(), player.getAngle());
-
     userIO.start(); // Start frame drawing
 
     drawObjects3D(userIO, world, player);
@@ -137,22 +123,9 @@ void Camera::drawViewOnScreen(UserIO &userIO, const b2World &world, const Object
     userIO.end(); // Display ray on screen
 }
 
-void Camera::objectObserved(const Object2D *object)
-{
-    std::cerr << "object Observed\n";
-    visibleObjects_.push_back(object);
-}
-
-void Camera::objectLost(const Object2D *object)
-{
-    std::cerr << "object Lost\n";
-    auto foundObj = std::find(visibleObjects_.begin(), visibleObjects_.end(), object);
-    visibleObjects_.erase(foundObj);
-}
-
-Camera::Camera(b2World &world, const b2Vec2 &position, float angle)
-    : Object{world, Type::CAMERA, position, angle}
-{
-    setSensor(true);
-    setCollisionFilter(Category::CAMERA);
-}
+// Camera::Camera(b2World &world, const b2Vec2 &position, float angle)
+//     : Object{world, Type::CAMERA, position, angle}
+// {
+//     setSensor(true);
+//     setCollisionFilter(Category::CAMERA);
+// }

@@ -34,9 +34,9 @@ int main()
 
     // Objects
     Player player(world, b2Vec2(-15.0f, -15.0f), 0);
-    Camera camera(world, player.getPosition(), player.getAngle());
+    // Camera camera(world, player.getPosition(), player.getAngle());
     Enemy enemy(world, b2Vec2(-20.0f, -20.0f), 0.0f);
-    camera.objectObserved(&enemy);
+    // camera.objectObserved(&enemy);
 
     std::vector<Chunk> chunks;
     // chunks.push_back(Chunk(world, b2Vec2(20, 20)));
@@ -89,7 +89,7 @@ int main()
         }
 
         // Drawing on screen
-        camera.drawViewOnScreen(userIO, world, player);
+        Camera::drawViewOnScreen(userIO, world, player);
     }
 
     return 0;

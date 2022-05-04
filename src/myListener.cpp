@@ -5,25 +5,30 @@ void MyListener::BeginContact(b2Contact *contact)
     Object *objA = (Object *)contact->GetFixtureA()->GetBody()->GetUserData().pointer;
     Object *objB = (Object *)contact->GetFixtureB()->GetBody()->GetUserData().pointer;
 
-    // Enemy killing player
-    if (getTandU<Player, Enemy>(objA, objB))
+    if (getTandU<Player, Object2D>(objA, objB))
     {
-        std::cerr << "YOU FOOL YOU DIED\n";
-        return;
-    }
+        if (contact->GetFixtureA()->IsSensor())
+        {
+            // collision with Player camera
+            // Object goes inside field of view
+            static_cast<Player *>(objA)->objectObserved(static_cast<Object2D *>(objB));
+            return;
+        }
 
-    // Player being near item
-    if (getTandU<Player, Item>(objA, objB))
-    {
-        static_cast<Player *>(objA)->itemContact(static_cast<Item *>(objB));
-        return;
-    }
+        // collision with Player actual body
 
-    // Object goes inside field of view
-    if (getTandU<Camera, Object2D>(objA, objB))
-    {
-        static_cast<Camera *>(objA)->objectObserved(static_cast<Object2D *>(objB));
-        return;
+        if (getTandU<Player, Enemy>(objA, objB))
+        {
+            // killing Player
+            std::cerr << "YOU FOOL YOU DIED\n";
+            return;
+        }
+        else if (getTandU<Player, Item>(objA, objB))
+        {
+            // item near
+            static_cast<Player *>(objA)->itemContact(static_cast<Item *>(objB));
+            return;
+        }
     }
 
     std::cerr << "Unindentified collision\n";
@@ -34,21 +39,26 @@ void MyListener::EndContact(b2Contact *contact)
     Object *objA = (Object *)contact->GetFixtureA()->GetBody()->GetUserData().pointer;
     Object *objB = (Object *)contact->GetFixtureB()->GetBody()->GetUserData().pointer;
 
-    // Player leaving item
-    if (getTandU<Player, Item>(objA, objB))
+    if (getTandU<Player, Object2D>(objA, objB))
     {
-        static_cast<Player *>(objA)->itemLost(static_cast<Item *>(objB));
-        return;
-    }
+        if (contact->GetFixtureA()->IsSensor())
+        {
+            // Object goes out of field of view
+            static_cast<Player *>(objA)->objectLost(static_cast<Object2D *>(objB));
+            return;
+        }
 
-    // Object goes out of field of view
-    if (getTandU<Camera, Object2D>(objA, objB))
-    {
-        static_cast<Camera *>(objA)->objectLost(static_cast<Object2D *>(objB));
-        return;
-    }
+        // end of collision with Player actual body
 
-    std::cerr << "Unindentified collision end\n";
+        if (getTandU<Player, Item>(objA, objB))
+        {
+            // Player leaving item
+            static_cast<Player *>(objA)->itemLost(static_cast<Item *>(objB));
+            return;
+        }
+
+        std::cerr << "Unindentified collision end\n";
+    }
 }
 
 template <typename T, typename U>
