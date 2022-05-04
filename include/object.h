@@ -70,8 +70,10 @@ protected:
     Object(b2World &world, Type type, const b2Vec2 &position, float angle);
     void setBody(b2World &world, Type type, const b2Vec2 &position, float angle);
     Object *destroyBody();
-    void setSensor(bool sensor, int fixIdx = 0);
-    void setCollisionFilter(Category category, int fixIdx = 0) const;
+
+    // These functions affect only last created fixture
+    void setSensor(bool sensor);
+    void setCollisionFilter(Category category) const;
 
 public:
     const b2Vec2 &getPosition() const { return body_->GetPosition(); };

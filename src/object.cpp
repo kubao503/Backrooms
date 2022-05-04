@@ -97,18 +97,15 @@ Object *Object::destroyBody()
     return this;
 }
 
-void Object::setSensor(bool sensor, int fixIdx)
+void Object::setSensor(bool sensor)
 {
-    body_->GetFixtureList()[fixIdx].SetSensor(sensor);
+    body_->GetFixtureList()->SetSensor(sensor);
 }
 
-void Object::setCollisionFilter(Category category, int fixIdx) const
+void Object::setCollisionFilter(Category category) const
 {
-    if (fixIdx < 0)
-        throw "Invalid fixture idx\n";
-
     b2Filter filter;
     filter.categoryBits = static_cast<uint16>(category);
     filter.maskBits = collisionMask_.at(category);
-    body_->GetFixtureList()[fixIdx].SetFilterData(filter);
+    body_->GetFixtureList()->SetFilterData(filter);
 }

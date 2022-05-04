@@ -9,16 +9,17 @@ void Player::setLocalVelocity(const b2Vec2 &newVelocity)
 Player::Player(b2World &world, const b2Vec2 &position, float angle)
     : Object{world, Type::PLAYER, position, angle}
 {
+    setCollisionFilter(Category::PLAYER);
+
     // New fixture is added at the front
     body_->CreateFixture(&argList[static_cast<int>(Type::CAMERA)].fixDef_);
 
     // Changing camera mass to zero
-    body_->GetFixtureList()[0].SetDensity(0.0f);
+    body_->GetFixtureList()->SetDensity(0.0f);
     body_->ResetMassData();
 
-    setCollisionFilter(Category::PLAYER, 1);
-    setCollisionFilter(Category::CAMERA, 0);
-    setSensor(true, 0);
+    setCollisionFilter(Category::CAMERA);
+    setSensor(true);
 }
 
 void Player::control(UserIO &userIO)
