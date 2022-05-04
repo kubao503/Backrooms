@@ -12,6 +12,7 @@ public:
         WALL,
         RED_WALL,
         ENEMY,
+        WALKIETALKIE,
         TOTAL
     };
 

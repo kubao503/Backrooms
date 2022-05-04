@@ -10,6 +10,7 @@ public:
     {
         ENEMY,
         WALL,
+        WALKIETALKIE,
         TOTAL
     };
     static bool init();

@@ -71,6 +71,13 @@ void Player::control(UserIO &userIO)
         // but this is likely done by another "thread"
         // So Item is automatically removed from visibleObjects_ and nearbyItem_
     }
+
+    // Changing item from inventory
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+    {
+        if (++currentItemIdx_ >= ownedItems_.size())
+            currentItemIdx_ = 0;
+    }
 }
 
 #include <iostream> // DEBUG

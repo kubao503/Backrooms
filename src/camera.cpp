@@ -116,7 +116,7 @@ void Camera::drawObjects2D(UserIO &userIO, const Player &player)
 void Camera::drawItems(UserIO &userIO, const Player &player)
 {
     if (player.getOwnedItems().size())
-        userIO.drawOnScreen(Shapes::RED_WALL);
+        userIO.drawOnScreen(player.getCurrentItem()->getGUIShapeIdx());
 }
 
 void Camera::drawViewOnScreen(UserIO &userIO, const Player &player)

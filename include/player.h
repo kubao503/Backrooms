@@ -19,6 +19,7 @@ private:
     std::vector<const Object2D *> visibleObjects_;
     Item *nearbyItem_;
     std::vector<std::unique_ptr<Item>> ownedItems_;
+    unsigned int currentItemIdx_{0};
 
 public:
     Player(b2World &world, const b2Vec2 &position, float angle);
@@ -27,6 +28,7 @@ public:
 
     const std::vector<const Object2D *> &getVisibleObjects() const { return visibleObjects_; }
     const std::vector<std::unique_ptr<Item>> &getOwnedItems() const { return ownedItems_; }
+    const Item *getCurrentItem() const { return ownedItems_[currentItemIdx_].get(); }
 
     void objectObserved(const Object2D *object);
     void objectLost(const Object2D *object);

@@ -3,11 +3,12 @@
 sf::RectangleShape Shapes::shapes_[Type::TOTAL]{
     shapeGenerator(sf::Vector2f(2.0f, 50.0f), sf::Color::White),
     shapeGenerator(sf::Vector2f(2.0f, 50.0f), sf::Color::Red),
-    shapeGenerator(sf::Vector2f(195.0f, 400.0f), sf::Color::White)};
+    shapeGenerator(sf::Vector2f(195.0f, 400.0f), sf::Color::White),
+    shapeGenerator(sf::Vector2f(800.0f, 450.0f), sf::Color::White)};
 
 sf::RectangleShape Shapes::getShape(Type shapeIdx, float offset)
 {
-    if (shapeIdx >= TOTAL)
+    if (shapeIdx < 0 || shapeIdx >= TOTAL)
         throw "Invalid shapeIdx\n";
 
     if (shapes_[shapeIdx].getTexture())
@@ -28,11 +29,18 @@ sf::RectangleShape Shapes::getShape(Type shapeIdx, float offset)
 void Shapes::init()
 {
     shapes_[ENEMY].setTexture(&Textures::getTexture(Textures::ENEMY), false);
-    sf::Vector2f wallSize = shapes_[WALL].getSize();
+
+    sf::Vector2f textSize = shapes_[WALL].getSize();
     shapes_[WALL].setTexture(&Textures::getTexture(Textures::WALL));
     shapes_[WALL].setTextureRect(sf::IntRect(
         sf::Vector2i(0, 0),
-        static_cast<sf::Vector2i>(wallSize)));
+        static_cast<sf::Vector2i>(textSize)));
+
+    // textSize = shapes_[WALKIETALKIE].getSize();
+    shapes_[WALKIETALKIE].setTexture(&Textures::getTexture(Textures::WALKIETALKIE));
+    // shapes_[WALKIETALKIE].setTextureRect(sf::IntRect(
+    //     sf::Vector2i(0, 0),
+    //     static_cast<sf::Vector2i>(textSize)));
 }
 
 sf::RectangleShape Shapes::shapeGenerator(const sf::Vector2f &size, sf::Color color)
