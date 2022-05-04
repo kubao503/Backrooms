@@ -23,7 +23,6 @@ public:
     void clear();
     bool wasCleared() const { return cleared_; };
     b2Vec2 getPosition() const { return position_; };
-    b2Vec2 getClosestChunk(const b2Vec2 &position) const;
 };
 
 #endif
