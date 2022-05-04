@@ -129,10 +129,3 @@ void Camera::drawViewOnScreen(UserIO &userIO, const Player &player)
 
     userIO.end(); // Display ray on screen
 }
-
-// Camera::Camera(b2World &world, const b2Vec2 &position, float angle)
-//     : Object{world, Type::CAMERA, position, angle}
-// {
-//     setSensor(true);
-//     setCollisionFilter(Category::CAMERA);
-// }

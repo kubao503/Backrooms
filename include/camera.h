@@ -5,8 +5,8 @@
 #include "object2d.h" // for drawing Object2D
 #include "myMath.h"   // for angle calculations
 #include "ray.h"      // for casting rays
-#include "config.h" // for constants
-#include "player.h" // for getting visible objects
+#include "config.h"   // for constants
+#include "player.h"   // for getting visible objects
 
 #include <vector> // for storing Object2Ds
 #include <memory>
@@ -36,8 +36,6 @@ private:
 public:
     // Casts multiple rays to show them as image on the screen
     static void drawViewOnScreen(UserIO &userIO, const Player &player);
-
-    // Camera(b2World &world, const b2Vec2 &position, float angle);
 };
 
 #endif
