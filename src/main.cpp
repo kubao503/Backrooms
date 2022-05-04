@@ -88,7 +88,7 @@ int main()
         }
 
         // Drawing on screen
-        Camera::drawViewOnScreen(userIO, world, player);
+        Camera::drawViewOnScreen(userIO, player);
     }
 
     return 0;

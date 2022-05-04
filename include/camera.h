@@ -4,16 +4,14 @@
 #include "userio.h"   // called to draw Shape on screen
 #include "object2d.h" // for drawing Object2D
 #include "myMath.h"   // for angle calculations
-// #include "enemy.h"    // for drawing Enemy
 #include "ray.h"      // for casting rays
-// #include "drawableObject.h"
 #include "config.h" // for constants
 #include "player.h" // for getting visible objects
 
 #include <vector> // for storing Object2Ds
 #include <memory>
 
-class Camera : public Object
+class Camera
 {
 private:
     using scale_t = std::pair<float, float>;
@@ -31,12 +29,13 @@ private:
     static void draw2DRay(UserIO &userIO, float angle, const Ray::RayCallback &callback, float distance);
 
     static bool ifInFieldOfView(const Object &camera, const Object &object);
-    static void drawObjects3D(UserIO &userIO, const b2World &world, const Player &player);
-    static void drawObjects2D(UserIO &userIO, const b2World &world, const Player &player);
+    static void drawObjects3D(UserIO &userIO, const Player &player);
+    static void drawObjects2D(UserIO &userIO, const Player &player);
+    static void drawItems(UserIO &userIO, const Player &player);
 
 public:
     // Casts multiple rays to show them as image on the screen
-    static void drawViewOnScreen(UserIO &userIO, const b2World &world, const Player &player);
+    static void drawViewOnScreen(UserIO &userIO, const Player &player);
 
     // Camera(b2World &world, const b2Vec2 &position, float angle);
 };

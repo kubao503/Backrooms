@@ -7,7 +7,7 @@
 #include "item.h"   // for picking up item
 
 #include <box2d/box2d.h> // for setting b2Body velocity
-#include <set>           // for storing near items
+#include <vector>        // for storing near items
 
 class Player : public Object
 {
@@ -18,17 +18,15 @@ private:
     // Stores any items that are near
     std::vector<const Object2D *> visibleObjects_;
     Item *nearbyItem_;
-    std::set<std::unique_ptr<Item>> ownedItems_;
+    std::vector<std::unique_ptr<Item>> ownedItems_;
 
 public:
     Player(b2World &world, const b2Vec2 &position, float angle);
 
     void control(UserIO &userIO);
 
-    const std::vector<const Object2D *> &getVisibleObjects() const
-    {
-        return visibleObjects_;
-    }
+    const std::vector<const Object2D *> &getVisibleObjects() const { return visibleObjects_; }
+    const std::vector<std::unique_ptr<Item>> &getOwnedItems() const { return ownedItems_; }
 
     void objectObserved(const Object2D *object);
     void objectLost(const Object2D *object);

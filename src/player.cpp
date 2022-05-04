@@ -64,9 +64,11 @@ void Player::control(UserIO &userIO)
     // Pickig up items
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) && nearbyItem_)
     {
+        ownedItems_.push_back(std::unique_ptr<Item>(nearbyItem_));
         nearbyItem_->destroyBody();
-        // nearbyItem_ = static_cast<Item *>(nearbyItem_->destroyBody());
-        // objectLost(nearbyItem_);
+        // Deleting b2Body calls EndContact
+        // but this is likely done by another "thread"
+        // So Item is automatically removed from visibleObjects_ and nearbyItem_
     }
 }
 

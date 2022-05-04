@@ -76,6 +76,7 @@ protected:
 public:
     const b2Vec2 &getPosition() const { return body_->GetPosition(); };
     float getAngle() const { return body_->GetAngle(); };
+    const b2World &getWorld() const { return *body_->GetWorld(); }
 };
 
 #endif
