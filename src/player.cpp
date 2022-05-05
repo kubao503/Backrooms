@@ -20,6 +20,8 @@ Player::Player(b2World &world, const b2Vec2 &position, float angle)
 
     setCollisionFilter(Category::CAMERA);
     setSensor(true);
+
+    keyPresses_[sf::Keyboard::Q] = false;
 }
 
 void Player::control(UserIO &userIO)
@@ -72,12 +74,15 @@ void Player::control(UserIO &userIO)
         // So Item is automatically removed from visibleObjects_ and nearbyItem_
     }
 
+
     // Changing item from inventory
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && !keyPresses_.at(sf::Keyboard::Q))
     {
         if (++currentItemIdx_ >= ownedItems_.size())
             currentItemIdx_ = 0;
     }
+
+    keyPresses_[sf::Keyboard::Q] = sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
 }
 
 #include <iostream> // DEBUG

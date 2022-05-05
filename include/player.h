@@ -8,6 +8,7 @@
 
 #include <box2d/box2d.h> // for setting b2Body velocity
 #include <vector>        // for storing near items
+#include <map>
 
 class Player : public Object
 {
@@ -20,6 +21,7 @@ private:
     Item *nearbyItem_;
     std::vector<std::unique_ptr<Item>> ownedItems_;
     unsigned int currentItemIdx_{0};
+    std::map<sf::Keyboard::Key, bool> keyPresses_;
 
 public:
     Player(b2World &world, const b2Vec2 &position, float angle);
