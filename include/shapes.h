@@ -15,6 +15,8 @@ public:
         ENEMY,
         EMF,
         EMF1,
+        EMF2,
+        EMF3,
         TOTAL
     };
 

@@ -19,7 +19,9 @@ void Emf::action(const b2World &world, const Player &player)
     // Calculating distance to enemy
     if (callback.getEnemy())
     {
-        GUIShapeIdx_ = emfShapes_[1];
+        float distanceToEnemy{distance(player.getPosition(), callback.getEnemy()->getPosition())};
+        int stateIdx{static_cast<int>(-3.0f / aabbSize * distanceToEnemy + emfStates)};
+        GUIShapeIdx_ = emfShapes_[stateIdx];
     }
     else
     {

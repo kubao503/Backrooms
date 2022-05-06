@@ -12,6 +12,8 @@ public:
         WALL,
         EMF,
         EMF1,
+        EMF2,
+        EMF3,
         TOTAL
     };
     static bool init();

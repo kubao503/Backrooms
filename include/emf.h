@@ -4,6 +4,7 @@
 #include "item.h"
 #include "enemy.h"
 #include "player.h"
+#include "myMath.h" // for calculating distance to enemy
 
 class Emf : public Item
 {
@@ -19,10 +20,12 @@ private:
     };
 
     static constexpr float aabbSize{50.0f};
-    static constexpr unsigned int emfStates{2};
+    static constexpr unsigned int emfStates{4};
     static constexpr Shapes::Type emfShapes_[emfStates]{
         Shapes::EMF,
-        Shapes::EMF1};
+        Shapes::EMF1,
+        Shapes::EMF2,
+        Shapes::EMF3};
     bool on_{false};
 
 public:
