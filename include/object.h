@@ -35,7 +35,8 @@ protected:
     };
 
 private:
-    static std::map<Category, uint16> collisionMask_;
+    static const std::map<Type, Category> categoryMap_;
+    static const std::map<Category, uint16> collisionMask_;
 
     // Object generating methods
     static const b2BodyDef &getBodyDef(b2BodyType bodyType);

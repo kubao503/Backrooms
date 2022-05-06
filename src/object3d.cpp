@@ -32,7 +32,4 @@ std::pair<b2Vec2, b2Vec2> Object3D::getClosestCorner(const b2Vec2 &playerPos) co
 }
 
 Object3D::Object3D(b2World &world, Type type, const b2Vec2 &position, float angle)
-    : DrawableObject{world, type, position, angle}
-{
-    setCollisionFilter(WALL);
-}
+    : DrawableObject{world, type, position, angle} {}

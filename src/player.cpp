@@ -9,7 +9,7 @@ void Player::setLocalVelocity(const b2Vec2 &newVelocity)
 Player::Player(b2World &world, const b2Vec2 &position, float angle)
     : Object{world, Type::PLAYER, position, angle}
 {
-    setCollisionFilter(Category::PLAYER);
+    // setCollisionFilter(Category::PLAYER);
 
     // New fixture is added at the front
     body_->CreateFixture(&argList[static_cast<int>(Type::CAMERA)].fixDef_);

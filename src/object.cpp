@@ -1,11 +1,20 @@
 #include "object.h"
 
-std::map<Object::Category, uint16> Object::collisionMask_{
+const std::map<Object::Category, uint16> Object::collisionMask_{
     {DEFAULT, 0xFFFF},
     {WALL, PLAYER | OBJECT2D},
     {PLAYER, WALL | PLAYER | OBJECT2D},
     {CAMERA, OBJECT2D},
     {OBJECT2D, WALL | PLAYER | CAMERA | OBJECT2D}};
+
+const std::map<Object::Type, Object::Category> Object::categoryMap_{
+    {Type::WALL, WALL},
+    {Type::RED_WALL, WALL},
+    {Type::PLAYER, PLAYER},
+    {Type::ENEMY, OBJECT2D},
+    {Type::ITEM, OBJECT2D},
+    {Type::CAMERA, CAMERA}
+};
 
 const Object::Arguments Object::argList[static_cast<int>(Type::TOTAL)]{
     {b2_staticBody, getShape(6.0f, 1.0f)},
@@ -77,6 +86,7 @@ Object::Object(b2World &world, Type type)
 Object::Object(b2World &world, Type type, const b2Vec2 &position, float angle)
 {
     setBody(world, type, position, angle);
+    setCollisionFilter(categoryMap_.at(type));
 }
 
 void Object::setBody(b2World &world, Type type, const b2Vec2 &position, float angle)
