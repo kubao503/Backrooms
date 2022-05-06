@@ -86,7 +86,6 @@ Object::Object(b2World &world, Type type)
 Object::Object(b2World &world, Type type, const b2Vec2 &position, float angle)
 {
     setBody(world, type, position, angle);
-    setCollisionFilter(categoryMap_.at(type));
 }
 
 void Object::setBody(b2World &world, Type type, const b2Vec2 &position, float angle)
@@ -96,15 +95,17 @@ void Object::setBody(b2World &world, Type type, const b2Vec2 &position, float an
     body_->SetTransform(position, angle);
     body_->CreateFixture(&argList[argIdx].fixDef_);
 
+    // Setting proper collision filter
+    setCollisionFilter(categoryMap_.at(type));
+
     // Setting Object as user data
     body_->GetUserData().pointer = (uintptr_t)this;
 }
 
-Object *Object::destroyBody()
+void Object::destroyBody()
 {
     body_->GetWorld()->DestroyBody(body_.get());
     body_.release(); // This body is no longer valid
-    return this;
 }
 
 void Object::setSensor(bool sensor)

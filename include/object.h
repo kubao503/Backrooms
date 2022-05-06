@@ -70,7 +70,7 @@ protected:
     Object(b2World &world, Type type);
     Object(b2World &world, Type type, const b2Vec2 &position, float angle);
     void setBody(b2World &world, Type type, const b2Vec2 &position, float angle);
-    Object *destroyBody();
+    void destroyBody();
 
     // These functions affect only last created fixture
     void setSensor(bool sensor);
