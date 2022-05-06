@@ -22,7 +22,7 @@ const Object::Arguments Object::argList[static_cast<int>(Type::TOTAL)]{
     {b2_dynamicBody, getShape(0.5f)},
     {b2_dynamicBody, getShape(0.5f)},
     {b2_staticBody, getShape(1.0f)},
-    {b2_staticBody, getShape(Conf::FOVangle, Conf::renderDistance, 5)}};
+    {b2_staticBody, getShape(Conf::FOVangle, Conf::renderDistance, 6)}};
 
 Object::Arguments::Arguments(b2BodyType bodyType, const b2Shape &shape)
     : bodyType_{bodyType}, fixDef_{getFixtureDef(shape)} {}
@@ -58,10 +58,13 @@ const b2Shape &Object::getShape(float radius)
 
 const b2Shape &Object::getShape(float FOVangle, float renderDist, int verticesCount)
 {
-    auto vertices = std::make_unique<b2Vec2[]>(verticesCount); // {new b2Vec2[verticesCount]{{0, 0}}};
-    for (int i{1}; i < verticesCount; ++i)
+    auto vertices = std::make_unique<b2Vec2[]>(verticesCount);
+    vertices[0] = 2.0f * getVecN(FOVangle / 2.0f);
+    vertices[1] = 2.0f * getVecN(-FOVangle / 2.0f);
+
+    for (int i{2}; i < verticesCount; ++i)
     {
-        float angle{FOVangle / 2.0f / (verticesCount - 2) * (2 * i - verticesCount)};
+        float angle{FOVangle / 2.0f / (verticesCount - 3) * (2 * i - verticesCount - 1)};
         vertices[i] = renderDist * getVecN(angle);
     }
 
