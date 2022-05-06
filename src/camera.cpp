@@ -63,7 +63,7 @@ void Camera::drawObjects3D(UserIO &userIO, const Player &player)
     // Angle between casted rays
     constexpr float angleChange{Conf::FOVangle / raysNumber_};
     Object *lastObject{nullptr}; // Last drawn object
-    b2Vec2 closestCorner;        // Corner of this object
+    std::pair<b2Vec2, b2Vec2> objectCorners;        // Corner of this object
 
     // Cast a rays in many directions
     // for drawing Object3Ds
@@ -78,10 +78,12 @@ void Camera::drawObjects3D(UserIO &userIO, const Player &player)
             {
                 // Start drawing texture from begining
                 lastObject = rayCallback.getObject();
-                closestCorner = static_cast<Object3D *>(rayCallback.getObject())->getClosestCorner(player.getPosition());
+                objectCorners = static_cast<Object3D *>(rayCallback.getObject())->getClosestCorner(player.getPosition());
             }
 
-            float rayNumber{distance(rayCallback.getHitPoint(), closestCorner)};
+            bool leftSide{b2Cross(getVec(player.getPosition(), rayCallback.getHitPoint()), getVec(player.getPosition(), objectCorners.second)) < 0.0f};
+            // leftSide = false;
+            float rayNumber{distance(rayCallback.getHitPoint(), leftSide ? objectCorners.first : objectCorners.second)};
             draw3DRay(userIO, angle, rayCallback, rayNumber);
         }
     }

@@ -12,7 +12,7 @@ private:
     b2Vec2 *getCorners() const;
 
 public:
-    b2Vec2 getClosestCorner(const b2Vec2 &playerPos) const;
+    std::pair<b2Vec2, b2Vec2> getClosestCorner(const b2Vec2 &playerPos) const;
     Object3D(b2World &world, Type type, const b2Vec2 &position, float angle);
 };
 

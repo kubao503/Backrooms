@@ -50,4 +50,9 @@ inline b2Vec2 rotateVec(const b2Vec2 &vec, float angle)
         -vec.x * cos(angle) + vec.y * sin(angle)};
 }
 
+inline int modulo(int value, int mod)
+{
+    return ((value % mod) + mod) % mod;
+}
+
 #endif

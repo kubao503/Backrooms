@@ -64,10 +64,10 @@ int main()
         // Chunks update
         gameWorld.draw(world, player);
 
-        b2Vec2 closestChunk = gameWorld.closestChunk(player);
+        // b2Vec2 closestChunk = gameWorld.closestChunk(player);
 
-        if (closestChunk.IsValid())
-            std::cout << closestChunk.x << " " << closestChunk.y << std::endl; // DEBUG
+        // if (closestChunk.IsValid())
+        //     std::cout << closestChunk.x << " " << closestChunk.y << std::endl; // DEBUG
 
         // Drawing on screen
         Camera::drawViewOnScreen(userIO, player);
