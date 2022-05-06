@@ -28,7 +28,7 @@ public:
 
     void control(UserIO &userIO);
 
-    const std::vector<const Object2D *> &getVisibleObjects() const { return visibleObjects_; }
+    const std::vector<const Object2D *> &getVisibleObjects() const;
     const std::vector<std::unique_ptr<Item>> &getOwnedItems() const { return ownedItems_; }
     const Item *getCurrentItem() const { return ownedItems_[currentItemIdx_].get(); }
 

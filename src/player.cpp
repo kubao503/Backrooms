@@ -64,6 +64,11 @@ void Player::control(UserIO &userIO)
     int mouseXMovement(userIO.getMouseXMovement());
     body_->SetAngularVelocity(ANGULAR_VELOCITY * mouseXMovement);
 
+    // Sorting visible objects
+    const b2Vec2 playerPosition{getPosition()};
+    std::sort(visibleObjects_.begin(), visibleObjects_.end(), [&playerPosition](const Object2D *objA, const Object2D *objB)
+              { return distance(playerPosition, objA->getPosition()) > distance(playerPosition, objB->getPosition()); });
+
     // Pickig up items
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) && nearbyItem_)
     {
@@ -74,7 +79,6 @@ void Player::control(UserIO &userIO)
         // So Item is automatically removed from visibleObjects_ and nearbyItem_
     }
 
-
     // Changing item from inventory
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && !keyPresses_.at(sf::Keyboard::Q))
     {
@@ -83,6 +87,11 @@ void Player::control(UserIO &userIO)
     }
 
     keyPresses_[sf::Keyboard::Q] = sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
+}
+
+const std::vector<const Object2D *> &Player::getVisibleObjects() const
+{
+    return visibleObjects_;
 }
 
 #include <iostream> // DEBUG

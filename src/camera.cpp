@@ -82,7 +82,6 @@ void Camera::drawObjects3D(UserIO &userIO, const Player &player)
             }
 
             bool leftSide{b2Cross(getVec(player.getPosition(), rayCallback.getHitPoint()), getVec(player.getPosition(), objectCorners.second)) < 0.0f};
-            // leftSide = false;
             float rayNumber{distance(rayCallback.getHitPoint(), leftSide ? objectCorners.first : objectCorners.second)};
             draw3DRay(userIO, angle, rayCallback, rayNumber);
         }
