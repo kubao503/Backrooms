@@ -25,7 +25,7 @@ int main()
     Shapes::init();
 
     // User input via mouse and output via screen
-    UserIO userIO(1600, 900, "Backrooms");
+    UserIO userIO("Backrooms");
 
     // Creating world without gravity
     b2World world{b2Vec2(0.0f, 0.0f)};

@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp> // for using sf::Shape
 #include "textures.h"        // for setting sf::Texture
+#include "config.h"          // for window size
 
 class Shapes
 {
@@ -23,7 +24,10 @@ public:
 
 private:
     static sf::RectangleShape shapes_[Type::TOTAL];
-    static sf::RectangleShape shapeGenerator(const sf::Vector2f &size, sf::Color color);
+
+    static void scaleBasedOnScreen(sf::Shape &shape);
+    static void makeFullScreen(sf::RectangleShape &shape);
+    static sf::RectangleShape shapeGenerator(const sf::Vector2f &size, sf::Color color, bool fullScreen = false);
 };
 
 #endif

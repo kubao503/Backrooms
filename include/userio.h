@@ -1,8 +1,9 @@
 #ifndef USER_IO_H
 #define USER_IO_H
 
-#include <SFML/Graphics.hpp> // for using sf::RenderWindow
+#include "config.h"
 #include "shapes.h"          // for drawing sf::Shape
+#include <SFML/Graphics.hpp> // for using sf::RenderWindow
 #include <memory>            // for moving sf::Color
 #include <algorithm>         // for std::min
 
@@ -13,13 +14,12 @@ private:
     bool focus_{true}; // Focus on game window
 
     sf::Color dimColor(const sf::Color &color, float dimFactor);
-    void setScale(sf::Shape &shape);
 
 public:
-    UserIO(unsigned int width, unsigned int height, const std::string &title)
+    UserIO(const std::string &title)
     {
         getMouseXMovement();
-        window_.create(sf::VideoMode(width, height), title);
+        window_.create(sf::VideoMode(Conf::windowWidth, Conf::windowHeight), title);
         window_.setMouseCursorVisible(false);
     }
 
