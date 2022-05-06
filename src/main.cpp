@@ -7,6 +7,7 @@
 #include "enemy.h"
 #include "timer.h"
 #include "item.h"
+#include "emf.h"
 // #include "game.h"
 #include "world.h"
 #include "myListener.h" // for setting contact listener
@@ -37,8 +38,8 @@ int main()
     // Objects
     Player player(world, b2Vec2(-15.0f, -15.0f), 0);
     Enemy enemy(world, b2Vec2(-20.0f, -20.0f), 0.0f);
-    Item item(world, Shapes::WALKIETALKIE, b2Vec2(-5.0f, -15.0f), 0.0f);
-    Item item2(world, Shapes::RED_WALL, b2Vec2(5.0f, -15.0f), 0.0f);
+    Emf emf(world, b2Vec2(-5.0f, -15.0f), 0.0f);
+    // Item item2(world, Shapes::RED_WALL, b2Vec2(5.0f, -15.0f), 0.0f);
 
     // Creating chunks
     World gameWorld(world, 100);
@@ -47,8 +48,8 @@ int main()
     float timeStep = 1.0f / 60.0f; // Step of time between events
     int32 velocityIterations = 4;  // Velocity calculations during one step
     int32 positionIterations = 3;  // Position calculations during one step
-    Chunk *b = new Chunk(world, b2Vec2(2, 3));
-    delete b;
+    // Chunk *b = new Chunk(world, b2Vec2(2, 3));
+    // delete b;
 
     // Main loop
     while (userIO.isOpen())
@@ -59,6 +60,7 @@ int main()
         // Physics step
         world.Step(timeStep, velocityIterations, positionIterations);
         player.control(userIO);
+        player.doItemAction(world);
         // enemy.control(player);
 
         // Chunks update

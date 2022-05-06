@@ -10,7 +10,8 @@ public:
     {
         ENEMY,
         WALL,
-        WALKIETALKIE,
+        EMF,
+        EMF1,
         TOTAL
     };
     static bool init();

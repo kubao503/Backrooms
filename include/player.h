@@ -31,6 +31,7 @@ public:
     const std::vector<const Object2D *> &getVisibleObjects() const;
     const std::vector<std::unique_ptr<Item>> &getOwnedItems() const { return ownedItems_; }
     const Item *getCurrentItem() const { return ownedItems_[currentItemIdx_].get(); }
+    void doItemAction(const b2World &world) const;
 
     void objectObserved(const Object2D *object);
     void objectLost(const Object2D *object);

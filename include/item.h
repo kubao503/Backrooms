@@ -3,10 +3,12 @@
 
 #include "object2d.h"
 
+class Player;
+
 class Item : public Object2D
 {
-private:
-    const Shapes::Type GUIShapeIdx_;
+protected:
+    Shapes::Type GUIShapeIdx_;
 
 public:
     using Object::destroyBody;
@@ -18,6 +20,8 @@ public:
     {
         setSensor(true);
     }
+
+    virtual void action(const b2World &world, const Player &player) = 0;
 };
 
 #endif

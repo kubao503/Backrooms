@@ -13,7 +13,8 @@ public:
         WALL,
         RED_WALL,
         ENEMY,
-        WALKIETALKIE,
+        EMF,
+        EMF1,
         TOTAL
     };
 

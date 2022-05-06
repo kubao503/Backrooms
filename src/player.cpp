@@ -94,6 +94,12 @@ const std::vector<const Object2D *> &Player::getVisibleObjects() const
     return visibleObjects_;
 }
 
+void Player::doItemAction(const b2World &world) const
+{
+    for (auto &&item : ownedItems_)
+        item->action(world, *this);
+}
+
 #include <iostream> // DEBUG
 
 void Player::objectObserved(const Object2D *object)
