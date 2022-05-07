@@ -1,9 +1,8 @@
 #ifndef EMF_H
 #define EMF_H
 
-#include "item.h"
-#include "enemy.h"
-#include "player.h"
+#include "item.h"   // for inheritance
+#include "enemy.h"  // for finding closest enemy
 #include "myMath.h" // for calculating distance to enemy
 
 class Emf : public Item
@@ -30,7 +29,9 @@ private:
 
 public:
     Emf(b2World &world, const b2Vec2 &position, float angle);
-    void action(const b2World &world, const Player &player) override;
+    void drop(b2World &world, const Object &player);
+
+    void action(const b2World &world, const Object &player) override;
 };
 
 #endif

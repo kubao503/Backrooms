@@ -19,7 +19,7 @@ public:
         RED_WALL,
         PLAYER,
         ENEMY,
-        ITEM,
+        EMF,
         CAMERA,
         TOTAL
     };
@@ -77,6 +77,7 @@ protected:
     void setCollisionFilter(Category category) const;
 
 public:
+    bool isSensor() const { return body_->GetFixtureList()->IsSensor(); }
     const b2Vec2 &getPosition() const { return body_->GetPosition(); };
     float getAngle() const { return body_->GetAngle(); };
     const b2World &getWorld() const { return *body_->GetWorld(); }

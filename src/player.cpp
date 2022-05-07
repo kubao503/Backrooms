@@ -9,7 +9,7 @@ void Player::setLocalVelocity(const b2Vec2 &newVelocity)
 Player::Player(b2World &world, const b2Vec2 &position, float angle)
     : Object{world, Type::PLAYER, position, angle}
 {
-    // setCollisionFilter(Category::PLAYER);
+    // Collision filter for PLAYER is set in Object's constructor
 
     // New fixture is added at the front
     body_->CreateFixture(&argList[static_cast<int>(Type::CAMERA)].fixDef_);
@@ -24,10 +24,9 @@ Player::Player(b2World &world, const b2Vec2 &position, float angle)
     keyPresses_[sf::Keyboard::Q] = false;
 }
 
-void Player::control(UserIO &userIO)
+void Player::move()
 {
     static constexpr float LINEAR_VELOCITY = 2.0f;
-    static constexpr float ANGULAR_VELOCITY = 0.15f;
     static constexpr float SPRINT_MULTIPLIER = 2.0f;
     b2Vec2 newVelocity(0.0f, 0.0f);
 
@@ -59,24 +58,44 @@ void Player::control(UserIO &userIO)
     }
 
     setLocalVelocity(newVelocity);
+}
+
+void Player::lookAround(UserIO &userIO)
+{
+    static constexpr float ANGULAR_VELOCITY = 0.15f;
 
     // looking around
     int mouseXMovement(userIO.getMouseXMovement());
     body_->SetAngularVelocity(ANGULAR_VELOCITY * mouseXMovement);
+}
 
-    // Sorting visible objects
-    const b2Vec2 playerPosition{getPosition()};
-    std::sort(visibleObjects_.begin(), visibleObjects_.end(), [&playerPosition](const Object2D *objA, const Object2D *objB)
-              { return distance(playerPosition, objA->getPosition()) > distance(playerPosition, objB->getPosition()); });
+#include <iostream> // DEBUG
 
+void Player::itemOperations(Game &game)
+{
     // Pickig up items
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) && nearbyItem_)
     {
-        ownedItems_.push_back(std::unique_ptr<Item>(nearbyItem_));
-        nearbyItem_->destroyBody();
+        auto item = game.shareObject(nearbyItem_);
+        item->destroyBody();
+        ownedItems_.push_back(std::move(item));
         // Deleting b2Body calls EndContact
         // but this is likely done by another "thread"
         // So Item is automatically removed from visibleObjects_ and nearbyItem_
+    }
+
+    // Dropping item
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::G))
+    {
+        if (ownedItems_.size())
+        {
+            ownedItems_[currentItemIdx_]->drop(*body_->GetWorld(), *this);
+            ownedItems_.erase(std::next(ownedItems_.begin(), currentItemIdx_));
+            if (currentItemIdx_ == ownedItems_.size())
+            {
+                currentItemIdx_ = 0;
+            }
+        }
     }
 
     // Changing item from inventory
@@ -87,6 +106,18 @@ void Player::control(UserIO &userIO)
     }
 
     keyPresses_[sf::Keyboard::Q] = sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
+}
+
+void Player::control(UserIO &userIO, Game &game)
+{
+    move();
+    lookAround(userIO);
+    itemOperations(game);
+
+    // Sorting visible objects by distance from the player
+    const b2Vec2 playerPosition{getPosition()};
+    std::sort(visibleObjects_.begin(), visibleObjects_.end(), [&playerPosition](const Object2D *objA, const Object2D *objB)
+              { return distance(playerPosition, objA->getPosition()) > distance(playerPosition, objB->getPosition()); });
 }
 
 const std::vector<const Object2D *> &Player::getVisibleObjects() const
@@ -100,7 +131,6 @@ void Player::doItemAction(const b2World &world) const
         item->action(world, *this);
 }
 
-#include <iostream> // DEBUG
 
 void Player::objectObserved(const Object2D *object)
 {
@@ -116,7 +146,7 @@ void Player::objectLost(const Object2D *object)
         visibleObjects_.erase(foundObj);
 }
 
-void Player::itemContact(Item *item)
+void Player::itemContact(const Item *item)
 {
     std::cerr << "Item contact\n";
     nearbyItem_ = item;

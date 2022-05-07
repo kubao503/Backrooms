@@ -16,7 +16,7 @@ class MyListener : public b2ContactListener
     void EndContact(b2Contact *contact) override;
 
     template <typename T, typename U>
-    bool getTandU(Object *&objA, Object *&objB);
+    bool getTandU(Object *&objA, Object *&objB, bool &isSensorA, bool &isSensorB);
 };
 
 #endif

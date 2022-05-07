@@ -8,7 +8,7 @@
 #include "timer.h"
 #include "item.h"
 #include "emf.h"
-// #include "game.h"
+#include "game.h"
 #include "world.h"
 #include "myListener.h" // for setting contact listener
 
@@ -35,10 +35,13 @@ int main()
     MyListener listener;
     world.SetContactListener(&listener);
 
+    Game game;
+    game.createItem(world, Object::Type::EMF, b2Vec2(-5.0f, -15.0f), 0.0f);
+
     // Objects
     Player player(world, b2Vec2(-15.0f, -15.0f), 0);
     Enemy enemy(world, b2Vec2(-20.0f, -20.0f), 0.0f);
-    Emf emf(world, b2Vec2(-5.0f, -15.0f), 0.0f);
+    // Emf emf(world, b2Vec2(-5.0f, -15.0f), 0.0f);
     // Item item2(world, Shapes::RED_WALL, b2Vec2(5.0f, -15.0f), 0.0f);
 
     // Creating chunks
@@ -59,7 +62,7 @@ int main()
 
         // Physics step
         world.Step(timeStep, velocityIterations, positionIterations);
-        player.control(userIO);
+        player.control(userIO, game);
         player.doItemAction(world);
         // enemy.control(player);
 

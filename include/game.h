@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "object.h"
+#include "emf.h"
 
 #include <box2d/box2d.h>
 #include <set>
@@ -10,9 +11,23 @@
 class Game
 {
 private:
-    std::set<Object *> freeItems_;
+    std::set<std::shared_ptr<Object>> objects_;
 
 public:
+    template <class T>
+    std::shared_ptr<T> shareObject(const T *searchedObj)
+    {
+        for (auto obj : objects_)
+        {
+            if (obj.get() == searchedObj)
+            {
+                return std::static_pointer_cast<T>(obj);
+            }
+        }
+
+        return nullptr;
+    }
+
     void createItem(b2World &world, Object::Type type, const b2Vec2 &position, float angle);
 };
 

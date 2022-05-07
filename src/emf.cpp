@@ -1,9 +1,14 @@
 #include "emf.h"
 
 Emf::Emf(b2World &world, const b2Vec2 &position, float angle)
-    : Item{world, emfShapes_[0], position, angle} {}
+    : Item{world, Type::EMF, emfShapes_[0], position, angle} {}
 
-void Emf::action(const b2World &world, const Player &player)
+void Emf::drop(b2World &world, const Object &player)
+{
+    setBody(world, Type::EMF, player.getPosition() + 5.0f * getVecN(player.getAngle()), 0);
+}
+
+void Emf::action(const b2World &world, const Object &player)
 {
     // if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
     //     on_ = !on_;

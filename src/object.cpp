@@ -12,7 +12,7 @@ const std::map<Object::Type, Object::Category> Object::categoryMap_{
     {Type::RED_WALL, WALL},
     {Type::PLAYER, PLAYER},
     {Type::ENEMY, OBJECT2D},
-    {Type::ITEM, OBJECT2D},
+    {Type::EMF, OBJECT2D},
     {Type::CAMERA, CAMERA}
 };
 
