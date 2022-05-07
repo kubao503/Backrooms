@@ -20,18 +20,21 @@ public:
         PLAYER,
         ENEMY,
         EMF,
+        ITEM_PICK_AREA,
         CAMERA,
         TOTAL
     };
 
 protected:
-    enum Category
+    enum Category : uint16
     {
         DEFAULT = 0x0,
         WALL = 0x1,
         PLAYER = 0x2,
         CAMERA = 0x4,
-        OBJECT2D = 0x8
+        ENEMY = 0x8,
+        ITEM = 0x10,
+        ITEM_PICK_AREA = 0x20
     };
 
 private:
@@ -40,10 +43,10 @@ private:
 
     // Object generating methods
     static const b2BodyDef &getBodyDef(b2BodyType bodyType);
-    static const b2Shape &getShape(float halfX, float halfY);
-    static const b2Shape &getShape(float radius);
-    static const b2Shape &getShape(float FOVangle, float renderDist, int verticesCount);
-    static const b2FixtureDef &getFixtureDef(const b2Shape &shape);
+    static std::unique_ptr<b2Shape> getShape(float halfX, float halfY);
+    static std::unique_ptr<b2Shape> getShape(float radius);
+    static std::unique_ptr<b2Shape> getShape(float FOVangle, float renderDist, int verticesCount);
+    static const b2FixtureDef &getFixtureDef(std::unique_ptr<b2Shape> shape);
     // Returns unique position helping avoiding spawning objects at the same place
     b2Vec2 getNewPosition() const;
 
@@ -54,7 +57,7 @@ protected:
     {
         b2BodyType bodyType_;
         b2FixtureDef fixDef_;
-        Arguments(b2BodyType bodyType, const b2Shape &shape);
+        Arguments(b2BodyType bodyType, std::unique_ptr<b2Shape> shape);
     };
 
     // Arguments for creating objects
@@ -73,6 +76,7 @@ protected:
     void destroyBody();
 
     // These functions affect only last created fixture
+    void addFixture(Type type, Category cat, bool sensor = false);
     void setSensor(bool sensor);
     void setCollisionFilter(Category category) const;
 

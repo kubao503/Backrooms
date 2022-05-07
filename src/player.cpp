@@ -12,14 +12,15 @@ Player::Player(b2World &world, const b2Vec2 &position, float angle)
     // Collision filter for PLAYER is set in Object's constructor
 
     // New fixture is added at the front
-    body_->CreateFixture(&argList[static_cast<int>(Type::CAMERA)].fixDef_);
+    addFixture(Type::CAMERA, Category::CAMERA, true);
+    // body_->CreateFixture(&argList[static_cast<int>(Type::CAMERA)].fixDef_);
+    // setCollisionFilter(Category::CAMERA);
+    // setSensor(true);
 
     // Changing camera mass to zero
     body_->GetFixtureList()->SetDensity(0.0f);
     body_->ResetMassData();
 
-    setCollisionFilter(Category::CAMERA);
-    setSensor(true);
 
     keyPresses_[sf::Keyboard::Q] = false;
 }

@@ -2,29 +2,33 @@
 
 const std::map<Object::Category, uint16> Object::collisionMask_{
     {DEFAULT, 0xFFFF},
-    {WALL, PLAYER | OBJECT2D},
-    {PLAYER, WALL | PLAYER | OBJECT2D},
-    {CAMERA, OBJECT2D},
-    {OBJECT2D, WALL | PLAYER | CAMERA | OBJECT2D}};
+    {WALL, PLAYER | ENEMY},
+    {PLAYER, WALL | ENEMY | ITEM_PICK_AREA},
+    {CAMERA, ENEMY | ITEM},
+    {ENEMY, WALL | PLAYER | CAMERA},
+    {ITEM, CAMERA},
+    {ITEM_PICK_AREA, PLAYER}};
 
 const std::map<Object::Type, Object::Category> Object::categoryMap_{
     {Type::WALL, WALL},
     {Type::RED_WALL, WALL},
     {Type::PLAYER, PLAYER},
-    {Type::ENEMY, OBJECT2D},
-    {Type::EMF, OBJECT2D},
-    {Type::CAMERA, CAMERA}};
+    {Type::ENEMY, ENEMY},
+    {Type::EMF, ITEM},
+    {Type::CAMERA, CAMERA},
+    {Type::ITEM_PICK_AREA, ITEM_PICK_AREA}};
 
 const Object::Arguments Object::argList[static_cast<int>(Type::TOTAL)]{
     {b2_staticBody, getShape(6.0f, 1.0f)},
     {b2_staticBody, getShape(6.0f, 1.0f)},
     {b2_dynamicBody, getShape(0.5f)},
     {b2_dynamicBody, getShape(0.5f)},
-    {b2_staticBody, getShape(1.0f)},
+    {b2_staticBody, getShape(0.1f)},
+    {b2_staticBody, getShape(10.0f)},
     {b2_staticBody, getShape(Conf::FOVangle, Conf::renderDistance, 5)}};
 
-Object::Arguments::Arguments(b2BodyType bodyType, const b2Shape &shape)
-    : bodyType_{bodyType}, fixDef_{getFixtureDef(shape)} {}
+Object::Arguments::Arguments(b2BodyType bodyType, std::unique_ptr<b2Shape> shape)
+    : bodyType_{bodyType}, fixDef_{getFixtureDef(std::move(shape))} {}
 
 b2Vec2 Object::getNewPosition() const
 {
@@ -41,21 +45,21 @@ const b2BodyDef &Object::getBodyDef(b2BodyType bodyType)
     return bodyDef;
 }
 
-const b2Shape &Object::getShape(float halfX, float halfY)
+std::unique_ptr<b2Shape> Object::getShape(float halfX, float halfY)
 {
-    static b2PolygonShape shape; // Shape
-    shape.SetAsBox(halfX, halfY);
+    auto shape = std::make_unique<b2PolygonShape>();
+    shape->SetAsBox(halfX, halfY);
     return shape;
 }
 
-const b2Shape &Object::getShape(float radius)
+std::unique_ptr<b2Shape> Object::getShape(float radius)
 {
-    static b2CircleShape shape; // Shape
-    shape.m_radius = radius;
+    auto shape = std::make_unique<b2CircleShape>();
+    shape->m_radius = radius;
     return shape;
 }
 
-const b2Shape &Object::getShape(float FOVangle, float renderDist, int verticesCount)
+std::unique_ptr<b2Shape> Object::getShape(float FOVangle, float renderDist, int verticesCount)
 {
     auto vertices = std::make_unique<b2Vec2[]>(verticesCount);
 
@@ -65,16 +69,17 @@ const b2Shape &Object::getShape(float FOVangle, float renderDist, int verticesCo
         vertices[i] = renderDist * getVecN(angle);
     }
 
-    static b2PolygonShape shape;
-    shape.Set(vertices.get(), verticesCount);
+    auto shape = std::make_unique<b2PolygonShape>();
+    shape->Set(vertices.get(), verticesCount);
 
     return shape;
 }
 
-const b2FixtureDef &Object::getFixtureDef(const b2Shape &shape)
+const b2FixtureDef &Object::getFixtureDef(std::unique_ptr<b2Shape> shape)
 {
     static b2FixtureDef fixture; // Fixture
-    fixture.shape = &shape;
+    fixture.shape = shape.get();
+    shape.release();
     fixture.density = 1.0f;
     fixture.friction = 0.0f;
     return fixture;
@@ -106,6 +111,14 @@ void Object::destroyBody()
 {
     body_->GetWorld()->DestroyBody(body_.get());
     body_.release(); // This body is no longer valid
+}
+
+void Object::addFixture(Type type, Category cat, bool sensor)
+{
+    body_->CreateFixture(&argList[static_cast<int>(type)].fixDef_);
+
+    setCollisionFilter(cat);
+    setSensor(sensor);
 }
 
 void Object::setSensor(bool sensor)

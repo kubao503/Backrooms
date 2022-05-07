@@ -10,10 +10,6 @@ void Emf::drop(b2World &world, const Object &player)
 
 void Emf::action(const b2World &world, const Object &player)
 {
-    // if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-    //     on_ = !on_;
-    // GUIShapeIdx_ = emfShapes_[on_];
-
     b2AABB aabb;
     aabb.upperBound = player.getPosition() + b2Vec2(aabbSize, aabbSize);
     aabb.lowerBound = player.getPosition() - b2Vec2(aabbSize, aabbSize);

@@ -13,11 +13,7 @@ public:
 
     Shapes::Type getGUIShapeIdx() const { return GUIShapeIdx_; }
 
-    Item(b2World &world, Type type, Shapes::Type GUIShapeIdx, const b2Vec2 &position, float angle)
-        : Object2D{world, type, position, angle}, GUIShapeIdx_{GUIShapeIdx}
-    {
-        setSensor(true);
-    }
+    Item(b2World &world, Type type, Shapes::Type GUIShapeIdx, const b2Vec2 &position, float angle);
 
     virtual void action(const b2World &world, const Object &player) = 0;
     virtual void drop(b2World &world, const Object &player) = 0;
