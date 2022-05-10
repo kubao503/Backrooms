@@ -9,25 +9,16 @@ sf::Color UserIO::dimColor(const sf::Color &color, float dimFactor)
                      color.a);
 }
 
-void UserIO::setScale(sf::Shape &shape)
-{
-    sf::Vector2u size{window_.getSize()};
-    float xScaleFactor{size.x / 1000.f};
-    shape.scale(xScaleFactor, 1.0f);
-}
-
 void UserIO::drawOnScreen(Shapes::Type shapeIdx, float x, float y, float xScale, float yScale, float dim, float textureOffset)
 {
     sf::Vector2u size{window_.getSize()};
     sf::RectangleShape shape{Shapes::getShape(shapeIdx, textureOffset)};
     const sf::Color &originalColor = shape.getFillColor();
     shape.setFillColor(std::move(dimColor(originalColor, dim)));
-    shape.setScale(xScale, yScale);
-    setScale(shape); // Set scale based on the window size
+    shape.scale(xScale, yScale);
 
     shape.setPosition(size.x / 2.0f * (x + 1.0f), size.y / 2.0f * (y + 1.0f));
     window_.draw(shape);
-    shape.setFillColor(originalColor);
 }
 
 void UserIO::handleEvents()

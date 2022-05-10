@@ -19,30 +19,34 @@ public:
         RED_WALL,
         PLAYER,
         ENEMY,
-        ITEM,
+        EMF,
+        ITEM_PICK_AREA,
         CAMERA,
         TOTAL
     };
 
 protected:
-    enum Category
+    enum Category : uint16
     {
         DEFAULT = 0x0,
         WALL = 0x1,
         PLAYER = 0x2,
         CAMERA = 0x4,
-        OBJECT2D = 0x8
+        ENEMY = 0x8,
+        ITEM = 0x10,
+        ITEM_PICK_AREA = 0x20
     };
 
 private:
-    static std::map<Category, uint16> collisionMask_;
+    static const std::map<Type, Category> categoryMap_;
+    static const std::map<Category, uint16> collisionMask_;
 
     // Object generating methods
     static const b2BodyDef &getBodyDef(b2BodyType bodyType);
-    static const b2Shape &getShape(float halfX, float halfY);
-    static const b2Shape &getShape(float radius);
-    static const b2Shape &getShape(float FOVangle, float renderDist, int verticesCount);
-    static const b2FixtureDef &getFixtureDef(const b2Shape &shape);
+    static std::unique_ptr<b2Shape> getShape(float halfX, float halfY);
+    static std::unique_ptr<b2Shape> getShape(float radius);
+    static std::unique_ptr<b2Shape> getShape(float FOVangle, float renderDist, int verticesCount);
+    static const b2FixtureDef &getFixtureDef(std::unique_ptr<b2Shape> shape);
     // Returns unique position helping avoiding spawning objects at the same place
     b2Vec2 getNewPosition() const;
 
@@ -53,7 +57,7 @@ protected:
     {
         b2BodyType bodyType_;
         b2FixtureDef fixDef_;
-        Arguments(b2BodyType bodyType, const b2Shape &shape);
+        Arguments(b2BodyType bodyType, std::unique_ptr<b2Shape> shape);
     };
 
     // Arguments for creating objects
@@ -69,11 +73,15 @@ protected:
     Object(b2World &world, Type type);
     Object(b2World &world, Type type, const b2Vec2 &position, float angle);
     void setBody(b2World &world, Type type, const b2Vec2 &position, float angle);
-    Object *destroyBody();
-    void setSensor(bool sensor, int fixIdx = 0);
-    void setCollisionFilter(Category category, int fixIdx = 0) const;
+    void destroyBody();
+
+    // These functions affect only last created fixture
+    void addFixture(Type type, Category cat, bool sensor = false);
+    void setSensor(bool sensor);
+    void setCollisionFilter(Category category) const;
 
 public:
+    bool isSensor() const { return body_->GetFixtureList()->IsSensor(); }
     const b2Vec2 &getPosition() const { return body_->GetPosition(); };
     float getAngle() const { return body_->GetAngle(); };
     const b2World &getWorld() const { return *body_->GetWorld(); }

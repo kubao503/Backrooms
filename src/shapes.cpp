@@ -3,11 +3,15 @@
 sf::RectangleShape Shapes::shapes_[Type::TOTAL]{
     shapeGenerator(sf::Vector2f(2.0f, 50.0f), sf::Color::White),
     shapeGenerator(sf::Vector2f(2.0f, 50.0f), sf::Color::Red),
-    shapeGenerator(sf::Vector2f(195.0f, 400.0f), sf::Color::White)};
+    shapeGenerator(sf::Vector2f(195.0f, 400.0f), sf::Color::White),
+    shapeGenerator(sf::Vector2f(1864.0f, 1051.0f), sf::Color::White, true),
+    shapeGenerator(sf::Vector2f(1864.0f, 1051.0f), sf::Color::White, true),
+    shapeGenerator(sf::Vector2f(1864.0f, 1051.0f), sf::Color::White, true),
+    shapeGenerator(sf::Vector2f(1864.0f, 1051.0f), sf::Color::White, true)};
 
 sf::RectangleShape Shapes::getShape(Type shapeIdx, float offset)
 {
-    if (shapeIdx >= TOTAL)
+    if (shapeIdx < 0 || shapeIdx >= TOTAL)
         throw "Invalid shapeIdx\n";
 
     if (shapes_[shapeIdx].getTexture())
@@ -27,18 +31,33 @@ sf::RectangleShape Shapes::getShape(Type shapeIdx, float offset)
 
 void Shapes::init()
 {
-    shapes_[ENEMY].setTexture(&Textures::getTexture(Textures::ENEMY), false);
-    sf::Vector2f wallSize = shapes_[WALL].getSize();
+    shapes_[ENEMY].setTexture(&Textures::getTexture(Textures::ENEMY));
     shapes_[WALL].setTexture(&Textures::getTexture(Textures::WALL));
-    shapes_[WALL].setTextureRect(sf::IntRect(
-        sf::Vector2i(0, 0),
-        static_cast<sf::Vector2i>(wallSize)));
+    shapes_[EMF].setTexture(&Textures::getTexture(Textures::EMF));
+    shapes_[EMF1].setTexture(&Textures::getTexture(Textures::EMF1));
+    shapes_[EMF2].setTexture(&Textures::getTexture(Textures::EMF2));
+    shapes_[EMF3].setTexture(&Textures::getTexture(Textures::EMF3));
 }
 
-sf::RectangleShape Shapes::shapeGenerator(const sf::Vector2f &size, sf::Color color)
+void Shapes::scaleBasedOnScreen(sf::Shape &shape)
+{
+    float xScaleFactor{Conf::windowWidth / 1000.f};
+    shape.scale(xScaleFactor, 1.0f);
+}
+
+void Shapes::makeFullScreen(sf::RectangleShape &shape)
+{
+    sf::Vector2f shapeSize{shape.getSize()};
+    shape.setScale(Conf::windowWidth / shapeSize.x, Conf::windowHeight / shapeSize.y);
+}
+
+sf::RectangleShape Shapes::shapeGenerator(const sf::Vector2f &size, sf::Color color, bool fullScreen)
 {
     sf::RectangleShape newShape(size);
     newShape.setOrigin(size * 0.5f); // Sets origin to shape's center
     newShape.setFillColor(color);
+    scaleBasedOnScreen(newShape);
+    if (fullScreen)
+        makeFullScreen(newShape);
     return newShape;
 }

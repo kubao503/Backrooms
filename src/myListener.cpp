@@ -4,12 +4,14 @@ void MyListener::BeginContact(b2Contact *contact)
 {
     Object *objA = (Object *)contact->GetFixtureA()->GetBody()->GetUserData().pointer;
     Object *objB = (Object *)contact->GetFixtureB()->GetBody()->GetUserData().pointer;
+    bool isSensorA{contact->GetFixtureA()->IsSensor()};
+    bool isSensorB{contact->GetFixtureB()->IsSensor()};
 
-    if (getTandU<Player, Object2D>(objA, objB))
+    if (getTandU<Player, Object2D>(objA, objB, isSensorA, isSensorB))
     {
-        if (contact->GetFixtureA()->IsSensor())
+        // collision with Player camera
+        if (isSensorA)
         {
-            // collision with Player camera
             // Object goes inside field of view
             static_cast<Player *>(objA)->objectObserved(static_cast<Object2D *>(objB));
             return;
@@ -17,13 +19,13 @@ void MyListener::BeginContact(b2Contact *contact)
 
         // collision with Player actual body
 
-        if (getTandU<Player, Enemy>(objA, objB))
+        if (getTandU<Player, Enemy>(objA, objB, isSensorA, isSensorB))
         {
             // killing Player
             std::cerr << "YOU FOOL YOU DIED\n";
             return;
         }
-        else if (getTandU<Player, Item>(objA, objB))
+        else if (getTandU<Player, Item>(objA, objB, isSensorA, isSensorB))
         {
             // item near
             static_cast<Player *>(objA)->itemContact(static_cast<Item *>(objB));
@@ -38,10 +40,12 @@ void MyListener::EndContact(b2Contact *contact)
 {
     Object *objA = (Object *)contact->GetFixtureA()->GetBody()->GetUserData().pointer;
     Object *objB = (Object *)contact->GetFixtureB()->GetBody()->GetUserData().pointer;
+    bool isSensorA{contact->GetFixtureA()->IsSensor()};
+    bool isSensorB{contact->GetFixtureB()->IsSensor()};
 
-    if (getTandU<Player, Object2D>(objA, objB))
+    if (getTandU<Player, Object2D>(objA, objB, isSensorA, isSensorB))
     {
-        if (contact->GetFixtureA()->IsSensor())
+        if (isSensorA)
         {
             // Object goes out of field of view
             static_cast<Player *>(objA)->objectLost(static_cast<Object2D *>(objB));
@@ -50,7 +54,7 @@ void MyListener::EndContact(b2Contact *contact)
 
         // end of collision with Player actual body
 
-        if (getTandU<Player, Item>(objA, objB))
+        if (getTandU<Player, Item>(objA, objB, isSensorA, isSensorB))
         {
             // Player leaving item
             static_cast<Player *>(objA)->itemLost();
@@ -62,19 +66,17 @@ void MyListener::EndContact(b2Contact *contact)
 }
 
 template <typename T, typename U>
-bool MyListener::getTandU(Object *&objA, Object *&objB)
+bool MyListener::getTandU(Object *&objA, Object *&objB, bool &isSensorA, bool &isSensorB)
 {
-    T *tPtr = dynamic_cast<T *>(objA);
-    U *uPtr = dynamic_cast<U *>(objB);
-
-    if (tPtr && uPtr)
+    if (dynamic_cast<T *>(objA) && dynamic_cast<U *>(objB))
         return true;
 
-    tPtr = dynamic_cast<T *>(objB);
-    uPtr = dynamic_cast<U *>(objA);
-
-    if (tPtr && uPtr)
+    if (dynamic_cast<U *>(objA) && dynamic_cast<T *>(objB))
+    {
+        std::swap(objA, objB);
+        std::swap(isSensorA, isSensorB);
         return true;
+    }
 
     return false;
 }
