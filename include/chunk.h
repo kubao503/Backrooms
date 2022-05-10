@@ -10,7 +10,7 @@
 
 class Chunk
 {
-private:
+public:
     std::unique_ptr<Object3D> wallNorth{nullptr};
     std::unique_ptr<Object3D> wallWest{nullptr};
     bool cleared_{false};

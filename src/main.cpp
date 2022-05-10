@@ -39,7 +39,7 @@ int main()
     Item item(world, b2Vec2(-5.0f, -15.0f), 0.0f);
 
     // Creating chunks
-    World gameWorld(world, 100);
+    World gameWorld(world, 10);
 
     // Simulation parameters
     float timeStep = 1.0f / 60.0f; // Step of time between events
@@ -60,9 +60,10 @@ int main()
         // Chunks update
         gameWorld.draw(world, player);
 
-        b2Vec2 closestChunk = gameWorld.closestChunk(player);
+        b2Vec2 position = player.getPosition();
+        b2Vec2 closestChunk = gameWorld.openChunk(position);
         if (closestChunk.IsValid())
-            std::cout << closestChunk.x << " " << closestChunk.y << std::endl; // DEBUG
+            std::cerr << closestChunk.x << " " << closestChunk.y << std::endl; // DEBUG
 
         // Drawing on screen
         Camera::drawViewOnScreen(userIO, player);
