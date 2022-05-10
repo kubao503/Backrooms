@@ -32,7 +32,7 @@ void Camera::draw3DRay(UserIO &userIO, float angle, const Ray::RayCallback &call
 
     static const float maxCordX{tan(Conf::FOVangle / 2.0f)};
 
-    userIO.drawOnScreen(callback.getShapeIdx(), tan(angle) / maxCordX, 0.0f, scale.first, scale.second, dimFactor, rayNumber);
+    userIO.drawOnScreen(callback.getShapeIdx(), tan(angle) / maxCordX, 0.0f, scale.first, scale.second, dimFactor, rayNumber, true);
 }
 
 void Camera::draw2DRay(UserIO &userIO, float angle, const Ray::RayCallback &callback, float distance)

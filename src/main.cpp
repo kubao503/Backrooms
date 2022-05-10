@@ -22,8 +22,16 @@ int main()
     if (!Textures::init())
     {
         std::cerr << "Loading textures failed\n";
+        return -1;
     }
     Shapes::init();
+
+    // Shaders
+    if (!sf::Shader::isAvailable())
+    {
+        std::cerr << "Shader is not available\n";
+        return -1;
+    }
 
     // User input via mouse and output via screen
     UserIO userIO("Backrooms");
