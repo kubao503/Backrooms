@@ -6,6 +6,9 @@ Emf::Emf(b2World &world, const b2Vec2 &position, float angle)
 void Emf::drop(b2World &world, const Object &player)
 {
     setBody(world, Type::EMF, player.getPosition() + 5.0f * getVecN(player.getAngle()), 0);
+    setSensor(true);
+
+    addFixture(Type::ITEM_PICK_AREA, Category::ITEM_PICK_AREA, true);
 }
 
 void Emf::action(const b2World &world, const Object &player)
