@@ -11,5 +11,6 @@ bool Textures::init()
     success = success && textures_[EMF1].loadFromFile("media/emf1.png");
     success = success && textures_[EMF2].loadFromFile("media/emf2.png");
     success = success && textures_[EMF3].loadFromFile("media/emf3.png");
+    success = success && textures_[FLASHLIGHT].loadFromFile("media/flashlight.png");
     return success;
 }

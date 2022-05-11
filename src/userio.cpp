@@ -9,7 +9,7 @@ sf::Color UserIO::dimColor(const sf::Color &color, float dimFactor)
                      color.a);
 }
 
-void UserIO::drawOnScreen(Shapes::Type shapeIdx, float x, float y, float xScale, float yScale, float dim, float textureOffset, float flashlightFrac)
+void UserIO::drawOnScreen(Shapes::Type shapeIdx, float x, float y, float xScale, float yScale, float dim, float textureOffset)
 {
     sf::Vector2u size{window_.getSize()};
     sf::RectangleShape shape{Shapes::getShape(shapeIdx, textureOffset)};
@@ -19,8 +19,7 @@ void UserIO::drawOnScreen(Shapes::Type shapeIdx, float x, float y, float xScale,
 
     shape.setPosition(size.x / 2.0f * (x + 1.0f), size.y / 2.0f * (y + 1.0f));
 
-    shader_.setUniform("dimFrac", flashlightFrac);
-    window_.draw(shape, &shader_);
+    window_.draw(shape);
 }
 
 void UserIO::handleEvents()

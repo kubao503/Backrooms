@@ -14,6 +14,7 @@ public:
         EMF1,
         EMF2,
         EMF3,
+        FLASHLIGHT,
         TOTAL
     };
     static bool init();
