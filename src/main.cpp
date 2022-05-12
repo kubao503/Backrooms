@@ -45,7 +45,7 @@ int main()
     // Item item2(world, Shapes::RED_WALL, b2Vec2(5.0f, -15.0f), 0.0f);
 
     // Creating chunks
-    World gameMap(world, 10);
+    World gameMap(world, 100);
 
     // Simulation parameters
     float timeStep = 1.0f / 60.0f; // Step of time between events
