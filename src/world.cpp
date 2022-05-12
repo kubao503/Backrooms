@@ -10,12 +10,12 @@ World::World(b2World &world, int size)
         }
 }
 
-void World::spawnChunk(b2World &world, b2Vec2 position)
+void World::spawnChunk(b2World &world, const b2Vec2 &position)
 {
     chunks[position] = std::make_unique<Chunk>(world, position);
 }
 
-void World::removeChunk(b2Vec2 position)
+void World::removeChunk(const b2Vec2 &position)
 {
     b2Vec2 foundPosition = this->closestChunk(position);
 
@@ -28,11 +28,11 @@ void World::clear()
     chunks.clear();
 }
 
-void World::draw(b2World &world, const Player &player)
+void World::draw(b2World &world, const b2Vec2 &playerPosition)
 {
     for (auto &chunk : chunks)
     {
-        b2Vec2 distance = chunk.second.get()->getPosition() - player.getPosition();
+        b2Vec2 distance = chunk.second.get()->getPosition() - playerPosition;
         if (abs(distance.x) < 50.0f && abs(distance.y) < 50.0f)
         {
             if (chunk.second.get()->wasCleared())
@@ -43,7 +43,7 @@ void World::draw(b2World &world, const Player &player)
     }
 }
 
-b2Vec2 World::closestChunk(b2Vec2 position) const
+b2Vec2 World::closestChunk(const b2Vec2 &position) const
 {
     int normalizedX = round(position.x / 10) * 10;
     int normalizedY = round(position.y / 10) * 10;
@@ -60,7 +60,7 @@ b2Vec2 World::closestChunk(b2Vec2 position) const
     return b2Vec2(INFINITY, INFINITY);
 }
 
-b2Vec2 World::openChunk(b2Vec2 position) const
+b2Vec2 World::openChunk(const b2Vec2 &position) const
 {
     std::vector<b2Vec2> routes;
     routes.reserve(4);

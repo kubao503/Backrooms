@@ -2,7 +2,6 @@
 #define CHUNK_H
 
 #include "object3d.h"
-#include "player.h"
 #include "myMath.h"
 #include <limits>
 #include <ctime>
@@ -22,7 +21,7 @@ private:
     b2Vec2 getWallWestPosition() const;
 
 public:
-    Chunk(b2World &world, b2Vec2 position);
+    Chunk(b2World &world, const b2Vec2 &position);
     void restore(b2World &world);
     void clear();
     bool wasCleared() const { return cleared_; };

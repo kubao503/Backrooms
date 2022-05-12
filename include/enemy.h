@@ -2,6 +2,7 @@
 #define ENEMY_H
 
 #include "object2d.h" // for inheriting from Object2D
+#include "world.h"    // for getting openChunk waypoints
 #include "ray.h"      // for ray sending to check player visibility
 
 class Enemy : public Object2D
@@ -16,13 +17,13 @@ class Enemy : public Object2D
 
     // Updated waypoint to player's position
     // only when player is visible
-    void updateWaypoint(const Object &player);
+    void updateWaypoint(const Object &player, const World &gameMap);
 
 public:
     Enemy(b2World &world, b2Vec2 position, float angle)
         : Object2D{world, Type::ENEMY, position, angle} {}
 
-    void control(const Object &player);
+    void control(const Object &player, const World &gameMap);
     void startHunt(b2World &world, const Object &player);
     void stopHunt();
 

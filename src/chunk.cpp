@@ -3,7 +3,7 @@
 
 std::mt19937 Chunk::mt(time(nullptr));
 
-Chunk::Chunk(b2World &world, b2Vec2 position)
+Chunk::Chunk(b2World &world, const b2Vec2 &position)
     : position_(position)
 {
     int seed = int(mt() % 4);

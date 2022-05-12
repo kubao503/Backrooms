@@ -11,11 +11,11 @@ private:
 public:
     World(b2World &world, int size);
     void clear();
-    void draw(b2World &world, const Player &player);
-    void spawnChunk(b2World &world, b2Vec2 position);
-    void removeChunk(b2Vec2 position);
-    b2Vec2 closestChunk(b2Vec2 position) const;
-    b2Vec2 openChunk(b2Vec2 position) const;
+    void draw(b2World &world, const b2Vec2 &playerPosition);
+    void spawnChunk(b2World &world, const b2Vec2 &position);
+    void removeChunk(const b2Vec2 &position);
+    b2Vec2 closestChunk(const b2Vec2 &position) const;
+    b2Vec2 openChunk(const b2Vec2 &position) const;
 };
 
 #endif

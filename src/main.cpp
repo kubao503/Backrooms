@@ -40,12 +40,12 @@ int main()
 
     // Objects
     Player player(world, b2Vec2(-15.0f, -15.0f), 0);
-    Enemy enemy(world, b2Vec2(-20.0f, -20.0f), 0.0f);
+    Enemy enemy(world, b2Vec2(0.0f, 0.0f), 0.0f);
     // Emf emf(world, b2Vec2(-5.0f, -15.0f), 0.0f);
     // Item item2(world, Shapes::RED_WALL, b2Vec2(5.0f, -15.0f), 0.0f);
 
     // Creating chunks
-    World gameWorld(world, 10);
+    World gameMap(world, 10);
 
     // Simulation parameters
     float timeStep = 1.0f / 60.0f; // Step of time between events
@@ -64,14 +64,14 @@ int main()
         world.Step(timeStep, velocityIterations, positionIterations);
         player.control(userIO, game);
         player.doItemAction(world);
-        // enemy.control(player);
+        enemy.control(player, gameMap);
 
         // Chunks update
-        gameWorld.draw(world, player);
+        gameMap.draw(world, player.getPosition());
 
-        b2Vec2 position = player.getPosition();
-        b2Vec2 playerChunk = gameWorld.closestChunk(position);
-        b2Vec2 closestChunk = gameWorld.openChunk(position);
+        // b2Vec2 position = player.getPosition();
+        // b2Vec2 playerChunk = gameMap.closestChunk(position);
+        // b2Vec2 closestChunk = gameMap.openChunk(position);
 
         // std::cerr << "\n::PLAYER'S CHUNK::\n";
         // std::cerr << playerChunk.x << " " << playerChunk.y << std::endl;
