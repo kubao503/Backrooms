@@ -1,13 +1,16 @@
 #include "world.h"
 #include <iostream>
 
-World::World(b2World &world, int size)
+World::World(b2World &world, unsigned int size, const b2Vec2 &playerPosition)
 {
-    for (float i = 0; i < size * Conf::chunkWidth; i += Conf::chunkWidth)
-        for (float j = 0; j < size * Conf::chunkWidth; j += Conf::chunkWidth)
-        {
-            this->spawnChunk(world, b2Vec2(i, j));
-        }
+    (void)world;
+    (void)size;
+    (void)playerPosition;
+    // for (float i = playerPosition.x - size * Conf::chunkWidth; i < playerPosition.x + size * Conf::chunkWidth; i += Conf::chunkWidth)
+    //     for (float j = playerPosition.y - size * Conf::chunkWidth; j < playerPosition.y + size * Conf::chunkWidth; j += Conf::chunkWidth)
+    //     {
+    //         spawnChunk(world, b2Vec2(i, j));
+    //     }
 }
 
 void World::spawnChunk(b2World &world, const b2Vec2 &position)
@@ -17,7 +20,7 @@ void World::spawnChunk(b2World &world, const b2Vec2 &position)
 
 void World::removeChunk(const b2Vec2 &position)
 {
-    b2Vec2 foundPosition = this->closestChunk(position);
+    b2Vec2 foundPosition = closestChunk(position);
 
     if (foundPosition.IsValid())
         chunks.erase(foundPosition);
@@ -30,16 +33,30 @@ void World::clear()
 
 void World::draw(b2World &world, const b2Vec2 &playerPosition)
 {
-    for (auto &chunk : chunks)
-    {
-        b2Vec2 distance = chunk.second.get()->getPosition() - playerPosition;
-        if (abs(distance.x) < Conf::renderDistance && abs(distance.y) < Conf::renderDistance)
+    int normalizedX = round(playerPosition.x / Conf::chunkWidth) * Conf::chunkWidth;
+    int normalizedY = round(playerPosition.y / Conf::chunkWidth) * Conf::chunkWidth;
+
+    for (float i = normalizedX - 3 * Conf::chunkWidth; i < normalizedX + 3 * Conf::chunkWidth; i += Conf::chunkWidth)
+        for (float j = normalizedY - 3 * Conf::chunkWidth; j < normalizedY + 3 * Conf::chunkWidth; j += Conf::chunkWidth)
         {
-            if (chunk.second.get()->wasCleared())
-                chunk.second.get()->restore(world);
+            try
+            {
+                chunks.at(b2Vec2(i, j));
+            }
+            catch (const std::out_of_range &exception)
+            {
+                spawnChunk(world, b2Vec2(i, j));
+            }
         }
-        else if (!chunk.second.get()->wasCleared())
-            chunk.second.get()->clear();
+
+    for (auto it = chunks.begin(); it != chunks.end();)
+    {
+        b2Vec2 distance = it->second.get()->getPosition() - playerPosition;
+
+        if (distance.Length() > Conf::renderDistance / 4)
+            it = chunks.erase(it);
+        else
+            ++it;
     }
 }
 

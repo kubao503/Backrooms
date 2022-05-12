@@ -17,7 +17,7 @@ public:
         E = 2
     };
 
-    World(b2World &world, int size);
+    World(b2World &world, unsigned int size, const b2Vec2 &playerPosition);
     void clear();
     void draw(b2World &world, const b2Vec2 &playerPosition);
     void spawnChunk(b2World &world, const b2Vec2 &position);
