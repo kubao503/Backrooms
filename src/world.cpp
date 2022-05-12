@@ -54,7 +54,7 @@ b2Vec2 World::closestChunk(const b2Vec2 &position) const
         chunks.at(chunkPosition);
         return chunkPosition;
     }
-    catch (std::out_of_range)
+    catch (const std::out_of_range &exception)
     {
     }
     return b2Vec2(INFINITY, INFINITY);

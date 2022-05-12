@@ -12,15 +12,17 @@ void Enemy::updateWaypoint(const Object &player, const World &gameMap)
 {
     b2Vec2 ray{getVec(getPosition(), player.getPosition())};
     Ray::RayCallback rayCallback = Ray::sendRay(*body_->GetWorld(), getPosition(), ray);
-    if (!rayCallback.hit() && false)
+    if (!rayCallback.hit() && false) // DEBUG
     {
         // If player is visible for enemy set waypoint to the player positioin
-        // waypoint_ = player.getPosition();
+        waypoint_ = player.getPosition();
     }
     else if (distance(getPosition(), waypoint_) < 0.01)
     {
         // If waypoint is reached set waypoint to random location
-        waypoint_ = gameMap.openChunk(getPosition());
+        const b2Vec2 &newWaypoint{gameMap.openChunk(getPosition())};
+        if (newWaypoint.IsValid())
+            waypoint_ = newWaypoint;
     }
 }
 
