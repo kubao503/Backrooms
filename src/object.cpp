@@ -19,8 +19,8 @@ const std::map<Object::Type, Object::Category> Object::categoryMap_{
     {Type::ITEM_PICK_AREA, ITEM_PICK_AREA}};
 
 const Object::Arguments Object::argList[static_cast<int>(Type::TOTAL)]{
-    {b2_staticBody, getShape(6.0f, 1.0f)},
-    {b2_staticBody, getShape(6.0f, 1.0f)},
+    {b2_staticBody, getShape(Conf::chunkWidth / 2 + Conf::wallWidth / 2, Conf::wallWidth / 2)},
+    {b2_staticBody, getShape(Conf::chunkWidth / 2 + Conf::wallWidth / 2, Conf::wallWidth / 2)},
     {b2_dynamicBody, getShape(0.5f)},
     {b2_dynamicBody, getShape(0.5f)},
     {b2_staticBody, getShape(0.1f)},

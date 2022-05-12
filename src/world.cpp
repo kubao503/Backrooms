@@ -45,15 +45,18 @@ void World::draw(b2World &world, const Player &player)
 
 b2Vec2 World::closestChunk(b2Vec2 position) const
 {
-    for (auto &&chunk : chunks)
+    int normalizedX = round(position.x / 10) * 10;
+    int normalizedY = round(position.y / 10) * 10;
+    b2Vec2 chunkPosition = b2Vec2(normalizedX, normalizedY);
+
+    try
     {
-        b2Vec2 chunkPosition = chunk.second->getPosition();
-
-        if (position.x >= chunkPosition.x && position.x <= (chunkPosition.x + 10.0f))
-            if (position.y >= chunkPosition.y && position.y <= (chunkPosition.y + 10.0f))
-                return chunkPosition;
+        chunks.at(chunkPosition);
+        return chunkPosition;
     }
-
+    catch (std::out_of_range)
+    {
+    }
     return b2Vec2(INFINITY, INFINITY);
 }
 
@@ -66,25 +69,31 @@ b2Vec2 World::openChunk(b2Vec2 position) const
 
     if (currentChunk.IsValid())
     {
-        if (!chunks.at(currentChunk)->wallNorth)
-            routes.push_back(this->closestChunk(b2Vec2(position.x + 10.0f, position.y)));
+        b2Vec2 neighbourChunk = this->closestChunk(b2Vec2(position.x + Conf::chunkWidth, position.y));
+        if (neighbourChunk.IsValid() && !chunks.at(currentChunk)->wallNorth)
+            routes.push_back(neighbourChunk);
 
+        neighbourChunk = this->closestChunk(b2Vec2(position.x, position.y - Conf::chunkWidth));
         if (!chunks.at(currentChunk)->wallWest)
-            routes.push_back(this->closestChunk(b2Vec2(position.x, position.y - 10.0f)));
+            routes.push_back(neighbourChunk);
 
-        b2Vec2 southChunk = this->closestChunk(b2Vec2(position.x - 10.0f, position.y));
-        if (southChunk.IsValid() && !chunks.at(currentChunk)->wallNorth)
-            routes.push_back(southChunk);
+        neighbourChunk = this->closestChunk(b2Vec2(position.x - Conf::chunkWidth, position.y));
+        if (neighbourChunk.IsValid() && !chunks.at(neighbourChunk)->wallNorth)
+            routes.push_back(neighbourChunk);
 
-        b2Vec2 eastChunk = this->closestChunk(b2Vec2(position.x, position.y + 10.0f));
-        if (eastChunk.IsValid() && !chunks.at(currentChunk)->wallWest)
-            routes.push_back(eastChunk);
+        neighbourChunk = this->closestChunk(b2Vec2(position.x, position.y + Conf::chunkWidth));
+        if (neighbourChunk.IsValid() && !chunks.at(neighbourChunk)->wallWest)
+            routes.push_back(neighbourChunk);
 
         if (!routes.size())
             return b2Vec2(INFINITY, INFINITY);
 
+        // for (auto &it : routes)
+        // {
+        //     std::cerr << it.x << " " << it.y << std::endl;
+        // }
+
         int choice = int(Chunk::mt() % routes.size());
-        // std::cerr << choice << std::endl;
         return routes[choice];
     }
     return b2Vec2(INFINITY, INFINITY);

@@ -70,9 +70,17 @@ int main()
         gameWorld.draw(world, player);
 
         b2Vec2 position = player.getPosition();
+        b2Vec2 playerChunk = gameWorld.closestChunk(position);
         b2Vec2 closestChunk = gameWorld.openChunk(position);
-        if (closestChunk.IsValid())
-            std::cerr << closestChunk.x << " " << closestChunk.y << std::endl; // DEBUG
+
+        // std::cerr << "\n::PLAYER'S CHUNK::\n";
+        // std::cerr << playerChunk.x << " " << playerChunk.y << std::endl;
+        // if (closestChunk.IsValid())
+        // {
+
+        //     std::cerr << "::CLOSEST OPEN CHUNK::\n";
+        //     std::cerr << closestChunk.x << " " << closestChunk.y << std::endl; // DEBUG
+        // }
 
         // Drawing on screen
         Camera::drawViewOnScreen(userIO, player);

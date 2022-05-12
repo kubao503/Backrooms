@@ -25,11 +25,11 @@ private:
         Shapes::EMF1,
         Shapes::EMF2,
         Shapes::EMF3};
-    bool on_{false};
+    // bool on_{false};
 
 public:
     Emf(b2World &world, const b2Vec2 &position, float angle);
-    void drop(b2World &world, const Object &player);
+    void drop(b2World &world, const Object &player) override;
 
     void action(const b2World &world, const Object &player) override;
 };

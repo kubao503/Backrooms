@@ -8,26 +8,34 @@ Chunk::Chunk(b2World &world, b2Vec2 position)
 {
     int seed = int(mt() % 4);
 
-    b2Vec2 wallWestPosition = b2Vec2(position_.x + 10.0f, position_.y + 5.0f);
-    b2Vec2 wallNorthPosition = b2Vec2(position_.x + 5.0f, position_.y);
+    b2Vec2 wallWestPosition = this->getWallWestPosition();
+    b2Vec2 wallNorthPosition = this->getWallNorthPosition();
 
-    // seed = 1; // DEBUG
     switch (seed)
     {
     case 1:
-        wallNorth = std::make_unique<Object3D>(world, Object::Type::WALL, wallNorthPosition, 0);
+        wallNorth = std::make_unique<Object3D>(world, Object::Type::WALL, wallNorthPosition, PI / 2);
         break;
     case 2:
-        wallWest = std::make_unique<Object3D>(world, Object::Type::WALL, wallWestPosition, PI / 2);
+        wallWest = std::make_unique<Object3D>(world, Object::Type::WALL, wallWestPosition, 0);
         break;
     case 3:
-        wallNorth = std::make_unique<Object3D>(world, Object::Type::WALL, wallNorthPosition, 0);
-        wallWest = std::make_unique<Object3D>(world, Object::Type::WALL, wallWestPosition, PI / 2);
+        wallNorth = std::make_unique<Object3D>(world, Object::Type::WALL, wallNorthPosition, PI / 2);
+        wallWest = std::make_unique<Object3D>(world, Object::Type::WALL, wallWestPosition, 0);
         break;
     default:
         break;
     }
 }
+
+b2Vec2 Chunk::getWallNorthPosition() const
+{
+    return b2Vec2(position_.x + Conf::chunkWidth / 2, position_.y);
+};
+b2Vec2 Chunk::getWallWestPosition() const
+{
+    return b2Vec2(position_.x, position_.y - Conf::chunkWidth / 2);
+};
 
 void Chunk::clear()
 {
@@ -45,14 +53,18 @@ void Chunk::restore(b2World &world)
 
     if (wallNorth)
     {
-        // std::cerr << wallNorth.get()->getAngle();
-        b2Vec2 wallNorthPosition = b2Vec2(position_.x + 5.0f, position_.y);
-        wallNorth->setBody(world, Object::Type::WALL, wallNorthPosition, 0);
+        b2Vec2 wallNorthPosition = this->getWallNorthPosition();
+        wallNorth->setBody(world, Object::Type::WALL, wallNorthPosition, PI / 2);
     }
 
     if (wallWest)
     {
-        b2Vec2 wallWestPosition = b2Vec2(position_.x + 10.0f, position_.y + 5.0f);
-        wallWest->setBody(world, Object::Type::WALL, wallWestPosition, PI / 2);
+        b2Vec2 wallWestPosition = this->getWallWestPosition();
+        wallWest->setBody(world, Object::Type::WALL, wallWestPosition, 0);
     }
+}
+
+b2Vec2 Chunk::getCenter() const
+{
+    return b2Vec2(position_.x + Conf::chunkWidth / 2, position_.y + Conf::chunkWidth / 2);
 }
