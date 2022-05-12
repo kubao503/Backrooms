@@ -3,8 +3,8 @@
 
 World::World(b2World &world, int size)
 {
-    for (float i = 0; i < size * 10; i += 10)
-        for (float j = 0; j < size * 10; j += 10)
+    for (float i = 0; i < size * Conf::chunkWidth; i += Conf::chunkWidth)
+        for (float j = 0; j < size * Conf::chunkWidth; j += Conf::chunkWidth)
         {
             this->spawnChunk(world, b2Vec2(i, j));
         }
@@ -33,7 +33,7 @@ void World::draw(b2World &world, const b2Vec2 &playerPosition)
     for (auto &chunk : chunks)
     {
         b2Vec2 distance = chunk.second.get()->getPosition() - playerPosition;
-        if (abs(distance.x) < 50.0f && abs(distance.y) < 50.0f)
+        if (abs(distance.x) < 5 * Conf::chunkWidth && abs(distance.y) < 5 * Conf::chunkWidth)
         {
             if (chunk.second.get()->wasCleared())
                 chunk.second.get()->restore(world);
@@ -45,8 +45,8 @@ void World::draw(b2World &world, const b2Vec2 &playerPosition)
 
 b2Vec2 World::closestChunk(const b2Vec2 &position) const
 {
-    int normalizedX = round(position.x / 10) * 10;
-    int normalizedY = round(position.y / 10) * 10;
+    int normalizedX = round(position.x / Conf::chunkWidth) * Conf::chunkWidth;
+    int normalizedY = round(position.y / Conf::chunkWidth) * Conf::chunkWidth;
     b2Vec2 chunkPosition = b2Vec2(normalizedX, normalizedY);
 
     try
