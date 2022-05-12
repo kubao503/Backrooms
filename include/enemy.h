@@ -19,6 +19,8 @@ class Enemy : public Object2D
     // only when player is visible
     void updateWaypoint(const Object &player, const World &gameMap);
 
+    World::Directions direction = World::Directions::N;
+
 public:
     Enemy(b2World &world, b2Vec2 position, float angle)
         : Object2D{world, Type::ENEMY, position, angle} {}

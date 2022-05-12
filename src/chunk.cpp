@@ -6,7 +6,7 @@ std::mt19937 Chunk::mt(time(nullptr));
 Chunk::Chunk(b2World &world, const b2Vec2 &position)
     : position_(position)
 {
-    int seed = int(mt() % 4);
+    int seed = int(mt() % 5);
 
     b2Vec2 wallWestPosition = this->getWallWestPosition();
     b2Vec2 wallNorthPosition = this->getWallNorthPosition();

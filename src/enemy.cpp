@@ -20,7 +20,7 @@ void Enemy::updateWaypoint(const Object &player, const World &gameMap)
     else if (distance(getPosition(), waypoint_) < 0.01)
     {
         // If waypoint is reached set waypoint to random location
-        const b2Vec2 &newWaypoint{gameMap.openChunk(getPosition())};
+        const b2Vec2 &newWaypoint{gameMap.openChunk(getPosition(), direction)};
         if (newWaypoint.IsValid())
             waypoint_ = newWaypoint;
     }

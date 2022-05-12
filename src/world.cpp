@@ -60,9 +60,11 @@ b2Vec2 World::closestChunk(const b2Vec2 &position) const
     return b2Vec2(INFINITY, INFINITY);
 }
 
-b2Vec2 World::openChunk(const b2Vec2 &position) const
+b2Vec2 World::openChunk(const b2Vec2 &position, Directions &prefDirection) const
 {
-    std::vector<b2Vec2> routes;
+    Directions unprefDirection = static_cast<Directions>(prefDirection * (-1)); // Reverse's direction
+
+    std::vector<std::pair<Directions, b2Vec2>> routes;
     routes.reserve(4);
 
     b2Vec2 currentChunk = this->closestChunk(position);
@@ -71,30 +73,48 @@ b2Vec2 World::openChunk(const b2Vec2 &position) const
     {
         b2Vec2 neighbourChunk = this->closestChunk(b2Vec2(position.x + Conf::chunkWidth, position.y));
         if (neighbourChunk.IsValid() && !chunks.at(currentChunk)->wallNorth)
-            routes.push_back(neighbourChunk);
+            routes.push_back({N, neighbourChunk});
 
         neighbourChunk = this->closestChunk(b2Vec2(position.x, position.y - Conf::chunkWidth));
-        if (!chunks.at(currentChunk)->wallWest)
-            routes.push_back(neighbourChunk);
+        if (neighbourChunk.IsValid() && !chunks.at(currentChunk)->wallWest)
+            routes.push_back({W, neighbourChunk});
 
         neighbourChunk = this->closestChunk(b2Vec2(position.x - Conf::chunkWidth, position.y));
         if (neighbourChunk.IsValid() && !chunks.at(neighbourChunk)->wallNorth)
-            routes.push_back(neighbourChunk);
+            routes.push_back({S, neighbourChunk});
 
         neighbourChunk = this->closestChunk(b2Vec2(position.x, position.y + Conf::chunkWidth));
         if (neighbourChunk.IsValid() && !chunks.at(neighbourChunk)->wallWest)
-            routes.push_back(neighbourChunk);
+            routes.push_back({E, neighbourChunk});
 
         if (!routes.size())
             return b2Vec2(INFINITY, INFINITY);
 
-        // for (auto &it : routes)
-        // {
-        //     std::cerr << it.x << " " << it.y << std::endl;
-        // }
+        if (routes.size() > 1)
+        {
+            std::remove_if(
+                routes.begin(), routes.end(), [unprefDirection](auto &route)
+                { return unprefDirection == route.first; });
+        }
 
-        int choice = int(Chunk::mt() % routes.size());
-        return routes[choice];
+        int choice = int(Chunk::mt() % 2); // Choice for choosing preffered route
+
+        if (!choice)
+        {
+            auto it = std::find_if(routes.begin(), routes.end(), [prefDirection](auto &route)
+                                   { return prefDirection == route.first; });
+
+            if (it != routes.end())
+            {
+                prefDirection = it->first;
+                return it->second;
+            }
+        }
+
+        choice = int(Chunk::mt() % routes.size()); // Choice for choosing from available routes if preffered route was not taken
+
+        prefDirection = routes[choice].first; // Set new preffered route and return chunk's coordinates
+        return routes[choice].second;
     }
     return b2Vec2(INFINITY, INFINITY);
 }
