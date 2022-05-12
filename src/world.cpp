@@ -51,7 +51,7 @@ b2Vec2 World::closestChunk(const b2Vec2 &position) const
 
     try
     {
-        chunks.at(chunkPosition);
+        chunks.at(chunkPosition); // If chunk exists, return it
         return chunkPosition;
     }
     catch (const std::out_of_range &exception)
@@ -62,7 +62,7 @@ b2Vec2 World::closestChunk(const b2Vec2 &position) const
 
 b2Vec2 World::openChunk(const b2Vec2 &position, Directions &prefDirection) const
 {
-    Directions unprefDirection = static_cast<Directions>(prefDirection * (-1)); // Reverse's direction
+    Directions unprefDirection = static_cast<Directions>(prefDirection * (-1)); // Reverses preffered direction
 
     std::vector<std::pair<Directions, b2Vec2>> routes;
     routes.reserve(4);
@@ -72,25 +72,25 @@ b2Vec2 World::openChunk(const b2Vec2 &position, Directions &prefDirection) const
     if (currentChunk.IsValid())
     {
         b2Vec2 neighbourChunk = this->closestChunk(b2Vec2(position.x + Conf::chunkWidth, position.y));
-        if (neighbourChunk.IsValid() && !chunks.at(currentChunk)->wallNorth)
+        if (neighbourChunk.IsValid() && !chunks.at(currentChunk)->wallNorth) // Checks north route
             routes.push_back({N, neighbourChunk});
 
         neighbourChunk = this->closestChunk(b2Vec2(position.x, position.y - Conf::chunkWidth));
-        if (neighbourChunk.IsValid() && !chunks.at(currentChunk)->wallWest)
+        if (neighbourChunk.IsValid() && !chunks.at(currentChunk)->wallWest) // Checks west route
             routes.push_back({W, neighbourChunk});
 
         neighbourChunk = this->closestChunk(b2Vec2(position.x - Conf::chunkWidth, position.y));
-        if (neighbourChunk.IsValid() && !chunks.at(neighbourChunk)->wallNorth)
+        if (neighbourChunk.IsValid() && !chunks.at(neighbourChunk)->wallNorth) // Checks south route
             routes.push_back({S, neighbourChunk});
 
         neighbourChunk = this->closestChunk(b2Vec2(position.x, position.y + Conf::chunkWidth));
-        if (neighbourChunk.IsValid() && !chunks.at(neighbourChunk)->wallWest)
+        if (neighbourChunk.IsValid() && !chunks.at(neighbourChunk)->wallWest) // Checks east route
             routes.push_back({E, neighbourChunk});
 
-        if (!routes.size())
+        if (!routes.size()) // If no choice is available, return not valid vector
             return b2Vec2(INFINITY, INFINITY);
 
-        if (routes.size() > 1)
+        if (routes.size() > 1) // If there is more than one choice available, remove unpreffered direction from choices pool
         {
             std::remove_if(
                 routes.begin(), routes.end(), [unprefDirection](auto &route)
@@ -99,7 +99,7 @@ b2Vec2 World::openChunk(const b2Vec2 &position, Directions &prefDirection) const
 
         int choice = int(Chunk::mt() % 2); // Choice for choosing preffered route
 
-        if (!choice)
+        if (!choice) // If preffered direction is available as choice (and choice equals 0), return it
         {
             auto it = std::find_if(routes.begin(), routes.end(), [prefDirection](auto &route)
                                    { return prefDirection == route.first; });
