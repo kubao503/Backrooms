@@ -1,11 +1,13 @@
 #include "camera.h"
 
-inline float Camera::getDimFactor(const Ray::RayCallback &callback)
+inline float Camera::distDimFactor(float distance, float maxDistance)
 {
-    // float dimFactor = 1.0f / callback.getFraction() * vecCosine(callback.normal_, callback.ray_) / 20;
-    float dimFactor = (vecCosine(callback.getNormal(), callback.getRay()) * 0.375f + 0.454545f) * (-callback.getFraction() * Conf::renderDistance / 15.0f + 1.3f);
-    return dimFactor;
-    // return 0.4f / callback.getFraction() * vecCosine(callback.normal_, callback.ray_);
+    return distance / -maxDistance + 1.0f;
+}
+
+inline float Camera::angleDimFactor(const Ray::RayCallback &callback)
+{
+    return vecCosine(callback.getNormal(), callback.getRay()) * 0.375f + 0.454545f;
 }
 
 inline Camera::scale_t Camera::get3DScale(float adjacentDistance)
@@ -28,12 +30,12 @@ void Camera::draw3DRay(UserIO &userIO, float angle, const Ray::RayCallback &call
     float adjacentDistance{cos(angle) * callback.getFraction() * Conf::renderDistance};
     scale_t scale{get3DScale(adjacentDistance)};
 
-    float dimFactor = getDimFactor(callback);
+    float dimFactor = distDimFactor(adjacentDistance) * angleDimFactor(callback);
 
     static const float maxCordX{tan(Conf::FOVangle / 2.0f)};
 
     // float flashlightFrac{0.1f * adjacentDistance * static_cast<float>(sqrt(std::max(0.0, 1.0f - pow(angle * 4.0f, 2))))};
-    userIO.drawOnScreen(callback.getShapeIdx(), tan(angle) / maxCordX, 0.0f, scale.first, scale.second, dimFactor, rayNumber);//, flashlightFrac);
+    userIO.drawOnScreen(callback.getShapeIdx(), tan(angle) / maxCordX, 0.0f, scale.first, scale.second, dimFactor, rayNumber); //, flashlightFrac);
 }
 
 void Camera::draw2DRay(UserIO &userIO, float angle, const Ray::RayCallback &callback, float distance)
@@ -42,8 +44,10 @@ void Camera::draw2DRay(UserIO &userIO, float angle, const Ray::RayCallback &call
     float adjacentDistance{cos(angle) * callback.getFraction() * distance};
     scale_t scale{get2DScale(adjacentDistance)};
 
+    float dimFactor = distDimFactor(adjacentDistance);
+
     static const float maxCordX{tan(Conf::FOVangle / 2.0f)};
-    userIO.drawOnScreen(callback.getShapeIdx(), tan(angle) / maxCordX, 0.0f, scale.first, scale.second);
+    userIO.drawOnScreen(callback.getShapeIdx(), tan(angle) / maxCordX, 0.0f, scale.first, scale.second, dimFactor);
 }
 
 bool Camera::ifInFieldOfView(const Object &camera, const Object &object)
@@ -58,7 +62,6 @@ bool Camera::ifInFieldOfView(const Object &camera, const Object &object)
     float angle{vecAngle(viewVector, objectVector)};
     return angle < Conf::FOVangle / 2.0f;
 }
-
 
 void Camera::drawObjects3D(UserIO &userIO, const Player &player)
 {
@@ -111,7 +114,7 @@ void Camera::drawObjects2D(UserIO &userIO, const Player &player)
             float cross = b2Cross(getVec(player.getAngle()), ray);
             objectAngle *= abs(cross) / cross;
 
-            draw2DRay(userIO, objectAngle, rayCallback, b2Distance(getVec(player.getAngle()), ray));
+            draw2DRay(userIO, objectAngle, rayCallback, ray.Length());
         }
     }
 }

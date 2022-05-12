@@ -18,8 +18,8 @@ private:
 
     static constexpr int raysNumber_{400};
 
-    // Draws texture at ray's hitpoint
-    static float getDimFactor(const Ray::RayCallback &callback);
+    static float distDimFactor(float distance, float maxDistance = Conf::renderDistance);
+    static float angleDimFactor(const Ray::RayCallback &callback);
     static scale_t get3DScale(float adjacentDistance);
     static scale_t get2DScale(float adjacentDistance);
 

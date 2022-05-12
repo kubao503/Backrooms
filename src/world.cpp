@@ -33,7 +33,7 @@ void World::draw(b2World &world, const b2Vec2 &playerPosition)
     for (auto &chunk : chunks)
     {
         b2Vec2 distance = chunk.second.get()->getPosition() - playerPosition;
-        if (abs(distance.x) < 5 * Conf::chunkWidth && abs(distance.y) < 5 * Conf::chunkWidth)
+        if (abs(distance.x) < Conf::renderDistance && abs(distance.y) < Conf::renderDistance)
         {
             if (chunk.second.get()->wasCleared())
                 chunk.second.get()->restore(world);
