@@ -32,6 +32,7 @@ private:
     static void drawObjects3D(UserIO &userIO, const Player &player);
     static void drawObjects2D(UserIO &userIO, const Player &player);
     static void drawItems(UserIO &userIO, const Player &player);
+    static void postFx(UserIO &userIO);
 
 public:
     // Casts multiple rays to show them as image on the screen

@@ -22,6 +22,7 @@ int main()
     if (!Textures::init())
     {
         std::cerr << "Loading textures failed\n";
+        return -1;
     }
     Shapes::init();
 

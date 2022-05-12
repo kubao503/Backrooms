@@ -6,6 +6,7 @@
 #include <SFML/Graphics.hpp> // for using sf::RenderWindow
 #include <memory>            // for moving sf::Color
 #include <algorithm>         // for std::min
+#include <iostream>
 
 class UserIO
 {
@@ -14,6 +15,8 @@ private:
     bool focus_{true}; // Focus on game window
 
     sf::Color dimColor(const sf::Color &color, float dimFactor);
+
+    sf::Shader shader_; // SHADER
 
 public:
     UserIO(const std::string &title)
