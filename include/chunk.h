@@ -14,7 +14,7 @@ class Chunk
 private:
     std::unique_ptr<Object3D> wallNorth{nullptr};
     std::unique_ptr<Object3D> wallWest{nullptr};
-    bool cleared_{false};
+    bool hunt_{false};
     static std::mt19937 mt;
     const b2Vec2 position_;
     b2Vec2 getWallNorthPosition() const;
@@ -22,11 +22,8 @@ private:
 
 public:
     Chunk(b2World &world, const b2Vec2 &position);
-    void restore(b2World &world);
-    void clear();
-    bool wasCleared() const { return cleared_; };
+    bool isHunt() const;
     b2Vec2 getPosition() const { return position_; };
-    b2Vec2 getCenter() const;
 };
 
 #endif
