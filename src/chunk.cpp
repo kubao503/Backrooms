@@ -7,12 +7,15 @@ RandomGenerator Chunk::chunkGenerator{int(mt())};
 Chunk::Chunk(b2World &world, const b2Vec2 &position)
     : position_(position)
 {
+    b2Vec2 bigChunkPosition = b2Vec2(round(position.x / Conf::bigChunkWidth), round(position.y / Conf::bigChunkWidth));
+    chunkGenerator.seed(int(bigChunkPosition.x), int(bigChunkPosition.y));
+    bool lowerDensity = chunkGenerator.drawLots(1u, 11u);
+
     chunkGenerator.seed(int(position.x), int(position.y));
+    unsigned int wallChance{lowerDensity ? 1u : 10u};
 
-    b2Vec2 bigChunkPosition = b2Vec2(round(position.x / 50), round(position.y / 50));
-
-    bool wallNorthExists = chunkGenerator.drawLots(4u, 10u);
-    bool wallWestExists = chunkGenerator.drawLots(4u, 10u);
+    bool wallNorthExists = chunkGenerator.drawLots(wallChance, 100u);
+    bool wallWestExists = chunkGenerator.drawLots(wallChance, 100u);
     bool huntExists = chunkGenerator.drawLots(1u, 10u);
 
     b2Vec2 wallNorthPosition = this->getWallNorthPosition();

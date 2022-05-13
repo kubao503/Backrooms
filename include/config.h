@@ -8,6 +8,7 @@ namespace Conf
     inline constexpr float FOVangle{PI / 2.5f};
     inline constexpr float renderDistance{20.0f};
     inline constexpr float chunkWidth{10.0f};
+    inline constexpr float bigChunkWidth{300.0f};
     inline constexpr float wallWidth{2.0f};
 
     inline constexpr unsigned int windowWidth{1600};
