@@ -29,19 +29,19 @@ Chunk::Chunk(b2World &world, const b2Vec2 &position)
     default:
         break;
     }
-};
+}
 
 b2Vec2 Chunk::getWallNorthPosition() const
 {
     return b2Vec2(position_.x + Conf::chunkWidth / 2, position_.y);
-};
+}
 
 b2Vec2 Chunk::getWallWestPosition() const
 {
     return b2Vec2(position_.x, position_.y - Conf::chunkWidth / 2);
-};
+}
 
 bool Chunk::isHunt() const
 {
     return hunt_;
-};
+}

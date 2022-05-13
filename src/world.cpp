@@ -24,7 +24,7 @@ void World::removeChunk(const b2Vec2 &position)
 
     if (foundPosition.IsValid())
         chunks.erase(foundPosition);
-};
+}
 
 void World::clear()
 {
