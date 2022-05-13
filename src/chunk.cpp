@@ -11,8 +11,8 @@ Chunk::Chunk(b2World &world, const b2Vec2 &position)
 
     b2Vec2 bigChunkPosition = b2Vec2(round(position.x / 50), round(position.y / 50));
 
-    bool wallNorthExists = chunkGenerator.drawLots(1u, 10u);
-    bool wallWestExists = chunkGenerator.drawLots(1u, 10u);
+    bool wallNorthExists = chunkGenerator.drawLots(4u, 10u);
+    bool wallWestExists = chunkGenerator.drawLots(4u, 10u);
     bool huntExists = chunkGenerator.drawLots(1u, 10u);
 
     b2Vec2 wallNorthPosition = this->getWallNorthPosition();

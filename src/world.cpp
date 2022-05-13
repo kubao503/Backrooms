@@ -36,8 +36,8 @@ void World::draw(b2World &world, const b2Vec2 &playerPosition)
     int normalizedX = round(playerPosition.x / Conf::chunkWidth) * Conf::chunkWidth;
     int normalizedY = round(playerPosition.y / Conf::chunkWidth) * Conf::chunkWidth;
 
-    for (float i = normalizedX - 3 * Conf::chunkWidth; i < normalizedX + 3 * Conf::chunkWidth; i += Conf::chunkWidth)
-        for (float j = normalizedY - 3 * Conf::chunkWidth; j < normalizedY + 3 * Conf::chunkWidth; j += Conf::chunkWidth)
+    for (float i = normalizedX - Conf::renderDistance * 1.2; i < normalizedX + Conf::renderDistance * 1.2; i += Conf::chunkWidth)
+        for (float j = normalizedY - Conf::renderDistance * 1.2; j < normalizedY + Conf::renderDistance * 1.2; j += Conf::chunkWidth)
         {
             try
             {
@@ -53,7 +53,7 @@ void World::draw(b2World &world, const b2Vec2 &playerPosition)
     {
         b2Vec2 distance = it->second.get()->getPosition() - playerPosition;
 
-        if (distance.Length() > Conf::renderDistance / 4)
+        if (distance.Length() > Conf::renderDistance * 2)
             it = chunks.erase(it);
         else
             ++it;
