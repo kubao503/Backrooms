@@ -2,33 +2,32 @@
 #include <iostream>
 
 std::mt19937 Chunk::mt(time(nullptr));
+RandomGenerator Chunk::chunkGenerator{int(mt())};
 
 Chunk::Chunk(b2World &world, const b2Vec2 &position)
     : position_(position)
 {
-    if (int(mt()) % 10)
+    chunkGenerator.seed(int(position.x), int(position.y));
+
+    b2Vec2 bigChunkPosition = b2Vec2(round(position.x / 50), round(position.y / 50));
+
+    bool wallNorthExists = chunkGenerator.drawLots(1u, 10u);
+    bool wallWestExists = chunkGenerator.drawLots(1u, 10u);
+    bool huntExists = chunkGenerator.drawLots(1u, 10u);
+
+    b2Vec2 wallNorthPosition = this->getWallNorthPosition();
+    b2Vec2 wallWestPosition = this->getWallWestPosition();
+
+    if (wallNorthExists)
+        wallNorth_ = std::make_unique<Object3D>(world, Object::Type::WALL, wallNorthPosition, PI / 2);
+
+    if (wallWestExists)
+        wallWest_ = std::make_unique<Object3D>(world, Object::Type::WALL, wallWestPosition, 0);
+
+    if (huntExists)
         hunt_ = true;
 
-    int seed = int(mt() % 5);
-
-    b2Vec2 wallWestPosition = this->getWallWestPosition();
-    b2Vec2 wallNorthPosition = this->getWallNorthPosition();
-
-    switch (seed)
-    {
-    case 1:
-        wallNorth = std::make_unique<Object3D>(world, Object::Type::WALL, wallNorthPosition, PI / 2);
-        break;
-    case 2:
-        wallWest = std::make_unique<Object3D>(world, Object::Type::WALL, wallWestPosition, 0);
-        break;
-    case 3:
-        wallNorth = std::make_unique<Object3D>(world, Object::Type::WALL, wallNorthPosition, PI / 2);
-        wallWest = std::make_unique<Object3D>(world, Object::Type::WALL, wallWestPosition, 0);
-        break;
-    default:
-        break;
-    }
+    return;
 }
 
 b2Vec2 Chunk::getWallNorthPosition() const

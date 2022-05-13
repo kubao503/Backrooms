@@ -89,19 +89,19 @@ b2Vec2 World::openChunk(const b2Vec2 &position, Directions &prefDirection) const
     if (currentChunk.IsValid())
     {
         b2Vec2 neighbourChunk = this->closestChunk(b2Vec2(position.x + Conf::chunkWidth, position.y));
-        if (neighbourChunk.IsValid() && !chunks.at(currentChunk)->wallNorth) // Checks north route
+        if (neighbourChunk.IsValid() && !chunks.at(currentChunk)->wallNorth_) // Checks north route
             routes.push_back({N, neighbourChunk});
 
         neighbourChunk = this->closestChunk(b2Vec2(position.x, position.y - Conf::chunkWidth));
-        if (neighbourChunk.IsValid() && !chunks.at(currentChunk)->wallWest) // Checks west route
+        if (neighbourChunk.IsValid() && !chunks.at(currentChunk)->wallWest_) // Checks west route
             routes.push_back({W, neighbourChunk});
 
         neighbourChunk = this->closestChunk(b2Vec2(position.x - Conf::chunkWidth, position.y));
-        if (neighbourChunk.IsValid() && !chunks.at(neighbourChunk)->wallNorth) // Checks south route
+        if (neighbourChunk.IsValid() && !chunks.at(neighbourChunk)->wallNorth_) // Checks south route
             routes.push_back({S, neighbourChunk});
 
         neighbourChunk = this->closestChunk(b2Vec2(position.x, position.y + Conf::chunkWidth));
-        if (neighbourChunk.IsValid() && !chunks.at(neighbourChunk)->wallWest) // Checks east route
+        if (neighbourChunk.IsValid() && !chunks.at(neighbourChunk)->wallWest_) // Checks east route
             routes.push_back({E, neighbourChunk});
 
         if (!routes.size()) // If no choice is available, return not valid vector
