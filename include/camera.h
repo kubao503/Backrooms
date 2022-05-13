@@ -7,6 +7,7 @@
 #include "ray.h"      // for casting rays
 #include "config.h"   // for constants
 #include "player.h"   // for getting visible objects
+#include "game.h"     // for getting debug information
 
 #include <vector> // for storing Object2Ds
 #include <memory>
@@ -24,19 +25,19 @@ private:
     static scale_t get2DScale(float adjacentDistance);
 
     // For 3D objects
-    static void draw3DRay(UserIO &userIO, float angle, const Ray::RayCallback &callback, float rayNumber);
+    static void draw3DRay(UserIO &userIO, bool debug, float angle, const Ray::RayCallback &callback, float rayNumber);
     // For 2D objectsSetSensor
-    static void draw2DRay(UserIO &userIO, float angle, const Ray::RayCallback &callback, float distance);
+    static void draw2DRay(UserIO &userIO, bool debug, float angle, const Ray::RayCallback &callback, float distance);
 
     static bool ifInFieldOfView(const Object &camera, const Object &object);
-    static void drawObjects3D(UserIO &userIO, const Player &player);
-    static void drawObjects2D(UserIO &userIO, const Player &player);
+    static void drawObjects3D(UserIO &userIO, bool debug, const Player &player);
+    static void drawObjects2D(UserIO &userIO, bool debug, const Player &player);
     static void drawItems(UserIO &userIO, const Player &player);
     static void postFx(UserIO &userIO);
 
 public:
     // Casts multiple rays to show them as image on the screen
-    static void drawViewOnScreen(UserIO &userIO, const Player &player);
+    static void drawViewOnScreen(UserIO &userIO, bool debug, const Player &player);
 };
 
 #endif

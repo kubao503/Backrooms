@@ -53,7 +53,7 @@ int main()
     int32 velocityIterations = 4;  // Velocity calculations during one step
     int32 positionIterations = 3;  // Position calculations during one step
     // Chunk *b = new Chunk(world, b2Vec2(2, 3));
-    // delete b;
+    // delete b;gameMap
 
     // Main loop
     while (userIO.isOpen())
@@ -84,7 +84,7 @@ int main()
         // }
 
         // Drawing on screen
-        Camera::drawViewOnScreen(userIO, player);
+        Camera::drawViewOnScreen(userIO, game.debugGet(), player);
     }
 
     return 0;

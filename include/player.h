@@ -19,7 +19,7 @@ private:
     void move();
     void lookAround(UserIO &userIO);
     void itemOperations(UserIO &userIO, Game &game);
-    void debugUpdate();
+    void debugUpdate(UserIO &userIO, Game &game);
 
     // Stores any items that are near
     std::vector<const Object2D *> visibleObjects_;

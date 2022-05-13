@@ -101,8 +101,11 @@ void Player::itemOperations(UserIO &userIO, Game &game)
     }
 }
 
-void Player::debugUpdate()
+void Player::debugUpdate(UserIO &userIO, Game &game)
 {
+    // Toggle debug mode
+    if (userIO.handleKeyPress(sf::Keyboard::Slash))
+        game.debugSet(!game.debugGet());
 }
 
 void Player::control(UserIO &userIO, Game &game)
@@ -110,7 +113,7 @@ void Player::control(UserIO &userIO, Game &game)
     move();
     lookAround(userIO);
     itemOperations(userIO, game);
-    debugUpdate();
+    debugUpdate(userIO, game);
 
     // Sorting visible objects by distance from the player
     const b2Vec2 playerPosition{getPosition()};
