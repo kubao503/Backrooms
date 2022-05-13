@@ -13,10 +13,9 @@ class UserIO
 private:
     sf::RenderWindow window_;
     bool focus_{true}; // Focus on game window
+    std::map<sf::Keyboard::Key, bool> keyPresses_;
 
     sf::Color dimColor(const sf::Color &color, float dimFactor);
-
-    sf::Shader shader_; // SHADER
 
 public:
     UserIO(const std::string &title)
@@ -34,6 +33,7 @@ public:
     void start() { window_.clear(); }
     // Displays frame
     void end() { window_.display(); }
+    bool handleKeyPress(sf::Keyboard::Key key);
     void handleEvents();
     int getMouseXMovement();
 };

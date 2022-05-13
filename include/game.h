@@ -12,6 +12,7 @@ class Game
 {
 private:
     std::set<std::shared_ptr<Object>> objects_;
+    bool debugMode_{false};
 
 public:
     template <class T>
@@ -28,6 +29,8 @@ public:
         return nullptr;
     }
 
+    bool debugGet() const { return debugMode_; }
+    void debugSet(bool debug) { debugMode_ = debug; }
     void createItem(b2World &world, Object::Type type, const b2Vec2 &position, float angle);
 };
 

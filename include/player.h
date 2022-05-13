@@ -18,14 +18,14 @@ private:
     void setLocalVelocity(const b2Vec2 &newVelocity);
     void move();
     void lookAround(UserIO &userIO);
-    void itemOperations(Game &game);
+    void itemOperations(UserIO &userIO, Game &game);
+    void debugUpdate();
 
     // Stores any items that are near
     std::vector<const Object2D *> visibleObjects_;
     const Item *nearbyItem_;
     std::vector<std::shared_ptr<Item>> ownedItems_;
     unsigned int currentItemIdx_{0};
-    std::map<sf::Keyboard::Key, bool> keyPresses_;
 
 public:
     Player(b2World &world, const b2Vec2 &position, float angle);

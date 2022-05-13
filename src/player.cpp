@@ -13,16 +13,10 @@ Player::Player(b2World &world, const b2Vec2 &position, float angle)
 
     // New fixture is added at the front
     addFixture(Type::CAMERA, Category::CAMERA, true);
-    // body_->CreateFixture(&argList[static_cast<int>(Type::CAMERA)].fixDef_);
-    // setCollisionFilter(Category::CAMERA);
-    // setSensor(true);
 
     // Changing camera mass to zero
     body_->GetFixtureList()->SetDensity(0.0f);
     body_->ResetMassData();
-
-
-    keyPresses_[sf::Keyboard::Q] = false;
 }
 
 void Player::move()
@@ -72,10 +66,10 @@ void Player::lookAround(UserIO &userIO)
 
 #include <iostream> // DEBUG
 
-void Player::itemOperations(Game &game)
+void Player::itemOperations(UserIO &userIO, Game &game)
 {
     // Pickig up items
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) && nearbyItem_)
+    if (userIO.handleKeyPress(sf::Keyboard::E) && nearbyItem_)
     {
         auto item = game.shareObject(nearbyItem_);
         item->destroyBody();
@@ -86,7 +80,7 @@ void Player::itemOperations(Game &game)
     }
 
     // Dropping item
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::G))
+    if (userIO.handleKeyPress(sf::Keyboard::G))
     {
         if (ownedItems_.size())
         {
@@ -100,20 +94,23 @@ void Player::itemOperations(Game &game)
     }
 
     // Changing item from inventory
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && !keyPresses_.at(sf::Keyboard::Q))
+    if (userIO.handleKeyPress(sf::Keyboard::Q))
     {
         if (++currentItemIdx_ >= ownedItems_.size())
             currentItemIdx_ = 0;
     }
+}
 
-    keyPresses_[sf::Keyboard::Q] = sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
+void Player::debugUpdate()
+{
 }
 
 void Player::control(UserIO &userIO, Game &game)
 {
     move();
     lookAround(userIO);
-    itemOperations(game);
+    itemOperations(userIO, game);
+    debugUpdate();
 
     // Sorting visible objects by distance from the player
     const b2Vec2 playerPosition{getPosition()};
@@ -131,7 +128,6 @@ void Player::doItemAction(const b2World &world) const
     for (auto &&item : ownedItems_)
         item->action(world, *this);
 }
-
 
 void Player::objectObserved(const Object2D *object)
 {

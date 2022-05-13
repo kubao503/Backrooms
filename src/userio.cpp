@@ -22,6 +22,13 @@ void UserIO::drawOnScreen(Shapes::Type shapeIdx, float x, float y, float xScale,
     window_.draw(shape);
 }
 
+bool UserIO::handleKeyPress(sf::Keyboard::Key key)
+{
+    bool temp = keyPresses_[key];
+    keyPresses_[key] = false;
+    return temp;
+}
+
 void UserIO::handleEvents()
 {
     sf::Event event;
@@ -35,6 +42,10 @@ void UserIO::handleEvents()
         {
             focus_ = true;
             getMouseXMovement(); // Reseting mouse position
+        }
+        if (event.type == sf::Event::KeyPressed)
+        {
+            keyPresses_[event.key.code] = true;
         }
     }
 }
