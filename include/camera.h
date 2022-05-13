@@ -7,7 +7,7 @@
 #include "ray.h"      // for casting rays
 #include "config.h"   // for constants
 #include "player.h"   // for getting visible objects
-#include "game.h"     // for getting debug information
+#include "world.h"     // for getting debug information
 
 #include <vector> // for storing Object2Ds
 #include <memory>

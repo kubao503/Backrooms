@@ -66,12 +66,12 @@ void Player::lookAround(UserIO &userIO)
 
 #include <iostream> // DEBUG
 
-void Player::itemOperations(UserIO &userIO, Game &game)
+void Player::itemOperations(UserIO &userIO, World &world)
 {
     // Pickig up items
     if (userIO.handleKeyPress(sf::Keyboard::E) && nearbyItem_)
     {
-        auto item = game.shareObject(nearbyItem_);
+        auto item = world.shareObject(nearbyItem_);
         item->destroyBody();
         ownedItems_.push_back(std::move(item));
         // Deleting b2Body calls EndContact
@@ -101,19 +101,19 @@ void Player::itemOperations(UserIO &userIO, Game &game)
     }
 }
 
-void Player::debugUpdate(UserIO &userIO, Game &game)
+void Player::debugUpdate(UserIO &userIO, World &world)
 {
     // Toggle debug mode
     if (userIO.handleKeyPress(sf::Keyboard::Slash))
-        game.debugSet(!game.debugGet());
+        world.debugSet(!world.debugGet());
 }
 
-void Player::control(UserIO &userIO, Game &game)
+void Player::control(UserIO &userIO, World &world)
 {
     move();
     lookAround(userIO);
-    itemOperations(userIO, game);
-    debugUpdate(userIO, game);
+    itemOperations(userIO, world);
+    debugUpdate(userIO, world);
 
     // Sorting visible objects by distance from the player
     const b2Vec2 playerPosition{getPosition()};

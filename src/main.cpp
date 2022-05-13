@@ -8,7 +8,6 @@
 #include "timer.h"
 #include "item.h"
 #include "emf.h"
-#include "game.h"
 #include "world.h"
 #include "myListener.h" // for setting contact listener
 
@@ -36,17 +35,16 @@ int main()
     MyListener listener;
     world.SetContactListener(&listener);
 
-    Game game;
-    game.createItem(world, Object::Type::EMF, b2Vec2(-5.0f, -15.0f), 0.0f);
-
+    // Creating chunks
     // Objects
     Player player(world, b2Vec2(-15.0f, -15.0f), 0);
     Enemy enemy(world, b2Vec2(0.0f, 0.0f), 0.0f);
     // Emf emf(world, b2Vec2(-5.0f, -15.0f), 0.0f);
     // Item item2(world, Shapes::RED_WALL, b2Vec2(5.0f, -15.0f), 0.0f);
 
-    // Creating chunks
     World gameMap(world, 1, player.getPosition());
+
+    // gameMap.createItem<Emf>(world, Object::Type::EMF, b2Vec2(-5.0f, -15.0f), 0.0f);
 
     // Simulation parameters
     float timeStep = 1.0f / 60.0f; // Step of time between events
@@ -63,7 +61,7 @@ int main()
 
         // Physics step
         world.Step(timeStep, velocityIterations, positionIterations);
-        player.control(userIO, game);
+        player.control(userIO, gameMap);
         player.doItemAction(world);
         enemy.control(player, gameMap);
 
@@ -84,7 +82,7 @@ int main()
         // }
 
         // Drawing on screen
-        Camera::drawViewOnScreen(userIO, game.debugGet(), player);
+        Camera::drawViewOnScreen(userIO, gameMap.debugGet(), player);
     }
 
     return 0;
