@@ -12,7 +12,7 @@ void Enemy::updateWaypoint(const Object &player, const World &gameMap)
 {
     b2Vec2 ray{getVec(getPosition(), player.getPosition())};
     Ray::RayCallback rayCallback = Ray::sendRay(*body_->GetWorld(), getPosition(), ray);
-    if (!rayCallback.hit() && false) // DEBUG
+    if (!rayCallback.hit() && !gameMap.debugGet()) // DEBUG
     {
         // If player is visible for enemy set waypoint to the player positioin
         waypoint_ = player.getPosition();
