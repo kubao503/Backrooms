@@ -12,10 +12,10 @@ Chunk::Chunk(b2World &world, const b2Vec2 &position)
     bool lowerDensity = chunkGenerator.drawLots(1u, 11u);
 
     chunkGenerator.seed(int(position.x), int(position.y));
-    unsigned int wallChance{lowerDensity ? 1u : 10u};
+    unsigned int wallChance{lowerDensity ? 1u : 4u};
 
-    bool wallNorthExists = chunkGenerator.drawLots(wallChance, 100u);
-    bool wallWestExists = chunkGenerator.drawLots(wallChance, 100u);
+    bool wallNorthExists = chunkGenerator.drawLots(wallChance, 10u);
+    bool wallWestExists = chunkGenerator.drawLots(wallChance, 10u);
     bool huntExists = chunkGenerator.drawLots(1u, 10u);
 
     b2Vec2 wallNorthPosition = this->getWallNorthPosition();
