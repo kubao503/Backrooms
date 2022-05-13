@@ -37,8 +37,8 @@ int main()
 
     // Creating chunks
     // Objects
-    Player player(world, b2Vec2(-15.0f, -15.0f), 0);
-    Enemy enemy(world, b2Vec2(0.0f, 0.0f), 0.0f);
+    Player player(world, b2Vec2(-10.0f, -10.0f), 0);
+    Enemy enemy(world, b2Vec2(0.0f, -10.0f), 0.0f);
     // Emf emf(world, b2Vec2(-5.0f, -15.0f), 0.0f);
     // Item item2(world, Shapes::RED_WALL, b2Vec2(5.0f, -15.0f), 0.0f);
 

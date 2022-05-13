@@ -3,7 +3,7 @@
 sf::RectangleShape Shapes::shapes_[Type::TOTAL]{
     shapeGenerator(sf::Vector2f(2.0f, 50.0f), sf::Color::White),
     shapeGenerator(sf::Vector2f(2.0f, 50.0f), sf::Color::Red),
-    shapeGenerator(sf::Vector2f(195.0f, 400.0f), sf::Color::White),
+    shapeGenerator(sf::Vector2f(509.0f, 798.0f), sf::Color::White),
     shapeGenerator(sf::Vector2f(1864.0f, 1051.0f), sf::Color::White, true),
     shapeGenerator(sf::Vector2f(1864.0f, 1051.0f), sf::Color::White, true),
     shapeGenerator(sf::Vector2f(1864.0f, 1051.0f), sf::Color::White, true),
