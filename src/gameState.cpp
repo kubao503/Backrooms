@@ -1,8 +1,7 @@
 #include "gameState.h"
 
 GameState::GameState()
-    : gameMap_{world_, 1, {0.f, 0.f}},
-      listener_{*this},
+    : listener_{*this},
       player_{world_, {0.f, 0.f}, 0.f},
       enemy_{world_, {Conf::chunkWidth, 0.f}, 0.f}
 {

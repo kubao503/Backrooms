@@ -4,7 +4,7 @@
 #include "object.h"
 #include "chunk.h"
 
-#include <map>      // for storing chunks
+#include <map> // for storing chunks
 
 class World
 {
@@ -20,7 +20,7 @@ public:
         E = 2
     };
 
-    World(b2World &world, unsigned int size, const b2Vec2 &playerPosition);
+    World(){};
     void clear();
     void draw(b2World &world, const b2Vec2 &playerPosition);
     void spawnChunk(b2World &world, const b2Vec2 &position);

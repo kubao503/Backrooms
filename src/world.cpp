@@ -1,13 +1,6 @@
 #include "world.h"
 #include <iostream>
 
-World::World(b2World &world, unsigned int size, const b2Vec2 &playerPosition)
-{
-    (void)world;
-    (void)size;
-    (void)playerPosition;
-}
-
 void World::spawnChunk(b2World &world, const b2Vec2 &position)
 {
     chunks[position] = std::make_unique<Chunk>(world, position);
