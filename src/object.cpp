@@ -21,8 +21,8 @@ const std::map<Object::Type, Object::Category> Object::categoryMap_{
 const Object::Arguments Object::argList[static_cast<int>(Type::TOTAL)]{
     {b2_staticBody, getShape(Conf::chunkWidth / 2 + Conf::wallWidth / 2, Conf::wallWidth / 2)},
     {b2_staticBody, getShape(Conf::chunkWidth / 2 + Conf::wallWidth / 2, Conf::wallWidth / 2)},
-    {b2_dynamicBody, getShape(0.5f)},
-    {b2_dynamicBody, getShape(0.5f)},
+    {b2_dynamicBody, getShape(.8f)},
+    {b2_dynamicBody, getShape(.8f)},
     {b2_staticBody, getShape(0.1f)},
     {b2_staticBody, getShape(10.0f)},
     {b2_staticBody, getShape(Conf::FOVangle, Conf::renderDistance, 5)}};

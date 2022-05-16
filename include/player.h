@@ -11,6 +11,8 @@
 #include <vector>        // for storing visible objects
 #include <memory> // for storing items in shared ptr
 
+#include <iostream> // DEBUG
+
 class Player : public Object
 {
 private:
@@ -30,6 +32,7 @@ public:
     Player(b2World &world, const b2Vec2 &position, float angle);
 
     void control(UserIO &userIO);
+    void lookAt(const b2Vec2 &target);
 
     const std::vector<const Object2D *> &getVisibleObjects() const;
     const std::vector<std::shared_ptr<Item>> &getOwnedItems() const { return ownedItems_; }

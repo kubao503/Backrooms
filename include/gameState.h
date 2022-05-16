@@ -16,8 +16,10 @@ class UserIO;
 
 class GameState
 {
-    std::set<std::shared_ptr<Object>> objects_;
+    bool isOver_{false};
     bool debugMode_{false};
+
+    std::set<std::shared_ptr<Object>> objects_;
 
     // Creating world without gravity
     b2World world_{b2Vec2(0.0f, 0.0f)};
@@ -37,6 +39,7 @@ public:
     GameState();
     void addObject(std::shared_ptr<Object> object);
     bool debugGet() const { return debugMode_; }
+    void gameOver();
     void step(UserIO &userIO);
 };
 

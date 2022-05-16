@@ -82,6 +82,8 @@ protected:
 
 public:
     bool isSensor() const { return body_->GetFixtureList()->IsSensor(); }
+    void stop() const { body_->SetLinearVelocity({0.f, 0.f}); }
+
     const b2Vec2 &getPosition() const { return body_->GetPosition(); };
     float getAngle() const { return body_->GetAngle(); };
     const b2World &getWorld() const { return *body_->GetWorld(); }

@@ -2,7 +2,7 @@
 
 #include "gameState.h" // for sharing item
 
-MyListener::MyListener(const GameState &game)
+MyListener::MyListener(GameState &game)
     : game_{game} {}
 
 void MyListener::BeginContact(b2Contact *contact)
@@ -32,6 +32,8 @@ void MyListener::BeginContact(b2Contact *contact)
             // killing Player
             if (game_.debugGet())
                 std::cerr << "YOU FOOL YOU DIED\n";
+
+            game_.gameOver();
             return;
         }
         else if (getTandU<Player, Item>(objA, objB, isSensorA, isSensorB))

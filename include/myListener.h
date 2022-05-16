@@ -15,7 +15,7 @@ class GameState;
 class MyListener : public b2ContactListener
 {
 public:
-    MyListener(const GameState &game);
+    MyListener(GameState &game);
 
 private:
     void BeginContact(b2Contact *contact) override;
@@ -24,7 +24,7 @@ private:
     template <typename T, typename U>
     bool getTandU(Object *&objA, Object *&objB, bool &isSensorA, bool &isSensorB);
 
-    const GameState &game_;
+    GameState &game_;
 };
 
 #endif

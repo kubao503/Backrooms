@@ -25,17 +25,33 @@ void GameState::debugUpdate(UserIO &userIO)
         debugSet(!debugGet());
 }
 
+void GameState::gameOver()
+{
+    isOver_ = true;
+}
+
 void GameState::step(UserIO &userIO)
 {
-    // Physics step
+    // Drawing on screen
+    Camera::drawViewOnScreen(userIO, debugGet(), player_);
     world_.Step(Conf::timeStep, Conf::velocityIterations, Conf::positionIterations);
+
+    // Jumpscare
+    if (isOver_)
+    {
+        player_.stop();
+        enemy_.stop();
+        player_.lookAt(enemy_.getPosition());
+        return;
+    }
+
+    // Physics step
     gameMap_.draw(world_, player_.getPosition());
 
     player_.control(userIO);
     player_.doItemAction();
-    debugUpdate(userIO);
     enemy_.control(player_.getPosition(), gameMap_, debugGet());
 
-    // Drawing on screen
-    Camera::drawViewOnScreen(userIO, debugGet(), player_);
+    debugUpdate(userIO);
+
 }
