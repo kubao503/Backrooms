@@ -2,6 +2,7 @@
 #define TEXTURES_H
 
 #include <SFML/Graphics.hpp> // for using sf::Texture
+#include <cassert>          // for checking texture type
 
 class Textures
 {
@@ -20,6 +21,8 @@ public:
     static bool init();
     static const sf::Texture &getTexture(Type textureType)
     {
+        assert(textureType >= 0 && textureType < TOTAL);
+
         return textures_[textureType];
     }
 

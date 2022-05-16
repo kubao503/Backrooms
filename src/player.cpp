@@ -66,14 +66,13 @@ void Player::lookAround(UserIO &userIO)
 
 #include <iostream> // DEBUG
 
-void Player::itemOperations(UserIO &userIO, World &world)
+void Player::itemOperations(UserIO &userIO)
 {
     // Pickig up items
     if (userIO.handleKeyPress(sf::Keyboard::E) && nearbyItem_)
     {
-        auto item = world.shareObject(nearbyItem_);
-        item->destroyBody();
-        ownedItems_.push_back(std::move(item));
+        ownedItems_.push_back(nearbyItem_);
+        nearbyItem_->destroyBody();
         // Deleting b2Body calls EndContact
         // but this is likely done by another "thread"
         // So Item is automatically removed from visibleObjects_ and nearbyItem_
@@ -101,19 +100,11 @@ void Player::itemOperations(UserIO &userIO, World &world)
     }
 }
 
-void Player::debugUpdate(UserIO &userIO, World &world)
-{
-    // Toggle debug mode
-    if (userIO.handleKeyPress(sf::Keyboard::Slash))
-        world.debugSet(!world.debugGet());
-}
-
-void Player::control(UserIO &userIO, World &world)
+void Player::control(UserIO &userIO)
 {
     move();
     lookAround(userIO);
-    itemOperations(userIO, world);
-    debugUpdate(userIO, world);
+    itemOperations(userIO);
 
     // Sorting visible objects by distance from the player
     const b2Vec2 playerPosition{getPosition()};
@@ -126,10 +117,10 @@ const std::vector<const Object2D *> &Player::getVisibleObjects() const
     return visibleObjects_;
 }
 
-void Player::doItemAction(const b2World &world) const
+void Player::doItemAction() const
 {
     for (auto &&item : ownedItems_)
-        item->action(world, *this);
+        item->action(getPosition());
 }
 
 void Player::objectObserved(const Object2D *object)
@@ -146,10 +137,12 @@ void Player::objectLost(const Object2D *object)
         visibleObjects_.erase(foundObj);
 }
 
-void Player::itemContact(const Item *item)
+void Player::itemContact(std::shared_ptr<Item> item)
 {
+    assert(item);
+
     std::cerr << "Item contact\n";
-    nearbyItem_ = item;
+    nearbyItem_ = std::move(item);
 }
 
 void Player::itemLost()

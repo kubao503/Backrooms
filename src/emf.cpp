@@ -1,7 +1,7 @@
 #include "emf.h"
 
-Emf::Emf(b2World &world, const b2Vec2 &position, float angle)
-    : Item{world, Type::EMF, emfShapes_[0], position, angle} {}
+Emf::Emf(b2World &world, const b2Vec2 &position, float angle, const Enemy &enemy)
+    : Item{world, Type::EMF, emfShapes_[0], position, angle}, enemy_{enemy} {}
 
 void Emf::drop(b2World &world, const Object &player)
 {
@@ -11,38 +11,10 @@ void Emf::drop(b2World &world, const Object &player)
     addFixture(Type::ITEM_PICK_AREA, Category::ITEM_PICK_AREA, true);
 }
 
-void Emf::action(const b2World &world, const Object &player)
+void Emf::action(const b2Vec2 &playerPos)
 {
-    b2AABB aabb;
-    aabb.upperBound = player.getPosition() + b2Vec2(aabbSize, aabbSize);
-    aabb.lowerBound = player.getPosition() - b2Vec2(aabbSize, aabbSize);
-
-    EnemyCallback callback;
-    world.QueryAABB(&callback, aabb);
-
-    // Calculating distance to enemy
-    if (callback.getEnemy())
-    {
-        float distanceToEnemy{distance(player.getPosition(), callback.getEnemy()->getPosition())};
-        int stateIdx{static_cast<int>(-3.0f / aabbSize * distanceToEnemy + emfStates)};
-        GUIShapeIdx_ = emfShapes_[stateIdx];
-    }
-    else
-    {
-        GUIShapeIdx_ = emfShapes_[0];
-    }
-}
-
-bool Emf::EnemyCallback::ReportFixture(b2Fixture *fixture)
-{
-    Object *obj = (Object *)fixture->GetBody()->GetUserData().pointer;
-    Enemy *enemy = dynamic_cast<Enemy *>(obj);
-
-    if (enemy)
-    {
-        foundEnemy_ = enemy;
-        return false; // Stop on the first enemy
-    }
-
-    return true; // Keep searching for enemy
+    // Updating emf state
+    float distanceToEnemy{distance(playerPos, enemy_.getPosition())};
+    int stateIdx{static_cast<int>((1.f - statesNumber) / detectionRadius * distanceToEnemy + statesNumber)};
+    GUIShapeIdx_ = emfShapes_.at(std::max(0, stateIdx));
 }

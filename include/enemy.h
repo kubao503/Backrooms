@@ -17,7 +17,7 @@ class Enemy : public Object2D
 
     // Updated waypoint to player's position
     // only when player is visible
-    void updateWaypoint(const Object &player, const World &gameMap);
+    void updateWaypoint(const b2Vec2 &playerPos, const World &gameMap, bool debug);
 
     World::Directions direction = World::Directions::N;
 
@@ -25,7 +25,7 @@ public:
     Enemy(b2World &world, b2Vec2 position, float angle)
         : Object2D{world, Type::ENEMY, position, angle} {}
 
-    void control(const Object &player, const World &gameMap);
+    void control(const b2Vec2 &playerPos, const World &gameMap, bool debug);
     void startHunt(b2World &world, const Object &player);
     void stopHunt();
 

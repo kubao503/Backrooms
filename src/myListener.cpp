@@ -1,5 +1,10 @@
 #include "myListener.h"
 
+#include "gameState.h" // for sharing item
+
+MyListener::MyListener(const GameState &game)
+    : game_{game} {}
+
 void MyListener::BeginContact(b2Contact *contact)
 {
     Object *objA = (Object *)contact->GetFixtureA()->GetBody()->GetUserData().pointer;
@@ -28,7 +33,7 @@ void MyListener::BeginContact(b2Contact *contact)
         else if (getTandU<Player, Item>(objA, objB, isSensorA, isSensorB))
         {
             // item near
-            static_cast<Player *>(objA)->itemContact(static_cast<Item *>(objB));
+            static_cast<Player *>(objA)->itemContact(game_.shareObject<Item>(static_cast<Item *>(objB)));
             return;
         }
     }

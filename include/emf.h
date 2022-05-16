@@ -5,33 +5,26 @@
 #include "enemy.h"  // for finding closest enemy
 #include "myMath.h" // for calculating distance to enemy
 
+#include <array>    // for storing emf shapes
+
 class Emf : public Item
 {
 private:
-    class EnemyCallback : public b2QueryCallback
-    {
-    private:
-        const Enemy *foundEnemy_{nullptr};
-        bool ReportFixture(b2Fixture *fixture) override;
-
-    public:
-        const Enemy *getEnemy() { return foundEnemy_; }
-    };
-
-    static constexpr float aabbSize{50.0f};
-    static constexpr unsigned int emfStates{4};
-    static constexpr Shapes::Type emfShapes_[emfStates]{
+    static constexpr float detectionRadius{50.0f};
+    static constexpr unsigned int statesNumber{4};
+    static constexpr std::array<Shapes::Type, statesNumber> emfShapes_{
         Shapes::EMF,
         Shapes::EMF1,
         Shapes::EMF2,
         Shapes::EMF3};
     // bool on_{false};
+    const Enemy &enemy_;
 
 public:
-    Emf(b2World &world, const b2Vec2 &position, float angle);
+    Emf(b2World &world, const b2Vec2 &position, float angle, const Enemy &enemy);
     void drop(b2World &world, const Object &player) override;
 
-    void action(const b2World &world, const Object &player) override;
+    void action(const b2Vec2 &playerPos) override;
 };
 
 #endif

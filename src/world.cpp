@@ -135,12 +135,3 @@ b2Vec2 World::openChunk(const b2Vec2 &position, Directions &prefDirection) const
     }
     return b2Vec2(INFINITY, INFINITY);
 }
-
-
-
-// template <typename T>
-// void World::createItem(b2World &world, Object::Type type, const b2Vec2 &position, float angle)
-// {
-//     if (type == Object::Type::EMF)
-//         objects_.emplace(std::make_shared<Emf>(world, position, angle));
-// }

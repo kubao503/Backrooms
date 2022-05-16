@@ -8,14 +8,14 @@ void Enemy::setVelocity()
     body_->SetLinearVelocity(waypointDirection);
 }
 
-void Enemy::updateWaypoint(const Object &player, const World &gameMap)
+void Enemy::updateWaypoint(const b2Vec2 &playerPos, const World &gameMap, bool debug)
 {
-    b2Vec2 ray{getVec(getPosition(), player.getPosition())};
+    b2Vec2 ray{getVec(getPosition(), playerPos)};
     Ray::RayCallback rayCallback = Ray::sendRay(*body_->GetWorld(), getPosition(), ray);
-    if (!rayCallback.hit() && !gameMap.debugGet()) // DEBUG
+    if (!rayCallback.hit() && !debug) // DEBUG
     {
         // If player is visible for enemy set waypoint to the player positioin
-        waypoint_ = player.getPosition();
+        waypoint_ = playerPos;
     }
     else if (distance(getPosition(), waypoint_) < 0.01)
     {
@@ -26,11 +26,11 @@ void Enemy::updateWaypoint(const Object &player, const World &gameMap)
     }
 }
 
-void Enemy::control(const Object &player, const World &gameMap)
+void Enemy::control(const b2Vec2 &playerPos, const World &gameMap, bool debug)
 {
     if (spawned_)
     {
-        updateWaypoint(player, gameMap);
+        updateWaypoint(playerPos, gameMap, debug);
         setVelocity();
     }
 }

@@ -12,8 +12,7 @@ sf::RectangleShape Shapes::shapes_[Type::TOTAL]{
 
 sf::RectangleShape Shapes::getShape(Type shapeIdx, float offset)
 {
-    if (shapeIdx < 0 || shapeIdx >= TOTAL)
-        throw "Invalid shapeIdx\n";
+    assert(shapeIdx >= 0 && shapeIdx < TOTAL);
 
     if (shapes_[shapeIdx].getTexture())
     {
