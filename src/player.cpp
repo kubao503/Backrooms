@@ -125,13 +125,11 @@ void Player::doItemAction() const
 
 void Player::objectObserved(const Object2D *object)
 {
-    std::cerr << "object observed\n";
     visibleObjects_.push_back(object);
 }
 
 void Player::objectLost(const Object2D *object)
 {
-    std::cerr << "object lost\n";
     auto foundObj = std::find(visibleObjects_.begin(), visibleObjects_.end(), object);
     if (foundObj != visibleObjects_.end())
         visibleObjects_.erase(foundObj);
@@ -141,12 +139,10 @@ void Player::itemContact(std::shared_ptr<Item> item)
 {
     assert(item);
 
-    std::cerr << "Item contact\n";
     nearbyItem_ = std::move(item);
 }
 
 void Player::itemLost()
 {
-    std::cerr << "Item lost\n";
     nearbyItem_ = nullptr;
 }

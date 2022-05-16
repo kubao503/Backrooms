@@ -1,14 +1,14 @@
 #ifndef GAME_STATE_H
 #define GAME_STATE_H
 
-#include "enemy.h"      // for keeping enemy
-#include "player.h"     // for keeping player
+#include "enemy.h"  // for keeping enemy
+#include "player.h" // for keeping player
 #include "emf.h"
 
 #include "userio.h"     // for getting key press
 #include "myListener.h" // for listening collisions
 #include "world.h"
-#include "camera.h"     // for drawing view
+#include "camera.h" // for drawing view
 
 #include <set> // for string objects
 
@@ -28,27 +28,30 @@ class GameState
     Enemy enemy_;
 
     void debugUpdate(UserIO &userIO);
-    bool debugGet() const { return debugMode_; }
     void debugSet(bool debug) { debugMode_ = debug; }
 
 public:
     template <typename T>
-    std::shared_ptr<T> shareObject(const T *searchedObj) const
-    {
-        for (auto obj : objects_)
-        {
-            if (obj.get() == searchedObj)
-            {
-                return std::static_pointer_cast<T>(obj);
-            }
-        }
-
-        return nullptr;
-    }
+    std::shared_ptr<T> shareObject(const T *searchedObj) const;
 
     GameState();
     void addObject(std::shared_ptr<Object> object);
+    bool debugGet() const { return debugMode_; }
     void step(UserIO &userIO);
 };
+
+template <typename T>
+std::shared_ptr<T> GameState::shareObject(const T *searchedObj) const
+{
+    for (auto obj : objects_)
+    {
+        if (obj.get() == searchedObj)
+        {
+            return std::static_pointer_cast<T>(obj);
+        }
+    }
+
+    return nullptr;
+}
 
 #endif

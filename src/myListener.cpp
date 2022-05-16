@@ -18,6 +18,9 @@ void MyListener::BeginContact(b2Contact *contact)
         if (isSensorA)
         {
             // Object goes inside field of view
+            if (game_.debugGet())
+                std::cerr << "object observed\n";
+
             static_cast<Player *>(objA)->objectObserved(static_cast<Object2D *>(objB));
             return;
         }
@@ -27,18 +30,23 @@ void MyListener::BeginContact(b2Contact *contact)
         if (getTandU<Player, Enemy>(objA, objB, isSensorA, isSensorB))
         {
             // killing Player
-            std::cerr << "YOU FOOL YOU DIED\n";
+            if (game_.debugGet())
+                std::cerr << "YOU FOOL YOU DIED\n";
             return;
         }
         else if (getTandU<Player, Item>(objA, objB, isSensorA, isSensorB))
         {
             // item near
+            if (game_.debugGet())
+                std::cerr << "Item contact\n";
+
             static_cast<Player *>(objA)->itemContact(game_.shareObject<Item>(static_cast<Item *>(objB)));
             return;
         }
     }
 
-    std::cerr << "Unindentified collision\n";
+    if (game_.debugGet())
+        std::cerr << "Unindentified collision\n";
 }
 
 void MyListener::EndContact(b2Contact *contact)
@@ -53,6 +61,9 @@ void MyListener::EndContact(b2Contact *contact)
         if (isSensorA)
         {
             // Object goes out of field of view
+            if (game_.debugGet())
+                std::cerr << "object lost\n";
+
             static_cast<Player *>(objA)->objectLost(static_cast<Object2D *>(objB));
             return;
         }
@@ -62,11 +73,15 @@ void MyListener::EndContact(b2Contact *contact)
         if (getTandU<Player, Item>(objA, objB, isSensorA, isSensorB))
         {
             // Player leaving item
+            if (game_.debugGet())
+                std::cerr << "Item lost\n";
+
             static_cast<Player *>(objA)->itemLost();
             return;
         }
 
-        std::cerr << "Unindentified collision end\n";
+        if (game_.debugGet())
+            std::cerr << "Unindentified collision end\n";
     }
 }
 

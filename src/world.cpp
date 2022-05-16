@@ -6,11 +6,6 @@ World::World(b2World &world, unsigned int size, const b2Vec2 &playerPosition)
     (void)world;
     (void)size;
     (void)playerPosition;
-    // for (float i = playerPosition.x - size * Conf::chunkWidth; i < playerPosition.x + size * Conf::chunkWidth; i += Conf::chunkWidth)
-    //     for (float j = playerPosition.y - size * Conf::chunkWidth; j < playerPosition.y + size * Conf::chunkWidth; j += Conf::chunkWidth)
-    //     {
-    //         spawnChunk(world, b2Vec2(i, j));
-    //     }
 }
 
 void World::spawnChunk(b2World &world, const b2Vec2 &position)
