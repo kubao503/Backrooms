@@ -29,7 +29,7 @@ float Ray::RayCallback::ReportFixture(b2Fixture *fixture, const b2Vec2 &point, c
     Object *userData = (Object *)fixture->GetBody()->GetUserData().pointer;
     Object3D *obj = dynamic_cast<Object3D *>(userData);
     if (!obj)
-        return 1.0f; // Continue ray travel
+        return -1.0f; // Continue ray travel
 
     // Gather information about hit
     object_ = obj;
