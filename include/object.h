@@ -1,63 +1,90 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include "shapes.h"  // for shapeIdx_ attribute
-#include "myWorld.h" // needed for creating b2Body
+#include "myMath.h"
+#include "config.h"
 
-#include <memory>     // for b2Body smart pointer
-#include <functional> // for storing fixture calls
+#include <box2d/box2d.h> // for creating body
 
-// DEBUG
-// #include <iostream>
+#include <memory> // for b2Body smart pointer
+#include <map>    // for collition mask
 
+// Collidable
 class Object
 {
 public:
-    enum ObjectType
+    enum class Type
     {
         WALL,
-        WALL2,
+        RED_WALL,
         PLAYER,
         ENEMY,
+        EMF,
+        ITEM_PICK_AREA,
+        CAMERA,
         TOTAL
     };
 
 protected:
-    enum class BodyType
+    enum Category : uint16
     {
-        STATIC,
-        DYNAMIC
+        DEFAULT = 0x0,
+        WALL = 0x1,
+        PLAYER = 0x2,
+        CAMERA = 0x4,
+        ENEMY = 0x8,
+        ITEM = 0x10,
+        ITEM_PICK_AREA = 0x20
     };
 
-    const Shapes::Type shapeIdx_;
+private:
+    static const std::map<Type, Category> categoryMap_;
+    static const std::map<Category, uint16> collisionMask_;
+
+    // Object generating methods
+    static const b2BodyDef &getBodyDef(b2BodyType bodyType);
+    static std::unique_ptr<b2Shape> getShape(float halfX, float halfY);
+    static std::unique_ptr<b2Shape> getShape(float radius);
+    static std::unique_ptr<b2Shape> getShape(float FOVangle, float renderDist, int verticesCount);
+    static const b2FixtureDef &getFixtureDef(std::unique_ptr<b2Shape> shape);
+    // Returns unique position helping avoiding spawning objects at the same place
+    b2Vec2 getNewPosition() const;
+
+    friend class Arguments;
+
+protected:
+    struct Arguments
+    {
+        b2BodyType bodyType_;
+        b2FixtureDef fixDef_;
+        Arguments(b2BodyType bodyType, std::unique_ptr<b2Shape> shape);
+    };
+
+    // Arguments for creating objects
+    static const Arguments argList[static_cast<int>(Type::TOTAL)];
+
     std::unique_ptr<b2Body> body_{nullptr};
 
-    // Returns unique position helping avoiding spawning
-    // objects at the same place
-    b2Vec2 getNewPosition() const;
-    static const b2BodyDef &getBodyDef(BodyType bodyType);
-    static const b2FixtureDef *getFixtureDef(const b2Vec2 &size);
-    static const b2FixtureDef *getFixtureDef(float radius);
+    virtual ~Object()
+    {
+        if (body_)
+            destroyBody();
+    }
+    Object(b2World &world, Type type);
+    Object(b2World &world, Type type, const b2Vec2 &position, float angle);
+    void setBody(b2World &world, Type type, const b2Vec2 &position, float angle);
+    void destroyBody();
 
-    virtual std::unique_ptr<b2Body> createBody(const b2BodyDef &bd, MyWorld &world) const = 0;
-    virtual ~Object() = default;
-
-    Object(ObjectType objectType);
-    // Object(MyWorld &world, Shapes::Type shapeIdx, BodyType bodyType, const b2Vec2 &size);
-    void setBody(MyWorld &world, ObjectType type);
-
-    static const std::function<const b2FixtureDef *()> fixtureCalls[ObjectType::TOTAL];
-    const static constexpr Shapes::Type shapeIdx[ObjectType::TOTAL]{
-        Shapes::WALL, Shapes::RED_WALL, Shapes::PLAYER, Shapes::ENEMY};
-
-    static constexpr BodyType bodyTypes[ObjectType::TOTAL]{
-        BodyType::STATIC, BodyType::STATIC, BodyType::DYNAMIC, BodyType::STATIC};
+    // These functions affect only last created fixture
+    void addFixture(Type type, Category cat, bool sensor = false);
+    void setSensor(bool sensor);
+    void setCollisionFilter(Category category) const;
 
 public:
-    Object(MyWorld &world, ObjectType objectType);
-    Shapes::Type getShapeIdx() const { return shapeIdx_; }
+    bool isSensor() const { return body_->GetFixtureList()->IsSensor(); }
     const b2Vec2 &getPosition() const { return body_->GetPosition(); };
     float getAngle() const { return body_->GetAngle(); };
+    const b2World &getWorld() const { return *body_->GetWorld(); }
 };
 
 #endif

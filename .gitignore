@@ -1,5 +1,8 @@
 *.out
-*.o
 .vscode/
-lib/
 bin/
+lib/
+include/box2d/
+include/SFML/
+Makefile
+*.dll

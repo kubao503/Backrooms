@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp> // for using sf::Shape
 #include "textures.h"        // for setting sf::Texture
+#include "config.h"          // for window size
 
 class Shapes
 {
@@ -11,24 +12,26 @@ public:
     {
         WALL,
         RED_WALL,
-        PLAYER,
         ENEMY,
+        EMF,
+        EMF1,
+        EMF2,
+        EMF3,
+        FLASHLIGHT,
         TOTAL
     };
 
-    static sf::RectangleShape getShape(Type shapeIdx)
-    {
-        if (shapeIdx >= TOTAL)
-            throw "Invalid shapeIdx\n";
-        return shapes_[shapeIdx];
-    }
+    static sf::RectangleShape getShape(Type shapeIdx, float offset = 0.0f);
 
     // Adds textures to some shapes
     static void init();
 
 private:
     static sf::RectangleShape shapes_[Type::TOTAL];
-    static sf::RectangleShape shapeGenerator(const sf::Vector2f &size, sf::Color color);
+
+    static void scaleBasedOnScreen(sf::Shape &shape);
+    static void makeFullScreen(sf::RectangleShape &shape);
+    static sf::RectangleShape shapeGenerator(const sf::Vector2f &size, sf::Color color, bool fullScreen = false);
 };
 
 #endif

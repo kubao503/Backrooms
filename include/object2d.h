@@ -1,15 +1,12 @@
 #ifndef OBJECT_2D_H
 #define OBJECT_2D_H
 
-#include "object.h"     // for inheriting from Object
+#include "drawableObject.h" // for inheriting from Object
 
-class Object2D : public Object
+class Object2D : public DrawableObject
 {
-private:
-    std::unique_ptr<b2Body> createBody(const b2BodyDef &bd, MyWorld &world) const override;
-
 public:
-    Object2D(MyWorld &world, ObjectType type);
+    Object2D(b2World &world, Type type, const b2Vec2 &position, float angle);
 };
 
 #endif
