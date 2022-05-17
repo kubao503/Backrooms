@@ -18,6 +18,7 @@ public:
         EMF2,
         EMF3,
         FLASHLIGHT,
+        BACKGROUND,
         TOTAL
     };
 

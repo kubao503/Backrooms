@@ -34,6 +34,7 @@ private:
     static void drawObjects2D(UserIO &userIO, bool debug, const Player &player);
     static void drawItems(UserIO &userIO, const Player &player);
     static void postFx(UserIO &userIO);
+    static void background(UserIO &userIO);
 
 public:
     // Casts multiple rays to show them as image on the screen
