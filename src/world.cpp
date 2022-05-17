@@ -1,11 +1,27 @@
 #include "world.h"
 #include <iostream>
 
+/**
+ * @brief
+ * Spawns chunk in given position
+ *
+ * @param world
+ * World in which the chunk will be spawned
+ * @param position
+ * Position of to be spawned chunk
+ */
 void World::spawnChunk(b2World &world, const b2Vec2 &position)
 {
     chunks[position] = std::make_unique<Chunk>(world, position);
 }
 
+/**
+ * @brief
+ * Removes chunk from given position
+ *
+ * @param position
+ * Position of to be removed chunk
+ */
 void World::removeChunk(const b2Vec2 &position)
 {
     b2Vec2 foundPosition = closestChunk(position);
@@ -14,11 +30,23 @@ void World::removeChunk(const b2Vec2 &position)
         chunks.erase(foundPosition);
 }
 
+/**
+ * @brief
+ * Removes all chunks
+ */
 void World::clear()
 {
     chunks.clear();
 }
 
+/**
+ * @brief
+ * Renders chunks in render distance field and removes unrendered chunks
+ * @param world
+ * World with chunks that will be altered
+ * @param playerPosition
+ * Position of player, from whom will be calculated distance to surrounding chunks
+ */
 void World::draw(b2World &world, const b2Vec2 &playerPosition)
 {
     int normalizedX = round(playerPosition.x / Conf::chunkWidth) * Conf::chunkWidth;
@@ -50,6 +78,14 @@ void World::draw(b2World &world, const b2Vec2 &playerPosition)
     }
 }
 
+/**
+ * @brief
+ * Returns closest chunk's position to a given position
+ *
+ * @param position
+ * @return b2Vec2
+ * Position of closest chunk (INF, INF if chunk does not exist)
+ */
 b2Vec2 World::closestChunk(const b2Vec2 &position) const
 {
     int normalizedX = round(position.x / Conf::chunkWidth) * Conf::chunkWidth;
@@ -66,6 +102,18 @@ b2Vec2 World::closestChunk(const b2Vec2 &position) const
     }
     return b2Vec2(INFINITY, INFINITY);
 }
+
+/**
+ * @brief
+ * Returns random neighbouring chunk which we can access from given position
+ *
+ * @param position
+ * @param prefDirection
+ * Disables randomizing if possible (chunk is accessible)
+ *
+ * @return b2Vec2
+ * Returns chunk's position (INF, INF if chunk does not exist)
+ */
 
 b2Vec2 World::openChunk(const b2Vec2 &position, Directions &prefDirection) const
 {
