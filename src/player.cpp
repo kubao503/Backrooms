@@ -46,8 +46,8 @@ void Player::move()
     newVelocity.Normalize();
     newVelocity *= LINEAR_VELOCITY;
 
-    // Sprint
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift))
+    // Sprint only when going forward
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) && sf::Keyboard::isKeyPressed(sf::Keyboard::W))
     {
         newVelocity *= SPRINT_MULTIPLIER;
     }

@@ -3,6 +3,7 @@
 Enemy::Enemy(b2World &world, b2Vec2 position, float angle)
     : Object2D{world, Type::ENEMY, position, angle}
 {
+    // Start without hunt
     stopHunt();
 }
 
