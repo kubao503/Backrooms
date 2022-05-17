@@ -14,6 +14,8 @@ namespace Conf
     inline constexpr unsigned int windowWidth{1600};
     inline constexpr unsigned int windowHeight{900};
 
+    inline constexpr double huntDuration{5.0};
+
     // Simulation parameters
     inline constexpr float timeStep = 1.0f / 60.0f; // Step of time between events
     inline constexpr int32 velocityIterations = 4;  // Velocity calculations during one step

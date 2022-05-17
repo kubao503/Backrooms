@@ -1,5 +1,11 @@
 #include "enemy.h"
 
+Enemy::Enemy(b2World &world, b2Vec2 position, float angle)
+    : Object2D{world, Type::ENEMY, position, angle}
+{
+    stopHunt();
+}
+
 void Enemy::setVelocity()
 {
     // Set velocity to waypoints location
@@ -16,6 +22,9 @@ void Enemy::updateWaypoint(const b2Vec2 &playerPos, const World &gameMap, bool d
     {
         // If player is visible for enemy set waypoint to the player positioin
         waypoint_ = playerPos;
+
+        // Make hunt longer
+        huntTimer_.reset();
     }
     else if (distance(getPosition(), waypoint_) < 0.01)
     {
@@ -26,20 +35,33 @@ void Enemy::updateWaypoint(const b2Vec2 &playerPos, const World &gameMap, bool d
     }
 }
 
+void Enemy::updateHuntTimer()
+{
+    if (huntTimer_.elapsed() > Conf::huntDuration)
+        stopHunt();
+}
+
 void Enemy::control(const b2Vec2 &playerPos, const World &gameMap, bool debug)
 {
     if (spawned_)
     {
         updateWaypoint(playerPos, gameMap, debug);
         setVelocity();
+        updateHuntTimer();
     }
 }
 
 void Enemy::startHunt(b2World &world, const Object &player)
 {
-    spawned_ = true;
-    b2Vec2 offset(1.0f, 0.0f); // Needed to not spawn enemy directly on player
-    setBody(world, Type::ENEMY, player.getPosition() + offset, 0.0f);
+    // Check if there isn't hunt already
+    if (!spawned_)
+    {
+        spawned_ = true;
+        b2Vec2 offset(Conf::chunkWidth, 0.0f); // Needed to not spawn enemy directly on player
+        setBody(world, Type::ENEMY, player.getPosition() + offset, 0.0f);
+
+        huntTimer_.reset();
+    }
 }
 
 void Enemy::stopHunt()

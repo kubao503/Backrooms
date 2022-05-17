@@ -13,8 +13,14 @@ void Emf::drop(b2World &world, const Object &player)
 
 void Emf::action(const b2Vec2 &playerPos)
 {
+    // Set default emf state
+    GUIShapeIdx_ = emfShapes_.at(0);
+
     // Updating emf state
-    float distanceToEnemy{distance(playerPos, enemy_.getPosition())};
-    int stateIdx{static_cast<int>((1.f - statesNumber) / detectionRadius * distanceToEnemy + statesNumber)};
-    GUIShapeIdx_ = emfShapes_.at(std::max(0, stateIdx));
+    if (enemy_.spawned())
+    {
+        float distanceToEnemy{distance(playerPos, enemy_.getPosition())};
+        int stateIdx{static_cast<int>((1.f - statesNumber) / detectionRadius * distanceToEnemy + statesNumber)};
+        GUIShapeIdx_ = emfShapes_.at(std::max(0, stateIdx));
+    }
 }

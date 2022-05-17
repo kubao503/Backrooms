@@ -25,6 +25,12 @@ void GameState::debugUpdate(UserIO &userIO)
         debugSet(!debugGet());
 }
 
+void GameState::huntUpdate()
+{
+    if (gameMap_.isHunt(player_.getPosition()))
+        enemy_.startHunt(world_, player_);
+}
+
 void GameState::gameOver()
 {
     isOver_ = true;
@@ -53,5 +59,5 @@ void GameState::step(UserIO &userIO)
     enemy_.control(player_.getPosition(), gameMap_, debugGet());
 
     debugUpdate(userIO);
-
+    huntUpdate();
 }

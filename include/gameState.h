@@ -30,6 +30,7 @@ class GameState
 
     void debugUpdate(UserIO &userIO);
     void debugSet(bool debug) { debugMode_ = debug; }
+    void huntUpdate();
 
 public:
     template <typename T>
