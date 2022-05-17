@@ -1,6 +1,14 @@
 #include "world.h"
 #include <iostream>
 
+b2Vec2 World::normalizeChunkPosition(b2Vec2 position) const
+{
+    position.x = round(position.x / Conf::chunkWidth) * Conf::chunkWidth;
+    position.y = round(position.y / Conf::chunkWidth) * Conf::chunkWidth;
+
+    return position;
+};
+
 /**
  * @brief
  * Spawns chunk in given position
@@ -49,13 +57,12 @@ void World::clear()
  */
 void World::draw(b2World &world, const b2Vec2 &playerPosition)
 {
-    int normalizedX = round(playerPosition.x / Conf::chunkWidth) * Conf::chunkWidth;
-    int normalizedY = round(playerPosition.y / Conf::chunkWidth) * Conf::chunkWidth;
+    b2Vec2 normalizedPosition = normalizeChunkPosition(playerPosition);
 
     float renderFactor = 1.5;
 
-    for (float i = normalizedX - Conf::renderDistance * renderFactor; i < normalizedX + Conf::renderDistance * renderFactor; i += Conf::chunkWidth)
-        for (float j = normalizedY - Conf::renderDistance * renderFactor; j < normalizedY + Conf::renderDistance * renderFactor; j += Conf::chunkWidth)
+    for (float i = normalizedPosition.x - Conf::renderDistance * renderFactor; i < normalizedPosition.x + Conf::renderDistance * renderFactor; i += Conf::chunkWidth)
+        for (float j = normalizedPosition.y - Conf::renderDistance * renderFactor; j < normalizedPosition.y + Conf::renderDistance * renderFactor; j += Conf::chunkWidth)
         {
             try
             {
@@ -80,7 +87,7 @@ void World::draw(b2World &world, const b2Vec2 &playerPosition)
 
 bool World::isHunt(const b2Vec2 &position) const
 {
-    b2Vec2 chunkPosition = closestChunk(position);
+    b2Vec2 chunkPosition = normalizeChunkPosition(position);
 
     try
     {
@@ -102,9 +109,7 @@ bool World::isHunt(const b2Vec2 &position) const
  */
 b2Vec2 World::closestChunk(const b2Vec2 &position) const
 {
-    int normalizedX = round(position.x / Conf::chunkWidth) * Conf::chunkWidth;
-    int normalizedY = round(position.y / Conf::chunkWidth) * Conf::chunkWidth;
-    b2Vec2 chunkPosition = b2Vec2(normalizedX, normalizedY);
+    b2Vec2 chunkPosition = normalizeChunkPosition(position);
 
     try
     {

@@ -10,6 +10,7 @@ class World
 {
 private:
     std::map<b2Vec2, std::unique_ptr<Chunk>> chunks;
+    b2Vec2 normalizeChunkPosition(b2Vec2 position) const;
 
 public:
     enum Directions
