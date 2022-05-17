@@ -20,6 +20,7 @@ public:
         E = 2
     };
 
+    World() = default;
     World(int seed) { Chunk::chunkGenerator.setBaseSeed(seed); };
     void clear();
     void draw(b2World &world, const b2Vec2 &playerPosition);
