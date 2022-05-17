@@ -6,14 +6,13 @@
 namespace Conf
 {
     inline constexpr float FOVangle{PI / 2.5f};
-    inline constexpr float renderDistance{40.0f};
+    inline constexpr float renderDistance{60.0f};
     inline constexpr float chunkWidth{10.0f};
     inline constexpr float bigChunkWidth{300.0f};
     inline constexpr float wallWidth{2.0f};
 
     inline constexpr unsigned int windowWidth{1600};
     inline constexpr unsigned int windowHeight{900};
-
 
     // Simulation parameters
     inline constexpr float timeStep = 1.0f / 60.0f; // Step of time between events
