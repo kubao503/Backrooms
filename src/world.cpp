@@ -78,6 +78,22 @@ void World::draw(b2World &world, const b2Vec2 &playerPosition)
     }
 }
 
+bool World::isHunt(const b2Vec2 &position) const
+{
+    int normalizedX = round(position.x / Conf::chunkWidth) * Conf::chunkWidth;
+    int normalizedY = round(position.y / Conf::chunkWidth) * Conf::chunkWidth;
+    b2Vec2 chunkPosition = b2Vec2(normalizedX, normalizedY);
+
+    try
+    {
+        return chunks.at(chunkPosition).get()->isHunt();
+    }
+    catch (const std::out_of_range &exception)
+    {
+    }
+    return false;
+}
+
 /**
  * @brief
  * Returns closest chunk's position to a given position
