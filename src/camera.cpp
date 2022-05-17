@@ -131,10 +131,16 @@ void Camera::postFx(UserIO &userIO)
     userIO.drawOnScreen(Shapes::FLASHLIGHT);
 }
 
+void Camera::background(UserIO &userIO)
+{
+    userIO.drawOnScreen(Shapes::BACKGROUND);
+}
+
 void Camera::drawViewOnScreen(UserIO &userIO, bool debug, const Player &player)
 {
     userIO.start(); // Start frame drawing
 
+    background(userIO);
     drawObjects3D(userIO, debug, player);
     drawObjects2D(userIO, debug, player);
     if (!debug) postFx(userIO);

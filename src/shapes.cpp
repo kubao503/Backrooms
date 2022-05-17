@@ -8,7 +8,8 @@ sf::RectangleShape Shapes::shapes_[Type::TOTAL]{
     shapeGenerator(sf::Vector2f(1864.0f, 1051.0f), sf::Color::White, true),
     shapeGenerator(sf::Vector2f(1864.0f, 1051.0f), sf::Color::White, true),
     shapeGenerator(sf::Vector2f(1864.0f, 1051.0f), sf::Color::White, true),
-    shapeGenerator(sf::Vector2f(1920.0f, 1080.0f), sf::Color::White, true)};
+    shapeGenerator(sf::Vector2f(1920.0f, 1080.0f), sf::Color::White, true),
+    shapeGenerator(sf::Vector2f(1777.0f, 1000.0f), sf::Color::White, true)};
 
 sf::RectangleShape Shapes::getShape(Type shapeIdx, float offset)
 {
@@ -38,6 +39,7 @@ void Shapes::init()
     shapes_[EMF2].setTexture(&Textures::getTexture(Textures::EMF2));
     shapes_[EMF3].setTexture(&Textures::getTexture(Textures::EMF3));
     shapes_[FLASHLIGHT].setTexture(&Textures::getTexture(Textures::FLASHLIGHT));
+    shapes_[BACKGROUND].setTexture(&Textures::getTexture(Textures::BACKGROUND));
 }
 
 void Shapes::scaleBasedOnScreen(sf::Shape &shape)
