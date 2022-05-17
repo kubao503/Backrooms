@@ -19,13 +19,12 @@ class GameState
     bool isOver_{false};
     bool debugMode_{false};
 
-    std::set<std::shared_ptr<Object>> objects_;
-
     // Creating world without gravity
     b2World world_{b2Vec2(0.0f, 0.0f)};
     World gameMap_;
     MyListener listener_;
 
+    std::set<std::shared_ptr<Object>> objects_;
     Player player_;
     Enemy enemy_;
 
