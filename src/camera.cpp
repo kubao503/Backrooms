@@ -36,11 +36,7 @@ void Camera::draw3DRay(UserIO &userIO, bool debug, float angle, const Ray::RayCa
     static const float maxCordX{tan(Conf::FOVangle / 2.0f)};
 
     // float flashlightFrac{0.1f * adjacentDistance * static_cast<float>(sqrt(std::max(0.0, 1.0f - pow(angle * 4.0f, 2))))};
-<<<<<<< Updated upstream
-    userIO.drawOnScreen(callback.getShapeIdx(), tan(angle) / maxCordX, 0.0f, scale.first, scale.second, dimFactor, rayNumber); //, flashlightFrac);
-=======
     userIO.drawOnScreen(callback.getShapeIdx(), tan(angle) / maxCordX, 0.0f, scale.first, scale.second, dimFactor, rayNumber, false);
->>>>>>> Stashed changes
 }
 
 void Camera::draw2DRay(UserIO &userIO, bool debug, float angle, const Ray::RayCallback &callback, float distance)
@@ -52,11 +48,7 @@ void Camera::draw2DRay(UserIO &userIO, bool debug, float angle, const Ray::RayCa
     float dimFactor = debug ? 1.0f : distDimFactor(adjacentDistance);
 
     static const float maxCordX{tan(Conf::FOVangle / 2.0f)};
-<<<<<<< Updated upstream
-    userIO.drawOnScreen(callback.getShapeIdx(), tan(angle) / maxCordX, 0.0f, scale.first, scale.second, dimFactor);
-=======
-    userIO.drawOnScreen(callback.getShapeIdx(), tan(angle) / maxCordX, 0.0f, scale.first, scale.second, 1.0f, 0.0f, false);
->>>>>>> Stashed changes
+    userIO.drawOnScreen(callback.getShapeIdx(), tan(angle) / maxCordX, 0.0f, scale.first, scale.second, dimFactor, 0.0f, false);
 }
 
 bool Camera::ifInFieldOfView(const Object &camera, const Object &object)
@@ -131,12 +123,12 @@ void Camera::drawObjects2D(UserIO &userIO, bool debug, const Player &player)
 void Camera::drawItems(UserIO &userIO, const Player &player)
 {
     if (player.getOwnedItems().size())
-        userIO.drawOnScreen(player.getCurrentItem()->getGUIShapeIdx());
+        userIO.drawOnScreen(player.getCurrentItem()->getGUIShapeIdx(), 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, false);
 }
 
 void Camera::postFx(UserIO &userIO)
 {
-    userIO.drawOnScreen(Shapes::FLASHLIGHT);
+    userIO.drawOnScreen(Shapes::FLASHLIGHT, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, false);
 }
 
 void Camera::background(UserIO &userIO)
@@ -148,21 +140,11 @@ void Camera::drawViewOnScreen(UserIO &userIO, bool debug, const Player &player)
 {
     userIO.start(); // Start frame drawing
 
-<<<<<<< Updated upstream
     background(userIO);
     drawObjects3D(userIO, debug, player);
     drawObjects2D(userIO, debug, player);
     if (!debug) postFx(userIO);
     drawItems(userIO, player);
-=======
-
-    userIO.drawOnScreen(Shapes::BACKGROUND);
-    drawObjects3D(userIO, player);
-    // drawObjects2D(userIO, player);
-    // drawItems(userIO, player);
-
-    (void)player;
->>>>>>> Stashed changes
 
     userIO.end(); // Display ray on screen
 }

@@ -20,7 +20,10 @@ void UserIO::drawOnScreen(Shapes::Type shapeIdx, float x, float y, float xScale,
     shape.setPosition(size.x / 2.0f * (x + 1.0f), size.y / 2.0f * (y + 1.0f));
 
     if (shader)
-        window_.draw(shape, &shaper)
+    {
+        shader_.setUniform("renderDist", Conf::renderDistance);
+        window_.draw(shape, &shader_);
+    }
     else
         window_.draw(shape);
 }

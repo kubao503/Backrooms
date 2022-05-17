@@ -6,6 +6,10 @@
 
 int main()
 {
+    if (!sf::Shader::isAvailable())
+    {
+        std::cerr << "Shader not available\n";
+    }
     // Loading textures
     if (!Textures::init())
     {

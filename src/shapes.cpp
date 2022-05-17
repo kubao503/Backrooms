@@ -38,12 +38,8 @@ void Shapes::init()
     shapes_[EMF1].setTexture(&Textures::getTexture(Textures::EMF1));
     shapes_[EMF2].setTexture(&Textures::getTexture(Textures::EMF2));
     shapes_[EMF3].setTexture(&Textures::getTexture(Textures::EMF3));
-<<<<<<< Updated upstream
     shapes_[FLASHLIGHT].setTexture(&Textures::getTexture(Textures::FLASHLIGHT));
     shapes_[BACKGROUND].setTexture(&Textures::getTexture(Textures::BACKGROUND));
-=======
-    shapes_[BACKGROUND].setTexture(&Textures::getTexture(Textures::EMF));
->>>>>>> Stashed changes
 }
 
 void Shapes::scaleBasedOnScreen(sf::Shape &shape)

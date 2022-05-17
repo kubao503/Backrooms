@@ -17,12 +17,19 @@ private:
 
     sf::Color dimColor(const sf::Color &color, float dimFactor);
 
+    sf::Shader shader_;
+
 public:
     UserIO(const std::string &title)
     {
         getMouseXMovement();
         window_.create(sf::VideoMode(Conf::windowWidth, Conf::windowHeight), title);
         window_.setMouseCursorVisible(false);
+
+        if (!shader_.loadFromFile("media/shader.frag", sf::Shader::Fragment))
+        {
+            std::cerr << "Unbale to load shader\n";
+        }
     }
 
     // The 0, 0 coordinate coresponds to the center of the screen
