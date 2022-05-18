@@ -21,7 +21,7 @@ private:
     const Enemy &enemy_;
 
 public:
-    Emf(b2World &world, const b2Vec2 &position, float angle, const Enemy &enemy);
+    Emf(b2World &world, const b2Vec2 &position, float angle, Mediator& mediator, const Enemy &enemy);
     void drop(b2World &world, const Object &player) override;
 
     void action(const b2Vec2 &playerPos) override;

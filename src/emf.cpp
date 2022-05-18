@@ -1,7 +1,7 @@
 #include "emf.h"
 
-Emf::Emf(b2World &world, const b2Vec2 &position, float angle, const Enemy &enemy)
-    : Item{world, Type::EMF, emfShapes_[0], position, angle}, enemy_{enemy} {}
+Emf::Emf(b2World &world, const b2Vec2 &position, float angle, Mediator& mediator, const Enemy &enemy)
+    : Item{world, Type::EMF, position, angle, emfShapes_[0], mediator}, enemy_{enemy} {}
 
 void Emf::drop(b2World &world, const Object &player)
 {

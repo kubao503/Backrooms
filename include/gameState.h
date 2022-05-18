@@ -9,12 +9,13 @@
 #include "myListener.h" // for listening collisions
 #include "world.h"
 #include "camera.h" // for drawing view
+#include "mediator.h"   // for inheritance
 
 #include <set> // for string objects
 
 class UserIO;
 
-class GameState
+class GameState : public Mediator
 {
     bool isOver_{false};
     bool debugMode_{false};
@@ -31,6 +32,8 @@ class GameState
     void debugUpdate(UserIO &userIO);
     void debugSet(bool debug) { debugMode_ = debug; }
     void huntUpdate();
+
+    void notify(const Component &comp, Event event) override;
 
 public:
     template <typename T>

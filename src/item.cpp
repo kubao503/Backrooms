@@ -1,7 +1,7 @@
 #include "item.h"
 
-Item::Item(b2World &world, Type type, Shapes::Type GUIShapeIdx, const b2Vec2 &position, float angle)
-    : Object2D{world, type, position, angle}, GUIShapeIdx_{GUIShapeIdx}
+Item::Item(b2World &world, Type type, const b2Vec2 &position, float angle, Shapes::Type GUIShapeIdx, Mediator &mediator)
+    : Object2D{world, type, position, angle}, Component{mediator}, GUIShapeIdx_{GUIShapeIdx}
 {
     setSensor(true);
 

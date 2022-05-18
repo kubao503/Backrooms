@@ -1,14 +1,14 @@
 #include "gameState.h"
 
 GameState::GameState()
-    : listener_{*this},
+    : listener_{*this, debugMode_},
       player_{world_, {0.f, 0.f}, 0.f},
       enemy_{world_, {Conf::chunkWidth, 0.f}, 0.f}
 {
     // Setting contact listener
     world_.SetContactListener(&listener_);
 
-    addObject(std::make_shared<Emf>(world_, b2Vec2(0.0f, -10.0f), 0.0f, enemy_));
+    addObject(std::make_shared<Emf>(world_, b2Vec2(0.0f, -10.0f), 0.0f, *this, enemy_));
 }
 
 void GameState::addObject(std::shared_ptr<Object> object)
@@ -29,6 +29,20 @@ void GameState::huntUpdate()
 {
     if (gameMap_.isHunt(player_.getPosition()))
         enemy_.startHunt(world_, player_);
+}
+
+void GameState::notify(const Component &comp, Event event)
+{
+    // handling notifications
+    switch (event)
+    {
+    case Mediator::ITEM_CONTACT:
+        player_.itemContact(shareObject(static_cast<const Item *>(&comp))); break;
+    case Mediator::GAMEOVER:
+        gameOver(); break;
+    default:
+        break;
+    }
 }
 
 void GameState::gameOver()
