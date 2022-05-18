@@ -32,4 +32,8 @@ std::pair<b2Vec2, b2Vec2> Object3D::getClosestCorner(const b2Vec2 &playerPos) co
 }
 
 Object3D::Object3D(b2World &world, Type type, const b2Vec2 &position, float angle)
-    : DrawableObject{world, type, position, angle} {}
+    : DrawableObject{world, type, position, angle} {
+        // Object3D has user data on their fixture
+        // to speed up Object3D recognision
+        body_->GetFixtureList()->GetUserData().pointer = (uintptr_t)this;
+    }
