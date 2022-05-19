@@ -59,30 +59,28 @@ void World::draw(b2World &world, const b2Vec2 &playerPosition, Mediator &mediato
 {
     b2Vec2 normalizedPosition = normalizeChunkPosition(playerPosition);
 
-    float renderFactor = 1.5;
+    float removeFactor = Conf::renderDistance * 2;
+    float renderFactor = Conf::renderDistance * 1.5;
 
-    for (float i = normalizedPosition.x - Conf::renderDistance * renderFactor; i < normalizedPosition.x + Conf::renderDistance * renderFactor; i += Conf::chunkWidth)
-        for (float j = normalizedPosition.y - Conf::renderDistance * renderFactor; j < normalizedPosition.y + Conf::renderDistance * renderFactor; j += Conf::chunkWidth)
+    for (float i = normalizedPosition.x - removeFactor - 1; i < normalizedPosition.x + removeFactor + 1; i += Conf::chunkWidth)
+        for (float j = normalizedPosition.y - removeFactor - 1; j < normalizedPosition.y + removeFactor + 1; j += Conf::chunkWidth)
         {
             try
             {
                 chunks.at(b2Vec2(i, j));
+
+                if (i < normalizedPosition.x - removeFactor || i > normalizedPosition.x + removeFactor)
+                    chunks.erase(b2Vec2(i, j));
+                if (j < normalizedPosition.y - removeFactor || j > normalizedPosition.y + removeFactor)
+                    chunks.erase(b2Vec2(i, j));
             }
             catch (const std::out_of_range &exception)
             {
-                spawnChunk(world, b2Vec2(i, j), mediator);
+                if (i >= normalizedPosition.x - renderFactor || i <= normalizedPosition.x + renderFactor)
+                    if (j >= normalizedPosition.y - renderFactor || j <= normalizedPosition.y + renderFactor)
+                        spawnChunk(world, b2Vec2(i, j), mediator);
             }
         }
-
-    for (auto it = chunks.begin(); it != chunks.end();)
-    {
-        b2Vec2 distance = it->second.get()->getPosition() - playerPosition;
-
-        if (distance.Length() > Conf::renderDistance * renderFactor)
-            it = chunks.erase(it);
-        else
-            ++it;
-    }
 }
 
 bool World::isHunt(const b2Vec2 &position) const

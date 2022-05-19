@@ -68,7 +68,7 @@ void Camera::drawObjects3D(UserIO &userIO, bool debug, const Player &player)
 {
     // Angle between casted rays
     constexpr float angleChange{Conf::FOVangle / raysNumber_};
-    Object *lastObject{nullptr};             // Last drawn object
+    const Object3D *lastObject{nullptr};             // Last drawn object
     std::pair<b2Vec2, b2Vec2> objectCorners; // Corner of this object
 
     // Cast a rays in many directions
@@ -76,7 +76,8 @@ void Camera::drawObjects3D(UserIO &userIO, bool debug, const Player &player)
     for (float angle{-Conf::FOVangle / 2.0f}; angle <= Conf::FOVangle / 2.0f; angle += angleChange)
     {
         // Rays can only hit Object3Ds
-        Ray::RayCallback rayCallback = Ray::sendRay(player.getWorld(), player.getPosition(), angle + player.getAngle(), Conf::renderDistance);
+        Ray::RayCallback rayCallback;
+        Ray::sendRay(rayCallback, player.getWorld(), player.getPosition(), angle + player.getAngle(), Conf::renderDistance);
 
         if (rayCallback.hit())
         {
@@ -84,7 +85,7 @@ void Camera::drawObjects3D(UserIO &userIO, bool debug, const Player &player)
             {
                 // Start drawing texture from begining
                 lastObject = rayCallback.getObject();
-                objectCorners = static_cast<Object3D *>(rayCallback.getObject())->getClosestCorner(player.getPosition());
+                objectCorners = rayCallback.getObject()->getClosestCorner(player.getPosition());
             }
 
             bool leftSide{b2Cross(getVec(player.getPosition(), rayCallback.getHitPoint()), getVec(player.getPosition(), objectCorners.second)) < 0.0f};
@@ -101,7 +102,9 @@ void Camera::drawObjects2D(UserIO &userIO, bool debug, const Player &player)
         // Drawing Object2D
         // Send a ray in the object2D's this direction
         b2Vec2 ray{getVec(player.getPosition(), object2D->getPosition())};
-        Ray::RayCallback rayCallback = Ray::sendRay(player.getWorld(), player.getPosition(), ray);
+
+        Ray::RayCallback rayCallback;
+        Ray::sendRay(rayCallback, player.getWorld(), player.getPosition(), ray);
 
         if (!rayCallback.hit())
         {
@@ -128,12 +131,12 @@ void Camera::drawItems(UserIO &userIO, const Player &player)
 
 void Camera::postFx(UserIO &userIO)
 {
-    userIO.drawOnScreen(Shapes::FLASHLIGHT);
+    userIO.drawOnScreen(Image::FLASHLIGHT);
 }
 
 void Camera::background(UserIO &userIO)
 {
-    userIO.drawOnScreen(Shapes::BACKGROUND);
+    userIO.drawOnScreen(Image::BACKGROUND);
 }
 
 void Camera::drawViewOnScreen(UserIO &userIO, bool debug, const Player &player)
@@ -143,7 +146,8 @@ void Camera::drawViewOnScreen(UserIO &userIO, bool debug, const Player &player)
     background(userIO);
     drawObjects3D(userIO, debug, player);
     drawObjects2D(userIO, debug, player);
-    if (!debug) postFx(userIO);
+    if (!debug)
+        postFx(userIO);
     drawItems(userIO, player);
 
     userIO.end(); // Display ray on screen

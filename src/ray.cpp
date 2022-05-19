@@ -1,18 +1,15 @@
 #include "ray.h"
 
-Ray::RayCallback Ray::sendRay(const b2World &world, const b2Vec2 &cameraPosition, const b2Vec2 &ray)
+inline void Ray::sendRay(RayCallback &callback, const b2World &world, const b2Vec2 &cameraPosition, const b2Vec2 &ray)
 {
-    RayCallback rayCallback;
-
     // Changing direction of vector in callback
-    rayCallback.ray_ = -ray;
+    callback.ray_ = -ray;
 
     // Casting a Box2D ray
-    world.RayCast(&rayCallback, cameraPosition, cameraPosition + ray);
-    return rayCallback;
+    world.RayCast(&callback, cameraPosition, cameraPosition + ray);
 }
 
-Ray::RayCallback Ray::sendRay(const b2World &world, const b2Vec2 &cameraPosition, float angle, float length)
+void Ray::sendRay(RayCallback &callback, const b2World &world, const b2Vec2 &cameraPosition, float angle, float length)
 {
     // Calculate ray
     b2Vec2 ray{getVec(angle)};
@@ -20,14 +17,13 @@ Ray::RayCallback Ray::sendRay(const b2World &world, const b2Vec2 &cameraPosition
     ray *= length;
 
     // Send ray in a given direction
-    return sendRay(world, cameraPosition, ray);
+    sendRay(callback, world, cameraPosition, ray);
 }
 
 float Ray::RayCallback::ReportFixture(b2Fixture *fixture, const b2Vec2 &point, const b2Vec2 &normal, float fraction)
 {
     // Non-zero userData pointer means that's Object3D
-    Object *userData = (Object *)fixture->GetBody()->GetUserData().pointer;
-    Object3D *obj = dynamic_cast<Object3D *>(userData);
+    const Object3D *obj = (Object3D *)fixture->GetUserData().pointer;
     if (!obj)
         return -1.0f; // Continue ray travel
 
