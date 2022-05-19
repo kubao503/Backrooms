@@ -1,8 +1,8 @@
 #include "drawableObject.h"
 
-std::map<Object::Type, Shapes::Type> DrawableObject::shapesMap_{
-    {Type::WALL, Shapes::WALL},
-    {Type::RED_WALL, Shapes::RED_WALL},
-    {Type::ENEMY, Shapes::ENEMY},
-    {Type::EMF, Shapes::ENEMY}
+std::map<Object::Type, Image::Type> DrawableObject::shapesMap_{
+    {Type::WALL, Image::WALL},
+    {Type::RED_WALL, Image::RED_WALL},
+    {Type::ENEMY, Image::ENEMY},
+    {Type::EMF, Image::ENEMY}
 };

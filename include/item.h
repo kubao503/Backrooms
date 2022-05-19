@@ -6,14 +6,14 @@
 class Item : public Object2D
 {
 protected:
-    Shapes::Type GUIShapeIdx_;
+    Image::Type GUIShapeIdx_;
 
 public:
     using Object::destroyBody;
 
-    Shapes::Type getGUIShapeIdx() const { return GUIShapeIdx_; }
+    Image::Type getGUIShapeIdx() const { return GUIShapeIdx_; }
 
-    Item(b2World &world, Type type, Shapes::Type GUIShapeIdx, const b2Vec2 &position, float angle);
+    Item(b2World &world, Type type, Image::Type GUIShapeIdx, const b2Vec2 &position, float angle);
 
     virtual void action(const b2Vec2 &playerPos) = 0;
     virtual void drop(b2World &world, const Object &player) = 0;

@@ -131,12 +131,12 @@ void Camera::drawItems(UserIO &userIO, const Player &player)
 
 void Camera::postFx(UserIO &userIO)
 {
-    userIO.drawOnScreen(Shapes::FLASHLIGHT);
+    userIO.drawOnScreen(Image::FLASHLIGHT);
 }
 
 void Camera::background(UserIO &userIO)
 {
-    userIO.drawOnScreen(Shapes::BACKGROUND);
+    userIO.drawOnScreen(Image::BACKGROUND);
 }
 
 void Camera::drawViewOnScreen(UserIO &userIO, bool debug, const Player &player)

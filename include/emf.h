@@ -12,11 +12,11 @@ class Emf : public Item
 private:
     static constexpr float detectionRadius{50.0f};
     static constexpr unsigned int statesNumber{4};
-    static constexpr std::array<Shapes::Type, statesNumber> emfShapes_{
-        Shapes::EMF,
-        Shapes::EMF1,
-        Shapes::EMF2,
-        Shapes::EMF3};
+    static constexpr std::array<Image::Type, statesNumber> emfShapes_{
+        Image::EMF,
+        Image::EMF1,
+        Image::EMF2,
+        Image::EMF3};
     // bool on_{false};
     const Enemy &enemy_;
 
