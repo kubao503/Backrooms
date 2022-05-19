@@ -146,7 +146,8 @@ void Camera::drawViewOnScreen(UserIO &userIO, bool debug, const Player &player)
     background(userIO);
     drawObjects3D(userIO, debug, player);
     drawObjects2D(userIO, debug, player);
-    if (!debug) postFx(userIO);
+    if (!debug)
+        postFx(userIO);
     drawItems(userIO, player);
 
     userIO.end(); // Display ray on screen
