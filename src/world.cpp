@@ -18,9 +18,9 @@ b2Vec2 World::normalizeChunkPosition(b2Vec2 position) const
  * @param position
  * Position of to be spawned chunk
  */
-void World::spawnChunk(b2World &world, const b2Vec2 &position)
+void World::spawnChunk(b2World &world, const b2Vec2 &position, Mediator &mediator)
 {
-    chunks[position] = std::make_unique<Chunk>(world, position);
+    chunks[position] = std::make_unique<Chunk>(world, position, mediator);
 }
 
 /**
@@ -55,7 +55,7 @@ void World::clear()
  * @param playerPosition
  * Position of player, from whom will be calculated distance to surrounding chunks
  */
-void World::draw(b2World &world, const b2Vec2 &playerPosition)
+void World::draw(b2World &world, const b2Vec2 &playerPosition, Mediator &mediator)
 {
     b2Vec2 normalizedPosition = normalizeChunkPosition(playerPosition);
 
@@ -70,7 +70,7 @@ void World::draw(b2World &world, const b2Vec2 &playerPosition)
             }
             catch (const std::out_of_range &exception)
             {
-                spawnChunk(world, b2Vec2(i, j));
+                spawnChunk(world, b2Vec2(i, j), mediator);
             }
         }
 

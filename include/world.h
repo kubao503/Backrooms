@@ -24,8 +24,8 @@ public:
     World() = default;
     World(int seed) { Chunk::chunkGenerator.setBaseSeed(seed); };
     void clear();
-    void draw(b2World &world, const b2Vec2 &playerPosition);
-    void spawnChunk(b2World &world, const b2Vec2 &position);
+    void draw(b2World &world, const b2Vec2 &playerPosition, Mediator &mediator);
+    void spawnChunk(b2World &world, const b2Vec2 &position, Mediator &mediator);
     void removeChunk(const b2Vec2 &position);
     bool isHunt(const b2Vec2 &position) const;
     b2Vec2 closestChunk(const b2Vec2 &position) const;

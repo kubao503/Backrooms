@@ -4,16 +4,19 @@
 std::mt19937 Chunk::mt(time(nullptr));
 RandomGenerator Chunk::chunkGenerator{int(mt())};
 
-Chunk::Chunk(b2World &world, const b2Vec2 &position)
+Chunk::Chunk(b2World &world, const b2Vec2 &position, Mediator &mediator)
     : position_(position)
 {
+    // Lower with lower density of walls
     b2Vec2 bigChunkPosition = b2Vec2(round(position.x / Conf::bigChunkWidth), round(position.y / Conf::bigChunkWidth));
     chunkGenerator.seed(int(bigChunkPosition.x), int(bigChunkPosition.y));
     bool lowerDensity = chunkGenerator.drawLots(1u, 11u);
 
+    // Chance for a wall depending on the existance of lower density region
     chunkGenerator.seed(int(position.x), int(position.y));
     unsigned int wallChance{lowerDensity ? 1u : 4u};
 
+    // Drawing lots
     bool wallNorthExists = chunkGenerator.drawLots(wallChance, 10u);
     bool wallWestExists = chunkGenerator.drawLots(wallChance, 10u);
     bool huntExists = chunkGenerator.drawLots(1u, 10u);
@@ -21,6 +24,7 @@ Chunk::Chunk(b2World &world, const b2Vec2 &position)
     b2Vec2 wallNorthPosition = this->getWallNorthPosition();
     b2Vec2 wallWestPosition = this->getWallWestPosition();
 
+    // Creating walls
     if (wallNorthExists)
         wallNorth_ = std::make_unique<Object3D>(world, Object::Type::WALL, wallNorthPosition, PI / 2);
 
@@ -30,7 +34,12 @@ Chunk::Chunk(b2World &world, const b2Vec2 &position)
     if (huntExists)
         hunt_ = true;
 
-    return;
+    // Randomly create item
+    bool item = mt() % 10 < 1;
+    if (item)
+    {
+        mediator.notify(std::make_shared<Emf>(world, position, 0, mediator), Mediator::ITEM_CREATED);
+    }
 }
 
 b2Vec2 Chunk::getWallNorthPosition() const

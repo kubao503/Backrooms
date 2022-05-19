@@ -7,8 +7,6 @@ GameState::GameState()
 {
     // Setting contact listener
     world_.SetContactListener(&listener_);
-
-    addObject(std::make_shared<Emf>(world_, b2Vec2(0.0f, -10.0f), 0.0f, *this, enemy_));
 }
 
 void GameState::addObject(std::shared_ptr<Object> object)
@@ -37,11 +35,25 @@ void GameState::notify(const Component &comp, Event event)
     switch (event)
     {
     case Mediator::ITEM_CONTACT:
-        player_.itemContact(shareObject(static_cast<const Item *>(&comp))); break;
-    case Mediator::GAMEOVER:
-        gameOver(); break;
-    default:
+        player_.itemContact(shareObject(static_cast<const Item *>(&comp)));
         break;
+    case Mediator::GAMEOVER:
+        gameOver();
+        break;
+    default:
+        throw "Event impossible to handle";
+    }
+}
+
+void GameState::notify(std::shared_ptr<Component> comp, Event event)
+{
+    switch (event)
+    {
+    case Mediator::ITEM_CREATED:
+        addObject(std::static_pointer_cast<Item>(comp));
+        break;
+    default:
+        throw "Event impossible to handle";
     }
 }
 
@@ -66,7 +78,7 @@ void GameState::step(UserIO &userIO)
     }
 
     // Physics step
-    gameMap_.draw(world_, player_.getPosition());
+    gameMap_.draw(world_, player_.getPosition(), *this);
 
     player_.control(userIO);
     player_.doItemAction();
@@ -74,4 +86,9 @@ void GameState::step(UserIO &userIO)
 
     debugUpdate(userIO);
     huntUpdate();
+
+    // DEBUG
+    // int counter = 0;
+    // for (auto obj : player_.getOwnedItems())
+    //     std::cerr << ++counter << ' ' << obj.use_count() << '\n';
 }

@@ -2,7 +2,6 @@
 #define EMF_H
 
 #include "item.h"   // for inheritance
-#include "enemy.h"  // for finding closest enemy
 #include "myMath.h" // for calculating distance to enemy
 
 #include <array>    // for storing emf shapes
@@ -18,10 +17,9 @@ private:
         Shapes::EMF2,
         Shapes::EMF3};
     // bool on_{false};
-    const Enemy &enemy_;
 
 public:
-    Emf(b2World &world, const b2Vec2 &position, float angle, Mediator& mediator, const Enemy &enemy);
+    Emf(b2World &world, const b2Vec2 &position, float angle, Mediator& mediator);
     void drop(b2World &world, const Object &player) override;
 
     void action(const b2Vec2 &playerPos) override;
