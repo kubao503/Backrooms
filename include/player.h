@@ -28,6 +28,7 @@ private:
     std::vector<std::shared_ptr<Item>> ownedItems_;
     unsigned int currentItemIdx_{0};
 
+    b2Vec2 currentChunk_{b2Vec2(INFINITY, INFINITY)};
     static float linearVelocity_;
 
 public:
@@ -47,10 +48,10 @@ public:
     void itemContact(std::shared_ptr<Item> item);
     void itemLost();
 
-    static void setLinearVelocity(float velocity)
-    {
-        linearVelocity_ = velocity;
-    }
+    b2Vec2 &getCurrentChunk() { return currentChunk_; }
+    void setCurrentChunk(const b2Vec2 &chunkPosition) { currentChunk_ = chunkPosition; }
+
+    static void setLinearVelocity(float velocity) { linearVelocity_ = velocity; }
 };
 
 #endif

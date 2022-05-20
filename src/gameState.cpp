@@ -54,7 +54,12 @@ void GameState::step(UserIO &userIO)
     }
 
     // Physics step
-    gameMap_.draw(world_, player_.getPosition());
+    b2Vec2 playerChunk = gameMap_.closestChunk(player_.getPosition());
+    if (playerChunk != player_.getCurrentChunk() || !player_.getCurrentChunk().IsValid())
+    {
+        gameMap_.draw(world_, player_.getPosition());
+        player_.setCurrentChunk(playerChunk);
+    }
 
     player_.control(userIO);
     player_.doItemAction();
