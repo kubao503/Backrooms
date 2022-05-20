@@ -29,7 +29,7 @@ private:
     unsigned int currentItemIdx_{0};
 
     b2Vec2 currentChunk_{b2Vec2(INFINITY, INFINITY)};
-    static float linearVelocity_;
+    float linearVelocity_{Conf::linearPlayerVelocity};
 
 public:
     Player(b2World &world, const b2Vec2 &position, float angle);
@@ -50,8 +50,7 @@ public:
 
     b2Vec2 &getCurrentChunk() { return currentChunk_; }
     void setCurrentChunk(const b2Vec2 &chunkPosition) { currentChunk_ = chunkPosition; }
-
-    static void setLinearVelocity(float velocity) { linearVelocity_ = velocity; }
+    void setLinearVelocity(float multiplier) { linearVelocity_ = Conf::linearPlayerVelocity * multiplier; }
 };
 
 #endif

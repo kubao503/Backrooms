@@ -1,7 +1,5 @@
 #include "player.h"
 
-float Player::linearVelocity_{Conf::linearPlayerVelocity};
-
 void Player::setLocalVelocity(const b2Vec2 &newVelocity)
 {
     const float angle{body_->GetAngle()};

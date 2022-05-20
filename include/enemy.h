@@ -25,6 +25,8 @@ class Enemy : public Object2D
 
     World::Directions direction = World::Directions::N;
 
+    float linearVelocity_{Conf::linearEnemyVelocity};
+
 public:
     Enemy(b2World &world, b2Vec2 position, float angle);
 
@@ -33,6 +35,8 @@ public:
     void stopHunt();
 
     bool spawned() const { return spawned_; }
+
+    void setLinearVelocity(float multiplier) { linearVelocity_ = Conf::linearEnemyVelocity * multiplier; }
 };
 
 #endif

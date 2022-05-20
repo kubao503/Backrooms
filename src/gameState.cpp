@@ -68,5 +68,7 @@ void GameState::step(UserIO &userIO)
     debugUpdate(userIO);
     huntUpdate();
 
-    Player::setLinearVelocity(Conf::linearPlayerVelocity * frameDuration_.elapsed() * 350);
+    float frameDurationMul = frameDuration_.elapsed() * 350;
+    enemy_.setLinearVelocity(frameDurationMul);
+    player_.setLinearVelocity(frameDurationMul);
 }
