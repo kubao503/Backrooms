@@ -1,6 +1,6 @@
 #include "player.h"
 
-float Player::LINEAR_VELOCITY{Conf::linearPlayerVelocity};
+float Player::linearVelocity_{Conf::linearPlayerVelocity};
 
 void Player::setLocalVelocity(const b2Vec2 &newVelocity)
 {
@@ -23,30 +23,29 @@ Player::Player(b2World &world, const b2Vec2 &position, float angle)
 
 void Player::move()
 {
-    // static constexpr float LINEAR_VELOCITY = 2.0f;
     static constexpr float SPRINT_MULTIPLIER = 2.0f;
     b2Vec2 newVelocity(0.0f, 0.0f);
 
     // Moving
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
     {
-        newVelocity += b2Vec2(0.0f, LINEAR_VELOCITY);
+        newVelocity += b2Vec2(0.0f, linearVelocity_);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
     {
-        newVelocity += b2Vec2(0.0f, -LINEAR_VELOCITY);
+        newVelocity += b2Vec2(0.0f, -linearVelocity_);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
     {
-        newVelocity += b2Vec2(LINEAR_VELOCITY, 0.0f);
+        newVelocity += b2Vec2(linearVelocity_, 0.0f);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
     {
-        newVelocity += b2Vec2(-LINEAR_VELOCITY, 0.0f);
+        newVelocity += b2Vec2(-linearVelocity_, 0.0f);
     }
 
     newVelocity.Normalize();
-    newVelocity *= LINEAR_VELOCITY;
+    newVelocity *= linearVelocity_;
 
     // Sprint only when going forward
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) && sf::Keyboard::isKeyPressed(sf::Keyboard::W))

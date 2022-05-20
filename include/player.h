@@ -28,7 +28,7 @@ private:
     std::vector<std::shared_ptr<Item>> ownedItems_;
     unsigned int currentItemIdx_{0};
 
-    static float LINEAR_VELOCITY;
+    static float linearVelocity_;
 
 public:
     Player(b2World &world, const b2Vec2 &position, float angle);
@@ -49,7 +49,7 @@ public:
 
     static void setLinearVelocity(float velocity)
     {
-        LINEAR_VELOCITY = velocity;
+        linearVelocity_ = velocity;
     }
 };
 
