@@ -1,5 +1,7 @@
 #include "player.h"
 
+float Player::LINEAR_VELOCITY{Conf::linearPlayerVelocity};
+
 void Player::setLocalVelocity(const b2Vec2 &newVelocity)
 {
     const float angle{body_->GetAngle()};
@@ -21,7 +23,7 @@ Player::Player(b2World &world, const b2Vec2 &position, float angle)
 
 void Player::move()
 {
-    static constexpr float LINEAR_VELOCITY = 2.0f;
+    // static constexpr float LINEAR_VELOCITY = 2.0f;
     static constexpr float SPRINT_MULTIPLIER = 2.0f;
     b2Vec2 newVelocity(0.0f, 0.0f);
 

@@ -16,6 +16,8 @@ namespace Conf
 
     inline constexpr double huntDuration{5.0};
 
+    inline constexpr float linearPlayerVelocity{2.0f};
+
     // Simulation parameters
     inline constexpr float timeStep = 1.0f / 60.0f; // Step of time between events
     inline constexpr int32 velocityIterations = 4;  // Velocity calculations during one step

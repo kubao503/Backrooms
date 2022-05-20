@@ -25,6 +25,7 @@ public:
     {
         reset();
     }
+
     void stop()
     {
         static int counter{0};

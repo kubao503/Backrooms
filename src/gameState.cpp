@@ -38,6 +38,8 @@ void GameState::gameOver()
 
 void GameState::step(UserIO &userIO)
 {
+    frameDuration_.start();
+
     // Drawing on screen
     Camera::drawViewOnScreen(userIO, debugGet(), player_);
     world_.Step(Conf::timeStep, Conf::velocityIterations, Conf::positionIterations);
@@ -60,4 +62,6 @@ void GameState::step(UserIO &userIO)
 
     debugUpdate(userIO);
     huntUpdate();
+
+    Player::setLinearVelocity(Conf::linearPlayerVelocity * frameDuration_.elapsed() * 350);
 }

@@ -23,6 +23,7 @@ class GameState
     b2World world_{b2Vec2(0.0f, 0.0f)};
     World gameMap_;
     MyListener listener_;
+    Timer frameDuration_;
 
     std::set<std::shared_ptr<Object>> objects_;
     Player player_;
