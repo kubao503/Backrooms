@@ -12,6 +12,7 @@ void Enemy::setVelocity()
     // Set velocity to waypoints location
     b2Vec2 waypointDirection{getVec(getPosition(), waypoint_)};
     waypointDirection.Normalize();
+    waypointDirection *= linearVelocity_;
     body_->SetLinearVelocity(waypointDirection);
 }
 

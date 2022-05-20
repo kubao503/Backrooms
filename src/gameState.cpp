@@ -64,6 +64,8 @@ void GameState::gameOver()
 
 void GameState::step(UserIO &userIO)
 {
+    frameDuration_.start();
+
     // Drawing on screen
     Camera::drawViewOnScreen(userIO, debugGet(), player_);
     world_.Step(Conf::timeStep, Conf::velocityIterations, Conf::positionIterations);
@@ -78,7 +80,12 @@ void GameState::step(UserIO &userIO)
     }
 
     // Physics step
-    gameMap_.draw(world_, player_.getPosition(), *this);
+    b2Vec2 playerChunk = gameMap_.closestChunk(player_.getPosition());
+    if (playerChunk != player_.getCurrentChunk() || !player_.getCurrentChunk().IsValid())
+    {
+        gameMap_.draw(world_, player_.getPosition(), *this);
+        player_.setCurrentChunk(playerChunk);
+    }
 
     player_.control(userIO);
     player_.doItemAction();
@@ -87,8 +94,7 @@ void GameState::step(UserIO &userIO)
     debugUpdate(userIO);
     huntUpdate();
 
-    // DEBUG
-    // int counter = 0;
-    // for (auto obj : player_.getOwnedItems())
-    //     std::cerr << ++counter << ' ' << obj.use_count() << '\n';
+    float frameDurationMul = frameDuration_.elapsed() * 350;
+    enemy_.setLinearVelocity(frameDurationMul);
+    player_.setLinearVelocity(frameDurationMul);
 }
