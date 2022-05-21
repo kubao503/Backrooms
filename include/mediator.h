@@ -1,7 +1,7 @@
 #ifndef MEDIATOR_H
 #define MEDIATOR_H
 
-class b2Vec2;
+struct b2Vec2;
 class Component;
 
 class Mediator

@@ -59,25 +59,25 @@ void World::draw(b2World &world, const b2Vec2 &playerPosition, Mediator &mediato
 {
     b2Vec2 normalizedPosition = normalizeChunkPosition(playerPosition);
 
-    float removeFactor = Conf::renderDistance * 2;
-    float renderFactor = Conf::renderDistance * 1.5;
+    float removeFactor = Conf::renderChunkDistance * 2;
+    float renderFactor = Conf::renderChunkDistance / 2;
 
-    for (float i = normalizedPosition.x - removeFactor - 1; i < normalizedPosition.x + removeFactor + 1; i += Conf::chunkWidth)
-        for (float j = normalizedPosition.y - removeFactor - 1; j < normalizedPosition.y + removeFactor + 1; j += Conf::chunkWidth)
+    for (float i = normalizedPosition.x - Conf::chunkWidth * removeFactor; i <= normalizedPosition.x + Conf::chunkWidth * removeFactor; i += Conf::chunkWidth)
+        for (float j = normalizedPosition.y - Conf::chunkWidth * removeFactor; j <= normalizedPosition.y + Conf::chunkWidth * removeFactor; j += Conf::chunkWidth)
         {
             try
             {
                 chunks.at(b2Vec2(i, j));
 
-                if (i < normalizedPosition.x - removeFactor || i > normalizedPosition.x + removeFactor)
+                if (i < normalizedPosition.x - Conf::chunkWidth * Conf::renderChunkDistance || i > normalizedPosition.x + Conf::chunkWidth * Conf::renderChunkDistance)
                     chunks.erase(b2Vec2(i, j));
-                if (j < normalizedPosition.y - removeFactor || j > normalizedPosition.y + removeFactor)
+                if (j < normalizedPosition.y - Conf::chunkWidth * Conf::renderChunkDistance || j > normalizedPosition.y + Conf::chunkWidth * Conf::renderChunkDistance)
                     chunks.erase(b2Vec2(i, j));
             }
             catch (const std::out_of_range &exception)
             {
-                if (i >= normalizedPosition.x - renderFactor || i <= normalizedPosition.x + renderFactor)
-                    if (j >= normalizedPosition.y - renderFactor || j <= normalizedPosition.y + renderFactor)
+                if (i >= normalizedPosition.x - Conf::chunkWidth * renderFactor || i <= normalizedPosition.x + Conf::chunkWidth * renderFactor)
+                    if (j >= normalizedPosition.y - Conf::chunkWidth * renderFactor || j <= normalizedPosition.y + Conf::chunkWidth * renderFactor)
                         spawnChunk(world, b2Vec2(i, j), mediator);
             }
         }
@@ -108,7 +108,6 @@ bool World::isHunt(const b2Vec2 &position) const
 b2Vec2 World::closestChunk(const b2Vec2 &position) const
 {
     b2Vec2 chunkPosition = normalizeChunkPosition(position);
-
     try
     {
         chunks.at(chunkPosition); // If chunk exists, return it
