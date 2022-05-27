@@ -17,23 +17,16 @@ private:
 
     sf::Color dimColor(const sf::Color &color, float dimFactor);
 
-    sf::Shader shader_;
-
 public:
     UserIO(const std::string &title)
     {
         getMouseXMovement();
         window_.create(sf::VideoMode(Conf::windowWidth, Conf::windowHeight), title);
         window_.setMouseCursorVisible(false);
-
-        if (!shader_.loadFromFile("media/shader.frag", sf::Shader::Fragment))
-        {
-            std::cerr << "Unbale to load shader\n";
-        }
     }
 
     // The 0, 0 coordinate coresponds to the center of the screen
-    void drawOnScreen(Shapes::Type shapeIdx, float x = 0, float y = 0, float xScale = 1.0f, float yScale = 1.0f, float dim = 1.0f, float textureOffset = 0.0, bool shader = true);
+    void drawOnScreen(Shapes::Type shapeIdx, float x = 0, float y = 0, float xScale = 1.0f, float yScale = 1.0f, float dim = 1.0f, float textureOffset = 0.0);
 
     bool isOpen() { return window_.isOpen(); }
     // Starts making new frame

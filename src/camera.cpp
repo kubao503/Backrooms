@@ -36,7 +36,7 @@ void Camera::draw3DRay(UserIO &userIO, bool debug, float angle, const Ray::RayCa
     static const float maxCordX{tan(Conf::FOVangle / 2.0f)};
 
     // float flashlightFrac{0.1f * adjacentDistance * static_cast<float>(sqrt(std::max(0.0, 1.0f - pow(angle * 4.0f, 2))))};
-    userIO.drawOnScreen(callback.getShapeIdx(), tan(angle) / maxCordX, 0.0f, scale.first, scale.second, dimFactor, rayNumber, false);
+    userIO.drawOnScreen(callback.getShapeIdx(), tan(angle) / maxCordX, 0.0f, scale.first, scale.second, dimFactor, rayNumber); //, flashlightFrac);
 }
 
 void Camera::draw2DRay(UserIO &userIO, bool debug, float angle, const Ray::RayCallback &callback, float distance)
@@ -48,7 +48,7 @@ void Camera::draw2DRay(UserIO &userIO, bool debug, float angle, const Ray::RayCa
     float dimFactor = debug ? 1.0f : distDimFactor(adjacentDistance);
 
     static const float maxCordX{tan(Conf::FOVangle / 2.0f)};
-    userIO.drawOnScreen(callback.getShapeIdx(), tan(angle) / maxCordX, 0.0f, scale.first, scale.second, dimFactor, 0.0f, false);
+    userIO.drawOnScreen(callback.getShapeIdx(), tan(angle) / maxCordX, 0.0f, scale.first, scale.second, dimFactor);
 }
 
 bool Camera::ifInFieldOfView(const Object &camera, const Object &object)
@@ -123,24 +123,18 @@ void Camera::drawObjects2D(UserIO &userIO, bool debug, const Player &player)
 void Camera::drawItems(UserIO &userIO, const Player &player)
 {
     if (player.getOwnedItems().size())
-        userIO.drawOnScreen(player.getCurrentItem()->getGUIShapeIdx(), 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, false);
+        userIO.drawOnScreen(player.getCurrentItem()->getGUIShapeIdx());
 }
 
 void Camera::postFx(UserIO &userIO)
 {
-    userIO.drawOnScreen(Shapes::FLASHLIGHT, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, false);
-}
-
-void Camera::background(UserIO &userIO)
-{
-    userIO.drawOnScreen(Shapes::BACKGROUND);
+    userIO.drawOnScreen(Shapes::FLASHLIGHT);
 }
 
 void Camera::drawViewOnScreen(UserIO &userIO, bool debug, const Player &player)
 {
     userIO.start(); // Start frame drawing
 
-    background(userIO);
     drawObjects3D(userIO, debug, player);
     drawObjects2D(userIO, debug, player);
     if (!debug) postFx(userIO);
