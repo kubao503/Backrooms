@@ -21,33 +21,32 @@ Player::Player(b2World &world, const b2Vec2 &position, float angle)
 
 void Player::move()
 {
-    static constexpr float LINEAR_VELOCITY = 2.0f;
     static constexpr float SPRINT_MULTIPLIER = 2.0f;
     b2Vec2 newVelocity(0.0f, 0.0f);
 
     // Moving
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
     {
-        newVelocity += b2Vec2(0.0f, LINEAR_VELOCITY);
+        newVelocity += b2Vec2(0.0f, linearVelocity_);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
     {
-        newVelocity += b2Vec2(0.0f, -LINEAR_VELOCITY);
+        newVelocity += b2Vec2(0.0f, -linearVelocity_);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
     {
-        newVelocity += b2Vec2(LINEAR_VELOCITY, 0.0f);
+        newVelocity += b2Vec2(linearVelocity_, 0.0f);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
     {
-        newVelocity += b2Vec2(-LINEAR_VELOCITY, 0.0f);
+        newVelocity += b2Vec2(-linearVelocity_, 0.0f);
     }
 
     newVelocity.Normalize();
-    newVelocity *= LINEAR_VELOCITY;
+    newVelocity *= linearVelocity_;
 
-    // Sprint
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift))
+    // Sprint only when going forward
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) && sf::Keyboard::isKeyPressed(sf::Keyboard::W))
     {
         newVelocity *= SPRINT_MULTIPLIER;
     }
@@ -64,7 +63,13 @@ void Player::lookAround(UserIO &userIO)
     body_->SetAngularVelocity(ANGULAR_VELOCITY * mouseXMovement);
 }
 
-#include <iostream> // DEBUG
+void Player::lookAt(const b2Vec2 &target)
+{
+    float angle = vecAngle(getVec(getAngle()), getVec(getPosition(), target));
+    float cross = b2Cross(getVec(getAngle()), getVec(getPosition(), target));
+    angle *= abs(cross) / cross;
+    body_->SetAngularVelocity(angle);
+}
 
 void Player::itemOperations(UserIO &userIO)
 {
@@ -79,25 +84,19 @@ void Player::itemOperations(UserIO &userIO)
     }
 
     // Dropping item
-    if (userIO.handleKeyPress(sf::Keyboard::G))
+    if (userIO.handleKeyPress(sf::Keyboard::G) && ownedItems_.size())
     {
-        if (ownedItems_.size())
+        ownedItems_[currentItemIdx_]->drop(*body_->GetWorld(), *this);
+        ownedItems_.erase(std::next(ownedItems_.begin(), currentItemIdx_));
+        if (currentItemIdx_ == ownedItems_.size())
         {
-            ownedItems_[currentItemIdx_]->drop(*body_->GetWorld(), *this);
-            ownedItems_.erase(std::next(ownedItems_.begin(), currentItemIdx_));
-            if (currentItemIdx_ == ownedItems_.size())
-            {
-                currentItemIdx_ = 0;
-            }
+            currentItemIdx_ = 0;
         }
     }
 
     // Changing item from inventory
-    if (userIO.handleKeyPress(sf::Keyboard::Q))
-    {
-        if (++currentItemIdx_ >= ownedItems_.size())
-            currentItemIdx_ = 0;
-    }
+    if (userIO.handleKeyPress(sf::Keyboard::Q) && ++currentItemIdx_ >= ownedItems_.size())
+        currentItemIdx_ = 0;
 }
 
 void Player::control(UserIO &userIO)

@@ -9,7 +9,9 @@
 
 #include <box2d/box2d.h> // for setting b2Body velocity
 #include <vector>        // for storing visible objects
-#include <memory> // for storing items in shared ptr
+#include <memory>        // for storing items in shared ptr
+
+#include <iostream> // DEBUG
 
 class Player : public Object
 {
@@ -26,10 +28,14 @@ private:
     std::vector<std::shared_ptr<Item>> ownedItems_;
     unsigned int currentItemIdx_{0};
 
+    b2Vec2 currentChunk_{b2Vec2(INFINITY, INFINITY)};
+    float linearVelocity_{Conf::linearPlayerVelocity};
+
 public:
     Player(b2World &world, const b2Vec2 &position, float angle);
 
     void control(UserIO &userIO);
+    void lookAt(const b2Vec2 &target);
 
     const std::vector<const Object2D *> &getVisibleObjects() const;
     const std::vector<std::shared_ptr<Item>> &getOwnedItems() const { return ownedItems_; }
@@ -41,6 +47,10 @@ public:
 
     void itemContact(std::shared_ptr<Item> item);
     void itemLost();
+
+    b2Vec2 &getCurrentChunk() { return currentChunk_; }
+    void setCurrentChunk(const b2Vec2 &chunkPosition) { currentChunk_ = chunkPosition; }
+    void setLinearVelocity(float multiplier) { linearVelocity_ = Conf::linearPlayerVelocity * multiplier; }
 };
 
 #endif

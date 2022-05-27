@@ -4,18 +4,16 @@
 #include "enemy.h" // for dynamic cast
 #include "player.h"
 #include "item.h"
+#include "component.h"
 
 #include <box2d/box2d.h> // for inheriting from b2ContactListener
 
 #include <iostream> // printing death message
 
-// #include "gameState.h" // circular include
-class GameState;
-
-class MyListener : public b2ContactListener
+class MyListener : public b2ContactListener, public Component
 {
 public:
-    MyListener(const GameState &game);
+    MyListener(const Component &component, const bool &debug);
 
 private:
     void BeginContact(b2Contact *contact) override;
@@ -24,7 +22,8 @@ private:
     template <typename T, typename U>
     bool getTandU(Object *&objA, Object *&objB, bool &isSensorA, bool &isSensorB);
 
-    const GameState &game_;
+    const bool &debug_;
+    // GameState &game_;
 };
 
 #endif

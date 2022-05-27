@@ -1,7 +1,7 @@
 #include "emf.h"
 
-Emf::Emf(b2World &world, const b2Vec2 &position, float angle, const Enemy &enemy)
-    : Item{world, Type::EMF, emfShapes_[0], position, angle}, enemy_{enemy} {}
+Emf::Emf(b2World &world, const b2Vec2 &position, float angle, Mediator& mediator)
+    : Item{world, Type::EMF, emfShapes_[0], position, angle, mediator} {}
 
 void Emf::drop(b2World &world, const Object &player)
 {
@@ -13,8 +13,14 @@ void Emf::drop(b2World &world, const Object &player)
 
 void Emf::action(const b2Vec2 &playerPos)
 {
+    // Set default emf state
+    GUIShapeIdx_ = emfShapes_.at(0);
+
     // Updating emf state
-    float distanceToEnemy{distance(playerPos, enemy_.getPosition())};
-    int stateIdx{static_cast<int>((1.f - statesNumber) / detectionRadius * distanceToEnemy + statesNumber)};
-    GUIShapeIdx_ = emfShapes_.at(std::max(0, stateIdx));
+    if (mediator_.enemySpawned())
+    {
+        float distanceToEnemy{distance(playerPos, mediator_.enemyPosition())};
+        int stateIdx{static_cast<int>((1.f - statesNumber) / detectionRadius * distanceToEnemy + statesNumber)};
+        GUIShapeIdx_ = emfShapes_.at(std::max(0, stateIdx));
+    }
 }

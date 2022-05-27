@@ -22,6 +22,7 @@ public:
 
         return (mt() % max) < chance;
     }
+
     bool drawLots(double chance, double max)
     {
         assert(chance <= max);
@@ -30,6 +31,8 @@ public:
         return (bigNumber / max - static_cast<int>(bigNumber / max)) * max < chance;
     }
 
+    void setBaseSeed(int seed) { baseSeed_ = seed; }
+
 private:
     int chunkSeed(int x, int y)
     {
@@ -37,7 +40,7 @@ private:
     }
 
     std::mt19937 mt;
-    const int baseSeed_;
+    int baseSeed_;
 };
 
 #endif

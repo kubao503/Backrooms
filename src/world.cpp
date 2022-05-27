@@ -1,11 +1,35 @@
 #include "world.h"
 #include <iostream>
 
-void World::spawnChunk(b2World &world, const b2Vec2 &position)
+b2Vec2 World::normalizeChunkPosition(b2Vec2 position) const
 {
-    chunks[position] = std::make_unique<Chunk>(world, position);
+    position.x = round(position.x / Conf::chunkWidth) * Conf::chunkWidth;
+    position.y = round(position.y / Conf::chunkWidth) * Conf::chunkWidth;
+
+    return position;
+};
+
+/**
+ * @brief
+ * Spawns chunk in given position
+ *
+ * @param world
+ * World in which the chunk will be spawned
+ * @param position
+ * Position of to be spawned chunk
+ */
+void World::spawnChunk(b2World &world, const b2Vec2 &position, Mediator &mediator)
+{
+    chunks[position] = std::make_unique<Chunk>(world, position, mediator);
 }
 
+/**
+ * @brief
+ * Removes chunk from given position
+ *
+ * @param position
+ * Position of to be removed chunk
+ */
 void World::removeChunk(const b2Vec2 &position)
 {
     b2Vec2 foundPosition = closestChunk(position);
@@ -14,48 +38,76 @@ void World::removeChunk(const b2Vec2 &position)
         chunks.erase(foundPosition);
 }
 
+/**
+ * @brief
+ * Removes all chunks
+ */
 void World::clear()
 {
     chunks.clear();
 }
 
-void World::draw(b2World &world, const b2Vec2 &playerPosition)
+/**
+ * @brief
+ * Renders chunks in render distance field and removes unrendered chunks
+ * @param world
+ * World with chunks that will be altered
+ * @param playerPosition
+ * Position of player, from whom will be calculated distance to surrounding chunks
+ */
+void World::draw(b2World &world, const b2Vec2 &playerPosition, Mediator &mediator)
 {
-    int normalizedX = round(playerPosition.x / Conf::chunkWidth) * Conf::chunkWidth;
-    int normalizedY = round(playerPosition.y / Conf::chunkWidth) * Conf::chunkWidth;
+    b2Vec2 normalizedPosition = normalizeChunkPosition(playerPosition);
 
-    float renderFactor = 1.5;
+    float removeFactor = Conf::renderChunkDistance * 2;
+    float renderFactor = Conf::renderChunkDistance / 2;
 
-    for (float i = normalizedX - Conf::renderDistance * renderFactor; i < normalizedX + Conf::renderDistance * renderFactor; i += Conf::chunkWidth)
-        for (float j = normalizedY - Conf::renderDistance * renderFactor; j < normalizedY + Conf::renderDistance * renderFactor; j += Conf::chunkWidth)
+    for (float i = normalizedPosition.x - Conf::chunkWidth * removeFactor; i <= normalizedPosition.x + Conf::chunkWidth * removeFactor; i += Conf::chunkWidth)
+        for (float j = normalizedPosition.y - Conf::chunkWidth * removeFactor; j <= normalizedPosition.y + Conf::chunkWidth * removeFactor; j += Conf::chunkWidth)
         {
             try
             {
                 chunks.at(b2Vec2(i, j));
+
+                if (i < normalizedPosition.x - Conf::chunkWidth * Conf::renderChunkDistance || i > normalizedPosition.x + Conf::chunkWidth * Conf::renderChunkDistance)
+                    chunks.erase(b2Vec2(i, j));
+                if (j < normalizedPosition.y - Conf::chunkWidth * Conf::renderChunkDistance || j > normalizedPosition.y + Conf::chunkWidth * Conf::renderChunkDistance)
+                    chunks.erase(b2Vec2(i, j));
             }
             catch (const std::out_of_range &exception)
             {
-                spawnChunk(world, b2Vec2(i, j));
+                if (i >= normalizedPosition.x - Conf::chunkWidth * renderFactor || i <= normalizedPosition.x + Conf::chunkWidth * renderFactor)
+                    if (j >= normalizedPosition.y - Conf::chunkWidth * renderFactor || j <= normalizedPosition.y + Conf::chunkWidth * renderFactor)
+                        spawnChunk(world, b2Vec2(i, j), mediator);
             }
         }
-
-    for (auto it = chunks.begin(); it != chunks.end();)
-    {
-        b2Vec2 distance = it->second.get()->getPosition() - playerPosition;
-
-        if (distance.Length() > Conf::renderDistance * renderFactor)
-            it = chunks.erase(it);
-        else
-            ++it;
-    }
 }
 
+bool World::isHunt(const b2Vec2 &position) const
+{
+    b2Vec2 chunkPosition = normalizeChunkPosition(position);
+
+    try
+    {
+        return chunks.at(chunkPosition).get()->isHunt();
+    }
+    catch (const std::out_of_range &exception)
+    {
+    }
+    return false;
+}
+
+/**
+ * @brief
+ * Returns closest chunk's position to a given position
+ *
+ * @param position
+ * @return b2Vec2
+ * Position of closest chunk (INF, INF if chunk does not exist)
+ */
 b2Vec2 World::closestChunk(const b2Vec2 &position) const
 {
-    int normalizedX = round(position.x / Conf::chunkWidth) * Conf::chunkWidth;
-    int normalizedY = round(position.y / Conf::chunkWidth) * Conf::chunkWidth;
-    b2Vec2 chunkPosition = b2Vec2(normalizedX, normalizedY);
-
+    b2Vec2 chunkPosition = normalizeChunkPosition(position);
     try
     {
         chunks.at(chunkPosition); // If chunk exists, return it
@@ -66,6 +118,18 @@ b2Vec2 World::closestChunk(const b2Vec2 &position) const
     }
     return b2Vec2(INFINITY, INFINITY);
 }
+
+/**
+ * @brief
+ * Returns random neighbouring chunk which we can access from given position
+ *
+ * @param position
+ * @param prefDirection
+ * Disables randomizing if possible (chunk is accessible)
+ *
+ * @return b2Vec2
+ * Returns chunk's position (INF, INF if chunk does not exist)
+ */
 
 b2Vec2 World::openChunk(const b2Vec2 &position, Directions &prefDirection) const
 {

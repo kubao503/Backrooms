@@ -12,7 +12,7 @@ int main()
         std::cerr << "Loading textures failed\n";
         return -1;
     }
-    Shapes::init();
+    Image::init();
 
     // User input via mouse and output via screen
     UserIO userIO("Backrooms");

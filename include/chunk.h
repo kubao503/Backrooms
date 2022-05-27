@@ -5,6 +5,8 @@
 #include "random_generator.h"
 #include "myMath.h"
 #include "config.h"
+#include "mediator.h" // for notifying about item creation
+#include "emf.h"
 
 #include <limits>
 #include <ctime>
@@ -26,7 +28,7 @@ private:
     b2Vec2 getWallWestPosition() const;
 
 public:
-    Chunk(b2World &world, const b2Vec2 &position);
+    Chunk(b2World &world, const b2Vec2 &position, Mediator &mediator);
     bool isHunt() const;
     b2Vec2 getPosition() const { return position_; };
 };

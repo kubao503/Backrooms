@@ -1,3 +1,6 @@
+#ifndef TIMER_5324532_H
+#define TIMER_5324532_H
+
 #include <chrono>   // for std::chrono functions
 #include <iostream> // for printing results
 
@@ -25,6 +28,7 @@ public:
     {
         reset();
     }
+
     void stop()
     {
         static int counter{0};
@@ -37,3 +41,5 @@ public:
         }
     }
 };
+
+#endif

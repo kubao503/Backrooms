@@ -16,6 +16,7 @@ public:
         EMF2,
         EMF3,
         FLASHLIGHT,
+        BACKGROUND,
         TOTAL
     };
     static bool init();
