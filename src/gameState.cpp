@@ -87,14 +87,12 @@ void GameState::step(UserIO &userIO)
         player_.setCurrentChunk(playerChunk);
     }
 
-    player_.control(userIO);
+    player_.control(userIO, frameDurationMul);
     player_.doItemAction();
-    enemy_.control(player_.getPosition(), gameMap_, debugGet());
+    enemy_.control(player_.getPosition(), gameMap_, frameDurationMul, debugGet());
 
     debugUpdate(userIO);
     huntUpdate();
 
-    float frameDurationMul = frameDuration_.elapsed() * 350;
-    enemy_.setLinearVelocity(frameDurationMul);
-    player_.setLinearVelocity(frameDurationMul);
+    frameDurationMul = frameDuration_.elapsed() * 350;
 }

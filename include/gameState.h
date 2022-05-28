@@ -30,6 +30,8 @@ class GameState : public Mediator
     Player player_;
     Enemy enemy_;
 
+    float frameDurationMul{1};
+
     void debugUpdate(UserIO &userIO);
     void debugSet(bool debug) { debugMode_ = debug; }
     void huntUpdate();
