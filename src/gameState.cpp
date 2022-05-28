@@ -64,7 +64,6 @@ void GameState::gameOver()
 
 void GameState::step(UserIO &userIO)
 {
-    frameDuration_.start();
 
     // Drawing on screen
     Camera::drawViewOnScreen(userIO, debugGet(), player_);
@@ -87,12 +86,13 @@ void GameState::step(UserIO &userIO)
         player_.setCurrentChunk(playerChunk);
     }
 
-    player_.control(userIO, frameDurationMul);
+    float frameDurationElapsed = frameDuration_.elapsed();
+    frameDuration_.reset();
+
+    player_.control(userIO, frameDurationElapsed);
     player_.doItemAction();
-    enemy_.control(player_.getPosition(), gameMap_, frameDurationMul, debugGet());
+    enemy_.control(player_.getPosition(), gameMap_, frameDurationElapsed, debugGet());
 
     debugUpdate(userIO);
     huntUpdate();
-
-    frameDurationMul = frameDuration_.elapsed() * 350;
 }
