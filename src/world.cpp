@@ -7,7 +7,7 @@ b2Vec2 World::normalizeChunkPosition(b2Vec2 position) const
     position.y = round(position.y / Conf::chunkWidth) * Conf::chunkWidth;
 
     return position;
-};
+}
 
 /**
  * @brief
