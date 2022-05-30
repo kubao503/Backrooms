@@ -2,7 +2,7 @@
 #define TEXTURES_H
 
 #include <SFML/Graphics.hpp> // for using sf::Texture
-#include <cassert>          // for checking texture type
+#include <cassert>           // for checking texture type
 
 class Textures
 {
@@ -15,8 +15,10 @@ public:
         EMF1,
         EMF2,
         EMF3,
+        EMF_DROPPED,
         FLASHLIGHT,
         BACKGROUND,
+        PAGE,
         TOTAL
     };
     static bool init();

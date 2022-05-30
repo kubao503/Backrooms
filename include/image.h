@@ -18,6 +18,7 @@ public:
         EMF1,
         EMF2,
         EMF3,
+        EMF_DROPPED,
         FLASHLIGHT,
         BACKGROUND,
         PAGE,
