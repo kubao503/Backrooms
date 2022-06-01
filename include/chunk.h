@@ -7,6 +7,7 @@
 #include "config.h"
 #include "mediator.h" // for notifying about item creation
 #include "emf.h"
+#include "page.h"
 
 #include <limits>
 #include <ctime>

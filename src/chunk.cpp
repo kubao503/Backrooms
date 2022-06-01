@@ -38,7 +38,7 @@ Chunk::Chunk(b2World &world, const b2Vec2 &position, Mediator &mediator)
     bool item = mt() % 10 < 1;
     if (item)
     {
-        mediator.notify(std::make_shared<Emf>(world, position, 0, mediator), Mediator::ITEM_CREATED);
+        mediator.notify(std::make_shared<Page>(world, position, 0, mediator), Mediator::ITEM_CREATED);
     }
 }
 

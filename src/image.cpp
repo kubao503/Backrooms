@@ -69,7 +69,7 @@ void Image::init()
     allImages_[BACKGROUND].addShape(1777.0f, 1000.0f, true);
     allImages_[BACKGROUND].addTexture(Textures::BACKGROUND);
 
-    allImages_[PAGE].addShape(10.f, 10.f);
+    allImages_[PAGE].addShape(200.f, 283.f);
     allImages_[PAGE].addTexture(Textures::PAGE);
 
     allImages_[NOISE].addShape(10.f, 10.f, true);

@@ -23,6 +23,7 @@ public:
         BACKGROUND,
         PAGE,
         NOISE,
+        EMPTY,
         TOTAL
     };
 

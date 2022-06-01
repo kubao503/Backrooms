@@ -22,6 +22,7 @@ public:
         EMF,
         ITEM_PICK_AREA,
         CAMERA,
+        PAGE,
         TOTAL
     };
 
