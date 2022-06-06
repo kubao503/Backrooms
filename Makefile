@@ -26,25 +26,27 @@ HEADERS = $(INCLUDE)/*									# header files in include/
 all: compile link tests
 
 link: $(OBJS) $(MAIN_OBJ)
-	$(CXX) $(CXX_FLAGS) $(OBJS) $(MAIN_OBJ) -o $(BIN)/$(MAIN) -L$(LIB) $(LIBRARIES)
+	$(CXX) $(CXX_FLAGS) $(OBJS) $(MAIN_OBJ) -o $(BIN)/$(MAIN) -L$(LIB) $(LIBRARIES)    # $(MAIN) executable linkage
 
 tests:	$(OBJS) $(TEST_OBJ)
-	$(CXX) $(CXX_FLAGS) $(OBJS) $(TEST_OBJ) -o $(BIN)/$(TEST) -L$(LIB) $(LIBRARIES)
+	$(CXX) $(CXX_FLAGS) $(OBJS) $(TEST_OBJ) -o $(BIN)/$(TEST) -L$(LIB) $(LIBRARIES)    # $(TEST) executable linkage
 
 compile: $(OBJS) $(MAIN_OBJ) $(TEST_OBJ)
 
-$(BIN)/%.o: $(SRC)/%.cpp $(HEADERS)
-	$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -c $< -o $@							# compiles all .o files from .cpp files in src/
+$(BIN)/%.o: $(SRC)/%.cpp $(HEADERS) $(BIN)
+	$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -c $< -o $@    # $(SRC) files compilation
 	
-$(MAIN_OBJ): $(MAIN)/$(MAIN).cpp $(HEADERS) $(BIN)/$(DIR)
-	$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -c $< -o $@
+$(MAIN_OBJ): $(MAIN)/$(MAIN).cpp $(HEADERS) $(BIN) $(BIN)/$(DIR)
+	$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -c $< -o $@    # $(MAIN).cpp file compilation
 
-$(TEST_OBJ): $(TEST)/$(TEST).cpp $(HEADERS) $(CATCH_DIR)/$(CATCH).hpp $(BIN)/$(DIR)
-	echo "Test object files."
-	$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -I$(CATCH_DIR) -c $< -o $@
+$(TEST_OBJ): $(TEST)/$(TEST).cpp $(HEADERS) $(CATCH_DIR)/$(CATCH).hpp $(BIN) $(BIN)/$(DIR)
+	$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -I$(CATCH_DIR) -c $< -o $@    # $(TEST).cpp file compilation
+
+$(BIN):
+	mkdir $(BIN)    # $(BIN) directory creation
 
 $(BIN)/$(DIR):
-	mkdir $(BIN)/$(DIR)
+	mkdir $(BIN)/$(DIR)    # $(BIN)/$(DIR) directory creation
 
 clean:
-	rm -r $(BIN)/*
+	rm -r $(BIN)    # removing $(BIN) and its contents
