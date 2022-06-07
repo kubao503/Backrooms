@@ -3,6 +3,7 @@
 
 std::mt19937 Chunk::mt(time(nullptr));
 RandomGenerator Chunk::chunkGenerator{int(mt())};
+std::vector<b2Vec2> Chunk::spawnedPages_;
 
 Chunk::Chunk(b2World &world, const b2Vec2 &position, Mediator &mediator)
     : position_(position)
@@ -35,10 +36,11 @@ Chunk::Chunk(b2World &world, const b2Vec2 &position, Mediator &mediator)
         hunt_ = true;
 
     // Randomly create item
-    bool item = mt() % 10 < 1;
-    if (item)
+    bool hasPage = chunkGenerator.drawLots(1u, 60u);
+    if (hasPage && std::find(Chunk::spawnedPages_.begin(), Chunk::spawnedPages_.end(), position) == Chunk::spawnedPages_.end())
     {
         mediator.notify(std::make_shared<Page>(world, position, 0, mediator), Mediator::ITEM_CREATED);
+        Chunk::spawnedPages_.push_back(position);
     }
 }
 

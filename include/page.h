@@ -10,7 +10,7 @@ private:
 
 public:
     Page(b2World &world, const b2Vec2 &position, float angle, Mediator &mediator);
-    void action(const b2Vec2 &playerPos) override { (void)playerPos; }
+    void action(const b2Vec2 &playerPos) override;
     void drop(b2World &world, const Object &player) override;
     void picked() override;
     static unsigned int pickedPages() { return pickedPages_; };

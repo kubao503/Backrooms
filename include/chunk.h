@@ -22,8 +22,11 @@ private:
         wallNorth_{nullptr};
     std::unique_ptr<Object3D> wallWest_{nullptr};
     bool hunt_{false};
+
     static std::mt19937 mt;
     static RandomGenerator chunkGenerator;
+    static std::vector<b2Vec2> spawnedPages_;
+
     const b2Vec2 position_;
     b2Vec2 getWallNorthPosition() const;
     b2Vec2 getWallWestPosition() const;
