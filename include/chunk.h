@@ -40,7 +40,7 @@ private:
             mediator.notify(std::make_shared<T>(world, position_, 0, mediator), Mediator::ITEM_CREATED);
             Chunk::spawnedItems_.push_back(position_);
         }
-    };
+    }
 
     void spawnWalls(bool lowerDensity, b2World &world);
 
