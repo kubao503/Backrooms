@@ -60,7 +60,7 @@ void Image::init()
     allImages_[EMF3].addShape(1864.0f, 1051.0f, true);
     allImages_[EMF3].addTexture(Textures::EMF3);
 
-    allImages_[EMF_DROPPED].addShape(200.0f, 283.0f);
+    allImages_[EMF_DROPPED].addShape(134.0f, 452.0f);
     allImages_[EMF_DROPPED].addTexture(Textures::EMF_DROPPED);
 
     allImages_[FLASHLIGHT].addShape(1920.0f, 1080.0f, true);
