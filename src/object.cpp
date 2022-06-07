@@ -86,7 +86,11 @@ const b2FixtureDef &Object::getFixtureDef(std::unique_ptr<b2Shape> shape)
     fixture.friction = 0.0f;
     return fixture;
 }
-
+Object::~Object()
+{
+    if (body_)
+        destroyBody();
+}
 Object::Object(b2World &world, Type type)
     : Object{world, type, getNewPosition(), 0} {}
 

@@ -22,12 +22,7 @@ public:
         TOTAL
     };
     static bool init();
-    static const sf::Texture &getTexture(Type textureType)
-    {
-        assert(textureType >= 0 && textureType < TOTAL);
-
-        return textures_[textureType];
-    }
+    static const sf::Texture &getTexture(Type textureType);
 
 private:
     static sf::Texture textures_[TOTAL];

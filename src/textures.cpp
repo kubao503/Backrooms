@@ -2,6 +2,13 @@
 
 sf::Texture Textures::textures_[TOTAL]{};
 
+const sf::Texture &Textures::getTexture(Type textureType)
+{
+    assert(textureType >= 0 && textureType < TOTAL);
+
+    return textures_[textureType];
+}
+
 bool Textures::init()
 {
     bool success{true};
