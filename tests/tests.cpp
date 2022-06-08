@@ -21,6 +21,8 @@ TEST_CASE("Item contact and picking up items.", "[ITEMS]")
 
     SECTION("Default values.")
     {
+        auto owned_items = player.getOwnedItems();
+        REQUIRE_FALSE(owned_items.size());
         REQUIRE_FALSE(player.getNearbyItem());
         REQUIRE_FALSE(Page::pickedPages());
     }
