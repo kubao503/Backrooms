@@ -14,6 +14,6 @@ void Chunk::spawnItem(unsigned int chance, b2World &world, Mediator &mediator)
         mediator.notify(std::make_shared<T>(world, position_, 0, mediator), Mediator::ITEM_CREATED);
         Chunk::spawnedItems_.push_back(position_);
     }
-};
+}
 
 #endif
