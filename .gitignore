@@ -1,8 +1,6 @@
 *.out
 .vscode/
 bin/
-lib/
-include/box2d/
 include/SFML/
 Makefile
 *.dll
