@@ -1,6 +1,1 @@
-*.out
 .vscode/
-bin/
-include/SFML/
-Makefile
-*.dll
